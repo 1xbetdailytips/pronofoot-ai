@@ -19,10 +19,24 @@ export const siteConfig = {
   // Social
   telegram: "https://t.me/pronofootai",          // free tips channel
   telegramVip: "https://t.me/pronofootaivip",     // VIP tips channel
-  // VIP
+  // VIP Tiers
   vipPrice: {
-    weekly: 3, // USD
-    weeklyFcfa: 1800, // CFA Francs
+    classique: {
+      weeklyFcfa: 2500,
+      monthlyFcfa: 8000,
+      weeklyUsd: 4,
+      monthlyUsd: 13,
+    },
+    elite: {
+      weeklyFcfa: 5000,
+      monthlyFcfa: 15000,
+      weeklyUsd: 8,
+      monthlyUsd: 25,
+    },
+    jackpot: {
+      oneTimeFcfa: 500,
+      oneTimeUsd: 1,
+    },
   },
 };
 
