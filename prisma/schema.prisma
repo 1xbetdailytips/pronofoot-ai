@@ -1,0 +1,144 @@
+// PronoFoot AI Database Schema
+// Using SQLite for zero-cost MVP
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+// ============================================
+// MATCH PREDICTIONS
+// ============================================
+model Match {
+  id            String   @id @default(cuid())
+  // Match info
+  homeTeam      String
+  awayTeam      String
+  league        String
+  country       String
+  matchDate     DateTime
+  kickoffTime   String
+  // Slug for SEO URL (e.g. "psg-vs-marseille-prediction-25-03-2026")
+  slug          String   @unique
+  // API reference
+  externalId    String?  @unique
+  // Predictions
+  prediction    String?  // "home_win", "draw", "away_win"
+  confidence    Float?   // 0-100
+  predictedScore String? // "2-1"
+  overUnder     String?  // "over_2_5", "under_2_5"
+  btts          String?  // "yes", "no"
+  aiAnalysis    String?  // AI-generated analysis text
+  aiAnalysisFr  String?  // French version
+  // Odds
+  homeOdds      Float?
+  drawOdds      Float?
+  awayOdds      Float?
+  overOdds      Float?
+  underOdds     Float?
+  // Stats
+  homeForm      String?  // e.g. "W W D L W"
+  awayForm      String?  // e.g. "L W W D L"
+  h2hRecord     String?  // JSON string of head-to-head data
+  // Status
+  status        String   @default("upcoming") // upcoming, live, finished
+  actualResult  String?  // Final score
+  predictionHit Boolean? // Did prediction win?
+  // Metadata
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  // Relations
+  ticketMatches TicketMatch[]
+
+  @@index([matchDate])
+  @@index([league])
+  @@index([status])
+}
+
+// ============================================
+// DAILY AI REPORT
+// ============================================
+model DailyReport {
+  id              String   @id @default(cuid())
+  date            DateTime @unique
+  // Best picks of the day
+  bestValueBet    String?  // Match ID
+  safestBet       String?  // Match ID
+  bestUnderdog    String?  // Match ID
+  accumulatorIds  String?  // Comma-separated match IDs
+  highOddsSpecial String?  // Match ID
+  // AI-generated report content
+  reportContent   String?  // English
+  reportContentFr String?  // French
+  totalOdds       Float?
+  // Status
+  published       Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+// ============================================
+// TICKET CODES (1xBet Booking Codes)
+// ============================================
+model Ticket {
+  id          String   @id @default(cuid())
+  date        DateTime
+  // Ticket details
+  name        String   // e.g. "Safe Ticket", "Value Ticket", "High Risk Ticket"
+  nameFr      String?  // French name
+  bookingCode String   // The 1xBet booking code
+  totalOdds   Float
+  riskLevel   String   // "safe", "medium", "high", "extreme"
+  // Access control
+  isFree      Boolean  @default(false) // Is this the free daily preview?
+  isVip       Boolean  @default(true)
+  // Result tracking
+  status      String   @default("pending") // pending, won, lost, partial
+  profit      Float?
+  // Metadata
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  // Relations
+  matches     TicketMatch[]
+
+  @@index([date])
+  @@index([isFree])
+}
+
+// Junction table: which matches are in which ticket
+model TicketMatch {
+  id        String @id @default(cuid())
+  ticket    Ticket @relation(fields: [ticketId], references: [id])
+  ticketId  String
+  match     Match  @relation(fields: [matchId], references: [id])
+  matchId   String
+  // What was picked for this match in this ticket
+  pick      String // "home_win", "over_2_5", "btts_yes", etc.
+  odds      Float
+
+  @@unique([ticketId, matchId])
+}
+
+// ============================================
+// USERS & VIP SUBSCRIPTIONS
+// ============================================
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  password      String?   // Hashed
+  telegramId    String?   @unique
+  telegramUsername String?
+  // VIP Status
+  isVip         Boolean   @default(false)
+  vipExpiresAt  DateTime?
+  // Stripe/Payment
+  stripeCustomerId String?
+  // Metadata
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
