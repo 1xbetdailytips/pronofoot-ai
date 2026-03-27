@@ -11,6 +11,7 @@ import {
   Clock,
   AlertCircle,
   Zap,
+  Send,
 } from "lucide-react";
 import AffiliateCTA from "@/components/ui/AffiliateCTA";
 import type { Tip, Fixture } from "@/lib/types";
@@ -376,6 +377,40 @@ export default async function DailyReportPage({
             campaign="report_accumulator"
           />
         </div>
+      </div>
+
+      {/* Telegram channels */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
+        <a
+          href="https://t.me/pronofootai"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl px-5 py-3.5 transition-colors"
+        >
+          <Send className="w-5 h-5 shrink-0" />
+          <div>
+            <p className="font-semibold text-sm">
+              {isFr ? "Tips gratuits quotidiens" : "Daily free tips"}
+            </p>
+            <p className="text-blue-200 text-xs">@pronofootai</p>
+          </div>
+          <span className="ml-auto">→</span>
+        </a>
+        <a
+          href="https://t.me/pronofootaivip"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-3 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-xl px-5 py-3.5 transition-colors"
+        >
+          <Zap className="w-5 h-5 shrink-0" />
+          <div>
+            <p className="font-semibold text-sm">
+              {isFr ? "Analyses VIP complètes" : "Full VIP analysis"}
+            </p>
+            <p className="text-amber-100 text-xs">@pronofootaivip</p>
+          </div>
+          <span className="ml-auto">→</span>
+        </a>
       </div>
 
       {/* Bottom CTA */}

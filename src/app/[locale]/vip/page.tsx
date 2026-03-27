@@ -220,22 +220,44 @@ export default async function VIPPage({
         </div>
       </section>
 
-      {/* Telegram CTA */}
-      <section className="bg-blue-600">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center">
-          <Send className="w-8 h-8 text-white mx-auto mb-3" />
-          <p className="text-white font-bold text-lg mb-2">
-            {isFr
-              ? "Des questions ? Contactez-nous sur Telegram"
-              : "Questions? Contact us on Telegram"}
-          </p>
+      {/* Telegram CTAs — both channels */}
+      <section className="py-10 px-4">
+        <div className="max-w-4xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {/* Free channel */}
           <a
             href={siteConfig.telegram}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 bg-white text-blue-600 font-bold px-6 py-2.5 rounded-xl hover:bg-blue-50 transition-colors"
+            className="flex items-center gap-4 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl px-6 py-5 transition-colors group"
           >
-            {tc("joinTelegram")} →
+            <Send className="w-7 h-7 shrink-0" />
+            <div>
+              <p className="font-bold text-base">
+                {isFr ? "Canal Gratuit" : "Free Channel"}
+              </p>
+              <p className="text-blue-100 text-sm">
+                @pronofootai · {isFr ? "Tips gratuits quotidiens" : "Daily free tips"}
+              </p>
+            </div>
+            <span className="ml-auto text-xl group-hover:translate-x-1 transition-transform">→</span>
+          </a>
+          {/* VIP channel */}
+          <a
+            href={siteConfig.telegramVip}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-4 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-2xl px-6 py-5 transition-colors group"
+          >
+            <Zap className="w-7 h-7 shrink-0" />
+            <div>
+              <p className="font-bold text-base">
+                {isFr ? "Canal VIP 💎" : "VIP Channel 💎"}
+              </p>
+              <p className="text-amber-100 text-sm">
+                @pronofootaivip · {isFr ? "Tips premium & analyses IA" : "Premium tips & AI analysis"}
+              </p>
+            </div>
+            <span className="ml-auto text-xl group-hover:translate-x-1 transition-transform">→</span>
           </a>
         </div>
       </section>

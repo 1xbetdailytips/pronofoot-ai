@@ -1,9 +1,9 @@
 import { getTranslations } from "next-intl/server";
 import type { Metadata } from "next";
-import { TrendingUp } from "lucide-react";
+import { TrendingUp, Send, Zap } from "lucide-react";
 import MatchCard from "@/components/predictions/MatchCard";
 import AffiliateCTA from "@/components/ui/AffiliateCTA";
-import { COVERED_LEAGUES } from "@/lib/config";
+import { COVERED_LEAGUES, siteConfig } from "@/lib/config";
 import { getTodaysMatches, matchToCardProps } from "@/lib/data";
 
 export function generateMetadata({
@@ -121,6 +121,40 @@ export default async function PredictionsPage({
           </p>
         </div>
       )}
+
+      {/* Telegram channels strip */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
+        <a
+          href={siteConfig.telegram}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl px-5 py-3.5 transition-colors"
+        >
+          <Send className="w-5 h-5 shrink-0" />
+          <div>
+            <p className="font-semibold text-sm">
+              {isFr ? "Tips gratuits sur Telegram" : "Free tips on Telegram"}
+            </p>
+            <p className="text-blue-200 text-xs">@pronofootai</p>
+          </div>
+          <span className="ml-auto">→</span>
+        </a>
+        <a
+          href={siteConfig.telegramVip}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-3 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-xl px-5 py-3.5 transition-colors"
+        >
+          <Zap className="w-5 h-5 shrink-0" />
+          <div>
+            <p className="font-semibold text-sm">
+              {isFr ? "Analyses VIP Telegram" : "VIP Analysis on Telegram"}
+            </p>
+            <p className="text-amber-100 text-xs">@pronofootaivip</p>
+          </div>
+          <span className="ml-auto">→</span>
+        </a>
+      </div>
 
       {/* Bottom CTA */}
       <div className="text-center">

@@ -17,7 +17,8 @@ export const siteConfig = {
   ogImage: "/images/og-default.png",
   twitterHandle: "@pronofootai",
   // Social
-  telegram: "https://t.me/pronofootai",
+  telegram: "https://t.me/pronofootai",          // free tips channel
+  telegramVip: "https://t.me/pronofootaivip",     // VIP tips channel
   // VIP
   vipPrice: {
     weekly: 3, // USD
