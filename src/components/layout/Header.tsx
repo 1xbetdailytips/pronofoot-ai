@@ -14,6 +14,7 @@ import {
   BarChart3,
   Globe,
 } from "lucide-react";
+import AuthButton from "@/components/auth/AuthButton";
 
 type HeaderProps = {
   locale: string;
@@ -91,6 +92,9 @@ export default function Header({ locale, translations: t }: HeaderProps) {
               <Globe className="w-4 h-4" />
               {otherLocale.toUpperCase()}
             </Link>
+
+            {/* Auth */}
+            <AuthButton locale={locale} />
           </nav>
 
           {/* Mobile menu button */}
@@ -135,6 +139,9 @@ export default function Header({ locale, translations: t }: HeaderProps) {
                 <Globe className="w-5 h-5" />
                 {locale === "fr" ? "Switch to English" : "Passer au Francais"}
               </Link>
+              <div className="px-1 pt-2 border-t border-gray-100 mt-1">
+                <AuthButton locale={locale} />
+              </div>
             </nav>
           </div>
         )}
