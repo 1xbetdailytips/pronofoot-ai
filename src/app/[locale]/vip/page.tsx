@@ -218,7 +218,7 @@ export default async function VIPPage({
             { icon: "🤖", text: isFr ? "IA Claude (Anthropic)" : "Claude AI (Anthropic)" },
             { icon: "⚽", text: isFr ? "500+ stats par match" : "500+ stats per match" },
             { icon: "⏰", text: isFr ? "Livraison 7h–8h chaque matin" : "Delivered 7–8 AM daily" },
-            { icon: "🇨🇲", text: isFr ? "Paiement MTN MoMo" : "MTN MoMo payment" },
+            { icon: "🇨🇲", text: isFr ? "MTN MoMo & Orange Money" : "MTN MoMo & Orange Money" },
             { icon: "📊", text: isFr ? "Taux de réussite suivi en direct" : "Win rate tracked live" },
           ].map(({ icon, text }) => (
             <div key={text} className="flex items-center gap-2">
@@ -281,11 +281,19 @@ export default async function VIPPage({
                 ))}
               </ul>
 
-              <button className="w-full bg-gray-900 hover:bg-gray-800 text-white font-bold py-4 rounded-xl transition-all text-base">
-                {isFr ? "S'abonner Classique" : "Subscribe Classique"}
-              </button>
+              <a
+                href="https://t.me/pronofootadmin"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full bg-gray-900 hover:bg-gray-800 text-white font-bold py-4 rounded-xl transition-all text-base flex items-center justify-center gap-2"
+              >
+                <Send className="w-4 h-4" />
+                {isFr ? "S'abonner via Telegram" : "Subscribe via Telegram"}
+              </a>
               <p className="text-gray-400 text-xs text-center mt-3">
-                {isFr ? "Résiliable à tout moment" : "Cancel anytime"}
+                {isFr
+                  ? "Contacte @pronofootadmin • MTN MoMo ou Orange Money"
+                  : "Contact @pronofootadmin • MTN MoMo or Orange Money"}
               </p>
             </div>
           </div>
@@ -331,11 +339,19 @@ export default async function VIPPage({
                 ))}
               </ul>
 
-              <button className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-gray-900 font-bold py-4 rounded-xl transition-all text-base shadow-lg shadow-amber-500/30">
-                {isFr ? "S'abonner Elite 💎" : "Subscribe Elite 💎"}
-              </button>
+              <a
+                href="https://t.me/pronofootadmin"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-gray-900 font-bold py-4 rounded-xl transition-all text-base shadow-lg shadow-amber-500/30 flex items-center justify-center gap-2"
+              >
+                <Send className="w-4 h-4" />
+                {isFr ? "S'abonner Elite via Telegram 💎" : "Subscribe Elite via Telegram 💎"}
+              </a>
               <p className="text-gray-500 text-xs text-center mt-3">
-                {isFr ? "Résiliable à tout moment • Protection 3 pertes incluse" : "Cancel anytime • 3-loss protection included"}
+                {isFr
+                  ? "Contacte @pronofootadmin • MTN MoMo ou Orange Money • Protection 3 pertes incluse"
+                  : "Contact @pronofootadmin • MTN MoMo or Orange Money • 3-loss protection included"}
               </p>
             </div>
           </div>
@@ -495,8 +511,8 @@ export default async function VIPPage({
               {
                 step: "1",
                 icon: MessageCircle,
-                title: isFr ? "Abonnez-vous" : "Subscribe",
-                desc: isFr ? "Choisissez Classique ou Elite et payez via MTN MoMo" : "Pick Classique or Elite and pay via MTN MoMo",
+                title: isFr ? "Contactez-nous" : "Contact us",
+                desc: isFr ? "Écrivez à @pronofootadmin sur Telegram pour choisir votre formule" : "Message @pronofootadmin on Telegram to pick your plan",
               },
               {
                 step: "2",
