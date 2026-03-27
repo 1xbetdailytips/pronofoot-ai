@@ -1,5 +1,5 @@
 import { supabase } from "./supabase";
-import type { Fixture, Tip, MatchWithTip, DbTicket } from "./types";
+import type { Fixture, Tip, MatchWithTip, DbTicket, WinRateStats, WinRateStat, RecentResult } from "./types";
 
 // Map API-Football prediction code to our internal format
 export function mapPrediction(p: string): string {
@@ -104,6 +104,86 @@ export async function getTodaysTickets(): Promise<DbTicket[]> {
 
   if (error || !data) return [];
   return data as DbTicket[];
+}
+
+// ── Win Rate Stats ─────────────────────────────────────────────────────────
+
+function calcRate(items: RecentResult[], field: keyof RecentResult = "is_correct"): WinRateStat {
+  const valid = items.filter(r => r[field] !== null && r[field] !== undefined);
+  if (!valid.length) return { wins: 0, total: 0, rate: 0 };
+  const wins = valid.filter(r => r[field] === true).length;
+  return { wins, total: valid.length, rate: Math.round((wins / valid.length) * 100) };
+}
+
+export async function getWinRateStats(): Promise<WinRateStats> {
+  // Fetch all resolved results with fixture join
+  const { data: results } = await supabase
+    .from("results_log")
+    .select(`
+      id, tip_id, fixture_id, prediction, actual_result, is_correct,
+      home_score, away_score, total_goals,
+      over25_correct, over15_correct, btts_correct,
+      best_pick, best_pick_correct,
+      confidence, risk_level, match_date, logged_at,
+      fixtures(home_team, away_team, league_name)
+    `)
+    .order("logged_at", { ascending: false });
+
+  // Supabase FK joins return related row(s) as array — flatten to single object
+  const all: RecentResult[] = (results || []).map((r: Record<string, unknown>) => ({
+    ...r,
+    fixtures: Array.isArray(r.fixtures) ? r.fixtures[0] ?? null : r.fixtures ?? null,
+  })) as RecentResult[];
+
+  // Count pending tips (no result yet)
+  const { count: pendingCount } = await supabase
+    .from("tips")
+    .select("id", { count: "exact", head: true })
+    .is("result", null);
+
+  // Time windows
+  const now = Date.now();
+  const last7  = all.filter(r => r.logged_at && (now - new Date(r.logged_at).getTime()) < 7  * 86400000);
+  const last30 = all.filter(r => r.logged_at && (now - new Date(r.logged_at).getTime()) < 30 * 86400000);
+
+  // Confidence tiers
+  const highConf = all.filter(r => r.confidence !== null && r.confidence! >= 70);
+  const medConf  = all.filter(r => r.confidence !== null && r.confidence! >= 50 && r.confidence! < 70);
+  const lowConf  = all.filter(r => r.confidence !== null && r.confidence! < 50);
+
+  // Risk levels
+  const faible = all.filter(r => r.risk_level === "FAIBLE");
+  const moyen  = all.filter(r => r.risk_level === "MOYEN");
+  const eleve  = all.filter(r => r.risk_level === "ÉLEVÉ" || r.risk_level === "ELEVE");
+
+  // Current streak
+  let streakCount = 0;
+  let streakType: boolean | null = null;
+  for (const r of all) {
+    if (r.is_correct === null || r.is_correct === undefined) continue;
+    if (streakType === null) streakType = r.is_correct;
+    if (r.is_correct === streakType) streakCount++;
+    else break;
+  }
+
+  return {
+    overall:        calcRate(all),
+    last7days:      calcRate(last7),
+    last30days:     calcRate(last30),
+    over25:         calcRate(all, "over25_correct"),
+    over15:         calcRate(all, "over15_correct"),
+    btts:           calcRate(all, "btts_correct"),
+    bestPick:       calcRate(all, "best_pick_correct"),
+    highConfidence: calcRate(highConf),
+    medConfidence:  calcRate(medConf),
+    lowConfidence:  calcRate(lowConf),
+    faible:         calcRate(faible),
+    moyen:          calcRate(moyen),
+    eleve:          calcRate(eleve),
+    streak:         { count: streakCount, type: streakType === true ? "win" : streakType === false ? "loss" : null },
+    recentResults:  all.slice(0, 20),
+    pending:        pendingCount ?? 0,
+  };
 }
 
 // Build a MatchCard-compatible props object from a MatchWithTip

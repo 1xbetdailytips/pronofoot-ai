@@ -12,7 +12,6 @@ import {
   Bell,
   Target,
   BarChart2,
-  Clock,
   MessageCircle,
   Lock,
 } from "lucide-react";

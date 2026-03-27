@@ -11,6 +11,7 @@ import {
   FileText,
   Ticket,
   Crown,
+  BarChart3,
   Globe,
 } from "lucide-react";
 
@@ -21,6 +22,7 @@ type HeaderProps = {
     predictions: string;
     dailyReport: string;
     tickets: string;
+    stats: string;
     vip: string;
     language: string;
     siteName: string;
@@ -35,6 +37,7 @@ export default function Header({ locale, translations: t }: HeaderProps) {
     { name: t.predictions, href: `/${locale}/predictions`, icon: TrendingUp },
     { name: t.dailyReport, href: `/${locale}/rapport-du-jour`, icon: FileText },
     { name: t.tickets, href: `/${locale}/tickets`, icon: Ticket },
+    { name: t.stats, href: `/${locale}/stats`, icon: BarChart3 },
     { name: t.vip, href: `/${locale}/vip`, icon: Crown },
   ];
 

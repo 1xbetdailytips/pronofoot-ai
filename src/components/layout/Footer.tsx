@@ -11,6 +11,7 @@ type FooterProps = {
     predictions: string;
     dailyReport: string;
     tickets: string;
+    stats: string;
     vip: string;
     footerDisclaimer: string;
     responsibleGambling: string;
@@ -103,6 +104,14 @@ export default function Footer({ locale, translations: t }: FooterProps) {
                   className="hover:text-white transition-colors"
                 >
                   {t.tickets}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href={`/${locale}/stats`}
+                  className="hover:text-white transition-colors"
+                >
+                  {t.stats}
                 </Link>
               </li>
               <li>
