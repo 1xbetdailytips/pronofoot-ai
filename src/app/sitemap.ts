@@ -9,6 +9,7 @@ const STATIC_ROUTES = [
   { path: "/predictions", priority: 0.9, changeFreq: "daily" },
   { path: "/rapport-du-jour", priority: 0.9, changeFreq: "daily" },
   { path: "/tickets", priority: 0.8, changeFreq: "daily" },
+  { path: "/stats", priority: 0.8, changeFreq: "daily" },
   { path: "/vip", priority: 0.7, changeFreq: "weekly" },
 ] as const;
 

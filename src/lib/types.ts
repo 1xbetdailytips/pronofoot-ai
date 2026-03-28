@@ -54,6 +54,56 @@ export type MatchWithTip = Fixture & {
   slug: string;
 };
 
+// ── Win Rate Stats ────────────────────────────────────────────────────────────
+
+export type WinRateStat = {
+  wins: number;
+  total: number;
+  rate: number; // 0–100
+};
+
+export type RecentResult = {
+  id: number;
+  tip_id: number;
+  fixture_id: number;
+  prediction: string;
+  actual_result: string;
+  is_correct: boolean;
+  home_score: number;
+  away_score: number;
+  total_goals: number | null;
+  over25_correct: boolean | null;
+  over15_correct: boolean | null;
+  btts_correct: boolean | null;
+  best_pick: string | null;
+  best_pick_correct: boolean | null;
+  confidence: number | null;
+  risk_level: string | null;
+  match_date: string | null;
+  logged_at: string | null;
+  // joined
+  fixtures?: { home_team: string; away_team: string; league_name: string } | null;
+};
+
+export type WinRateStats = {
+  overall: WinRateStat;
+  last7days: WinRateStat;
+  last30days: WinRateStat;
+  over25: WinRateStat;
+  over15: WinRateStat;
+  btts: WinRateStat;
+  bestPick: WinRateStat;
+  highConfidence: WinRateStat;
+  medConfidence: WinRateStat;
+  lowConfidence: WinRateStat;
+  faible: WinRateStat;
+  moyen: WinRateStat;
+  eleve: WinRateStat;
+  streak: { count: number; type: 'win' | 'loss' | null };
+  recentResults: RecentResult[];
+  pending: number;
+};
+
 export type DbTicket = {
   id: string;
   date: string;

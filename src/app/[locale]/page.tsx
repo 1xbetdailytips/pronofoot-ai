@@ -11,7 +11,7 @@ import {
 import AffiliateCTA from "@/components/ui/AffiliateCTA";
 import MatchCard from "@/components/predictions/MatchCard";
 import { siteConfig } from "@/lib/config";
-import { getTodaysMatches, getTodaysTickets, matchToCardProps } from "@/lib/data";
+import { getTodaysMatches, getTodaysTickets, matchToCardProps, getWinRateStats } from "@/lib/data";
 
 export default async function HomePage({
   params,
@@ -23,9 +23,10 @@ export default async function HomePage({
   const locale = params.locale;
   const isFr = locale === "fr";
 
-  const [matches, tickets] = await Promise.all([
+  const [matches, tickets, winStats] = await Promise.all([
     getTodaysMatches(),
     getTodaysTickets(),
+    getWinRateStats(),
   ]);
 
   const topMatches = matches.slice(0, 4);
@@ -79,7 +80,9 @@ export default async function HomePage({
 
           <div className="grid grid-cols-3 gap-4 mt-12 max-w-md">
             <div className="text-center">
-              <p className="text-3xl font-bold text-white">73%</p>
+              <p className="text-3xl font-bold text-white">
+                {winStats.overall.total > 0 ? `${winStats.overall.rate}%` : "—"}
+              </p>
               <p className="text-emerald-200 text-sm">{t("statsWinRate")}</p>
             </div>
             <div className="text-center">
