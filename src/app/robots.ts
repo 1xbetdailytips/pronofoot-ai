@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { siteConfig } from "@/lib/config";
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -6,9 +7,9 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        disallow: ["/admin/", "/api/"],
+        disallow: ["/admin/", "/api/", "/*/login", "/*/compte"],
       },
     ],
-    sitemap: "https://parifoot.online/sitemap.xml",
+    sitemap: `${siteConfig.url}/sitemap.xml`,
   };
 }

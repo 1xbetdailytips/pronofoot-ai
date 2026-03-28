@@ -36,6 +36,7 @@ export async function generateMetadata({
       languages: {
         fr: "/fr",
         en: "/en",
+        "x-default": "/fr",
       },
     },
     openGraph: {
@@ -45,6 +46,14 @@ export async function generateMetadata({
       siteName: siteConfig.name,
       locale: locale === "fr" ? "fr_FR" : "en_US",
       type: "website",
+      images: [
+        {
+          url: `${siteConfig.url}/images/og-default.png`,
+          width: 1200,
+          height: 630,
+          alt: siteConfig.name,
+        },
+      ],
     },
     twitter: {
       card: "summary_large_image",
@@ -81,17 +90,40 @@ export default async function LocaleLayout({
   return (
     <html lang={locale}>
       <head>
-        {/* JSON-LD Organization Schema */}
+        {/* JSON-LD: Organization + WebSite Schema */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",
-              "@type": "Organization",
-              name: siteConfig.name,
-              url: siteConfig.url,
-              description: siteConfig.description[locale as "fr" | "en"],
-              sameAs: [siteConfig.telegram],
+              "@graph": [
+                {
+                  "@type": "Organization",
+                  "@id": `${siteConfig.url}/#organization`,
+                  name: siteConfig.name,
+                  url: siteConfig.url,
+                  logo: `${siteConfig.url}/images/logo.png`,
+                  description: siteConfig.description[locale as "fr" | "en"],
+                  sameAs: [
+                    siteConfig.telegram,
+                    "https://twitter.com/pronofootai",
+                  ],
+                  contactPoint: {
+                    "@type": "ContactPoint",
+                    contactType: "customer service",
+                    availableLanguage: ["French", "English"],
+                    url: "https://t.me/pronofootadmin",
+                  },
+                },
+                {
+                  "@type": "WebSite",
+                  "@id": `${siteConfig.url}/#website`,
+                  name: siteConfig.name,
+                  url: siteConfig.url,
+                  publisher: { "@id": `${siteConfig.url}/#organization` },
+                  inLanguage: ["fr", "en"],
+                },
+              ],
             }),
           }}
         />

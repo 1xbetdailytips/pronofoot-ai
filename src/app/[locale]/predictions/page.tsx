@@ -14,11 +14,19 @@ export function generateMetadata({
   const isFr = params.locale === "fr";
   return {
     title: isFr
-      ? "Pronostics Football Aujourd'hui - Predictions IA"
+      ? "Pronostics Football Aujourd'hui - Prédictions IA"
       : "Football Predictions Today - AI Predictions",
     description: isFr
-      ? "Pronostics football du jour par intelligence artificielle. Analyses detaillees, cotes, et scores prevus pour chaque match."
+      ? "Pronostics football du jour par intelligence artificielle. Analyses détaillées, cotes, et scores prévus pour chaque match."
       : "Today's AI football predictions. Detailed analysis, odds, and predicted scores for every match.",
+    alternates: {
+      canonical: `/${params.locale}/predictions`,
+      languages: {
+        fr: "/fr/predictions",
+        en: "/en/predictions",
+        "x-default": "/fr/predictions",
+      },
+    },
   };
 }
 

@@ -31,6 +31,14 @@ export function generateMetadata({
     description: isFr
       ? "Deux formules VIP pour tous les budgets. Codes 1xBet prêts chaque matin, analyses IA, picks Over 1.5, alertes live. À partir de 2 500 FCFA/semaine."
       : "Two VIP plans for every budget. Ready 1xBet codes every morning, AI analysis, Over 1.5 picks, live alerts. From 2,500 FCFA/week.",
+    alternates: {
+      canonical: `/${params.locale}/vip`,
+      languages: {
+        fr: "/fr/vip",
+        en: "/en/vip",
+        "x-default": "/fr/vip",
+      },
+    },
   };
 }
 

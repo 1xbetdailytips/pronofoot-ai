@@ -1,0 +1,25 @@
+# PronoFoot AI
+
+> AI-powered football predictions platform for French-speaking Africa. Uses machine learning to analyze 500+ statistics per match and generate daily betting predictions.
+
+## About
+
+PronoFoot AI is a football match analysis platform built on artificial intelligence. Based in Cameroon, we serve French-speaking Africa with daily predictions, 1xBet ticket codes, and performance-tracked AI analysis.
+
+## Key Pages
+
+- [Daily Predictions](https://www.parifoot.online/fr/predictions): AI-generated football match predictions updated every morning
+- [AI Performance Stats](https://www.parifoot.online/fr/stats): Complete transparency on our AI's win rate, by confidence tier and market
+- [Daily Report](https://www.parifoot.online/fr/rapport-du-jour): Best value bet, safest bet, underdog pick, and accumulator of the day
+- [1xBet Ticket Codes](https://www.parifoot.online/fr/tickets): Ready-to-use booking codes for 1xBet
+- [VIP Plans](https://www.parifoot.online/fr/vip): Premium subscription with 5 daily codes (Classic & Elite tiers)
+- [Responsible Gambling](https://www.parifoot.online/fr/responsible-gambling): Our commitment to responsible gambling
+
+## Leagues Covered
+
+Cameroon MTN Elite One, CAF Champions League, Africa Cup of Nations, Premier League, La Liga, Ligue 1, Serie A, Bundesliga, Champions League, Europa League
+
+## Contact
+
+- Telegram: https://t.me/pronofootai
+- Admin: https://t.me/pronofootadmin

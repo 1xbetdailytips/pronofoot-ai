@@ -48,7 +48,7 @@ export default async function HomePage({
               <Zap className="w-4 h-4 text-amber-400" />
               <span className="text-white/90 text-sm font-medium">
                 {isFr
-                  ? "Alimente par l'Intelligence Artificielle"
+                  ? "Alimenté par l'Intelligence Artificielle"
                   : "Powered by Artificial Intelligence"}
               </span>
             </div>
@@ -92,8 +92,10 @@ export default async function HomePage({
               <p className="text-emerald-200 text-sm">{t("statsMatches")}</p>
             </div>
             <div className="text-center">
-              <p className="text-3xl font-bold text-white">1.2K</p>
-              <p className="text-emerald-200 text-sm">{t("statsMembers")}</p>
+              <p className="text-3xl font-bold text-white">
+                {winStats.overall.total > 0 ? winStats.overall.total : "—"}
+              </p>
+              <p className="text-emerald-200 text-sm">{t("statsPredictions")}</p>
             </div>
           </div>
         </div>
@@ -257,11 +259,11 @@ export default async function HomePage({
           <div className="max-w-3xl mx-auto text-center">
             <Crown className="w-12 h-12 text-amber-400 mx-auto mb-4" />
             <h2 className="text-3xl font-bold text-white mb-4">
-              {isFr ? "Passez au Niveau Superieur" : "Level Up Your Betting"}
+              {isFr ? "Passez au Niveau Supérieur" : "Level Up Your Betting"}
             </h2>
             <p className="text-gray-400 mb-8">
               {isFr
-                ? "5 codes tickets premium par jour. Des paris surs aux cotes extremes. Annulez a tout moment."
+                ? "5 codes tickets premium par jour. Des paris sûrs aux cotes extrêmes. Annulez à tout moment."
                 : "5 premium ticket codes daily. From safe bets to extreme odds. Cancel anytime."}
             </p>
 
@@ -318,7 +320,7 @@ export default async function HomePage({
                 </p>
                 <p className="text-blue-100 text-sm">
                   {isFr
-                    ? "Pronostics gratuits et alertes en temps reel"
+                    ? "Pronostics gratuits et alertes en temps réel"
                     : "Free predictions and real-time alerts"}
                 </p>
               </div>

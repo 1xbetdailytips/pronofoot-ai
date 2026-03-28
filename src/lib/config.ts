@@ -5,7 +5,7 @@
 export const siteConfig = {
   name: "PronoFoot AI",
   domain: "parifoot.online",
-  url: process.env.NEXT_PUBLIC_SITE_URL || "https://parifoot.online",
+  url: process.env.NEXT_PUBLIC_SITE_URL || "https://www.parifoot.online",
   description: {
     en: "AI-powered football predictions, daily betting tips, and ready-to-use 1xBet ticket codes. Smart analysis for smarter bets.",
     fr: "Pronostics football par IA, tips quotidiens et codes tickets 1xBet prets a l'emploi. Des analyses intelligentes pour des paris plus intelligents.",

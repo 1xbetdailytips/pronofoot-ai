@@ -12,6 +12,14 @@ export function generateMetadata({ params }: { params: { locale: string } }): Me
     description: isFr
       ? "Statistiques complètes de performance de notre IA : taux de réussite global, par confiance, par marché. Transparence totale."
       : "Complete AI performance statistics: overall win rate, by confidence tier, by market. Full transparency.",
+    alternates: {
+      canonical: `/${params.locale}/stats`,
+      languages: {
+        fr: "/fr/stats",
+        en: "/en/stats",
+        "x-default": "/fr/stats",
+      },
+    },
   };
 }
 

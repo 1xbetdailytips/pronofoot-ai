@@ -144,6 +144,14 @@ export function generateMetadata({
     description: isFr
       ? "Rapport quotidien de paris sportifs par IA. Meilleur pari value, pari le plus sûr, meilleur outsider et combiné du jour."
       : "Daily AI betting report. Best value bet, safest bet, best underdog and accumulator of the day.",
+    alternates: {
+      canonical: `/${params.locale}/rapport-du-jour`,
+      languages: {
+        fr: "/fr/rapport-du-jour",
+        en: "/en/rapport-du-jour",
+        "x-default": "/fr/rapport-du-jour",
+      },
+    },
   };
 }
 

@@ -14,8 +14,16 @@ export function generateMetadata({
   return {
     title: isFr ? "Codes Ticket 1xBet Gratuit" : "Free 1xBet Ticket Codes",
     description: isFr
-      ? "Codes de reservation 1xBet prets a l'emploi. Copiez le code, collez-le dans 1xBet et votre coupon se charge automatiquement."
+      ? "Codes de réservation 1xBet prêts à l'emploi. Copiez le code, collez-le dans 1xBet et votre coupon se charge automatiquement."
       : "Ready-to-use 1xBet booking codes. Copy the code, paste it in 1xBet and your bet slip loads automatically.",
+    alternates: {
+      canonical: `/${params.locale}/tickets`,
+      languages: {
+        fr: "/fr/tickets",
+        en: "/en/tickets",
+        "x-default": "/fr/tickets",
+      },
+    },
   };
 }
 

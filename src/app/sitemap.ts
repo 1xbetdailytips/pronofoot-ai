@@ -1,7 +1,8 @@
 import { createClient } from "@supabase/supabase-js";
 import type { MetadataRoute } from "next";
+import { siteConfig } from "@/lib/config";
 
-const BASE_URL = "https://parifoot.online";
+const BASE_URL = siteConfig.url;
 const LOCALES = ["fr", "en"];
 
 const STATIC_ROUTES = [
@@ -11,6 +12,9 @@ const STATIC_ROUTES = [
   { path: "/tickets", priority: 0.8, changeFreq: "daily" },
   { path: "/stats", priority: 0.8, changeFreq: "daily" },
   { path: "/vip", priority: 0.7, changeFreq: "weekly" },
+  { path: "/responsible-gambling", priority: 0.3, changeFreq: "monthly" },
+  { path: "/terms", priority: 0.3, changeFreq: "monthly" },
+  { path: "/privacy", priority: 0.3, changeFreq: "monthly" },
 ] as const;
 
 function toSlug(text: string): string {
@@ -26,19 +30,25 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
   const entries: MetadataRoute.Sitemap = [];
 
-  // ── Static pages (both locales) ──────────────────────────────────────────
-  for (const locale of LOCALES) {
-    for (const route of STATIC_ROUTES) {
+  // ── Static pages (both locales) with hreflang alternates ──────────────
+  for (const route of STATIC_ROUTES) {
+    for (const locale of LOCALES) {
       entries.push({
         url: `${BASE_URL}/${locale}${route.path}`,
         lastModified: now,
         changeFrequency: route.changeFreq,
         priority: route.priority,
+        alternates: {
+          languages: {
+            fr: `${BASE_URL}/fr${route.path}`,
+            en: `${BASE_URL}/en${route.path}`,
+          },
+        },
       });
     }
   }
 
-  // ── Dynamic prediction pages ─────────────────────────────────────────────
+  // ── Dynamic prediction pages ─────────────────────────────────────────
   try {
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -50,14 +60,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     const { data: fixtures } = await supabase
       .from("fixtures")
-      .select("home_team, away_team, match_date")
+      .select("id, home_team, away_team, match_date")
       .gte("match_date", cutoff)
       .order("match_date", { ascending: false })
       .limit(200);
 
     if (fixtures) {
       for (const f of fixtures) {
-        const slug = `${toSlug(f.home_team)}-vs-${toSlug(f.away_team)}`;
+        const slug = `${toSlug(f.home_team)}-vs-${toSlug(f.away_team)}-${f.id}`;
         const lastMod = new Date(f.match_date);
         for (const locale of LOCALES) {
           entries.push({
@@ -65,6 +75,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             lastModified: lastMod,
             changeFrequency: "daily",
             priority: 0.6,
+            alternates: {
+              languages: {
+                fr: `${BASE_URL}/fr/predictions/${slug}`,
+                en: `${BASE_URL}/en/predictions/${slug}`,
+              },
+            },
           });
         }
       }
