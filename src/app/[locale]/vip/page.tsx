@@ -683,34 +683,97 @@ export default async function VIPPage({
         </div>
       </section>
 
-      {/* ── JSON-LD ──────────────────────────────────────────────────────── */}
+      {/* ── FAQ SECTION ────────────────────────────────────────────────── */}
+      <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <h2 className="text-2xl font-extrabold text-gray-900 text-center mb-10">
+          {isFr ? "Questions Fréquentes" : "Frequently Asked Questions"}
+        </h2>
+        <div className="space-y-4">
+          {(isFr ? [
+            { q: "Comment fonctionne PronoFoot AI ?", a: "Notre intelligence artificielle analyse plus de 500 statistiques par match chaque matin : forme récente, confrontations directes, classements, données tactiques et bien plus. Elle génère ensuite des pronostics avec un niveau de confiance et des codes tickets 1xBet prêts à l'emploi." },
+            { q: "Quels sont les modes de paiement acceptés ?", a: "Nous acceptons MTN Mobile Money et Orange Money. Le paiement se fait directement via notre système Campay sécurisé. Vous recevez l'activation VIP dans les minutes suivant la confirmation du paiement." },
+            { q: "Puis-je annuler mon abonnement à tout moment ?", a: "Oui, il n'y a aucun engagement. Votre abonnement expire automatiquement à la fin de la période payée (semaine ou mois). Aucun renouvellement automatique." },
+            { q: "Quel est le taux de réussite de l'IA ?", a: "Notre taux de réussite varie selon le marché et le niveau de confiance. Consultez notre page Statistiques pour voir les résultats en temps réel avec une transparence totale — chaque prédiction est enregistrée et vérifiée." },
+            { q: "Comment utiliser un code ticket 1xBet ?", a: "C'est simple : copiez le code de réservation fourni, ouvrez 1xBet, allez dans votre coupon, cliquez sur 'Charger par code' et collez le code. Votre coupon complet avec tous les matchs et les cotes se charge automatiquement." },
+          ] : [
+            { q: "How does PronoFoot AI work?", a: "Our artificial intelligence analyzes over 500 statistics per match every morning: recent form, head-to-head records, standings, tactical data and more. It then generates predictions with a confidence level and ready-to-use 1xBet ticket codes." },
+            { q: "What payment methods are accepted?", a: "We accept MTN Mobile Money and Orange Money. Payment is made directly through our secure Campay system. You receive VIP activation within minutes of payment confirmation." },
+            { q: "Can I cancel my subscription at any time?", a: "Yes, there is no commitment. Your subscription expires automatically at the end of the paid period (week or month). No automatic renewal." },
+            { q: "What is the AI success rate?", a: "Our success rate varies by market and confidence level. Check our Statistics page for real-time results with full transparency — every prediction is recorded and verified." },
+            { q: "How do I use a 1xBet ticket code?", a: "It's simple: copy the booking code provided, open 1xBet, go to your bet slip, click 'Load by code' and paste the code. Your complete slip with all matches and odds loads automatically." },
+          ]).map(({ q, a }, i) => (
+            <details key={i} className="bg-white border border-gray-200 rounded-xl group">
+              <summary className="px-6 py-4 cursor-pointer font-bold text-gray-900 flex items-center justify-between hover:bg-gray-50 rounded-xl">
+                {q}
+                <span className="text-gray-400 group-open:rotate-45 transition-transform text-xl">+</span>
+              </summary>
+              <div className="px-6 pb-4 text-gray-600 text-sm leading-relaxed">
+                {a}
+              </div>
+            </details>
+          ))}
+        </div>
+      </section>
+
+      {/* ── JSON-LD: Product + FAQPage + BreadcrumbList ────────────────── */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             "@context": "https://schema.org",
-            "@type": "Product",
-            name: "PronoFoot AI VIP",
-            description: isFr
-              ? "Codes tickets 1xBet quotidiens générés par IA, analyses Over 1.5, picks Over 0.5, alertes live"
-              : "Daily AI-generated 1xBet ticket codes, Over 1.5 analysis, Over 0.5 picks, live alerts",
-            brand: { "@type": "Brand", name: "PronoFoot AI" },
-            offers: [
+            "@graph": [
               {
-                "@type": "Offer",
-                name: "VIP Classique",
-                price: "8000",
-                priceCurrency: "XAF",
-                priceValidUntil: "2026-12-31",
-                availability: "https://schema.org/InStock",
+                "@type": "Product",
+                name: "PronoFoot AI VIP",
+                description: isFr
+                  ? "Codes tickets 1xBet quotidiens générés par IA, analyses Over 1.5, picks Over 0.5, alertes live"
+                  : "Daily AI-generated 1xBet ticket codes, Over 1.5 analysis, Over 0.5 picks, live alerts",
+                brand: { "@type": "Brand", name: "PronoFoot AI" },
+                offers: [
+                  {
+                    "@type": "Offer",
+                    name: "VIP Classique",
+                    price: "8000",
+                    priceCurrency: "XAF",
+                    priceValidUntil: "2026-12-31",
+                    availability: "https://schema.org/InStock",
+                  },
+                  {
+                    "@type": "Offer",
+                    name: "VIP Elite",
+                    price: "15000",
+                    priceCurrency: "XAF",
+                    priceValidUntil: "2026-12-31",
+                    availability: "https://schema.org/InStock",
+                  },
+                ],
               },
               {
-                "@type": "Offer",
-                name: "VIP Elite",
-                price: "15000",
-                priceCurrency: "XAF",
-                priceValidUntil: "2026-12-31",
-                availability: "https://schema.org/InStock",
+                "@type": "FAQPage",
+                mainEntity: (isFr ? [
+                  { q: "Comment fonctionne PronoFoot AI ?", a: "Notre intelligence artificielle analyse plus de 500 statistiques par match chaque matin : forme récente, confrontations directes, classements, données tactiques et bien plus. Elle génère ensuite des pronostics avec un niveau de confiance et des codes tickets 1xBet prêts à l'emploi." },
+                  { q: "Quels sont les modes de paiement acceptés ?", a: "Nous acceptons MTN Mobile Money et Orange Money. Le paiement se fait directement via notre système Campay sécurisé. Vous recevez l'activation VIP dans les minutes suivant la confirmation du paiement." },
+                  { q: "Puis-je annuler mon abonnement à tout moment ?", a: "Oui, il n'y a aucun engagement. Votre abonnement expire automatiquement à la fin de la période payée (semaine ou mois). Aucun renouvellement automatique." },
+                  { q: "Quel est le taux de réussite de l'IA ?", a: "Notre taux de réussite varie selon le marché et le niveau de confiance. Consultez notre page Statistiques pour voir les résultats en temps réel avec une transparence totale." },
+                  { q: "Comment utiliser un code ticket 1xBet ?", a: "Copiez le code de réservation fourni, ouvrez 1xBet, allez dans votre coupon, cliquez sur 'Charger par code' et collez le code. Votre coupon complet se charge automatiquement." },
+                ] : [
+                  { q: "How does PronoFoot AI work?", a: "Our artificial intelligence analyzes over 500 statistics per match every morning: recent form, head-to-head records, standings, tactical data and more. It then generates predictions with a confidence level and ready-to-use 1xBet ticket codes." },
+                  { q: "What payment methods are accepted?", a: "We accept MTN Mobile Money and Orange Money. Payment is made directly through our secure Campay system. You receive VIP activation within minutes of payment confirmation." },
+                  { q: "Can I cancel my subscription at any time?", a: "Yes, there is no commitment. Your subscription expires automatically at the end of the paid period (week or month). No automatic renewal." },
+                  { q: "What is the AI success rate?", a: "Our success rate varies by market and confidence level. Check our Statistics page for real-time results with full transparency." },
+                  { q: "How do I use a 1xBet ticket code?", a: "Copy the booking code provided, open 1xBet, go to your bet slip, click 'Load by code' and paste the code. Your complete slip loads automatically." },
+                ]).map(({ q, a }) => ({
+                  "@type": "Question",
+                  name: q,
+                  acceptedAnswer: { "@type": "Answer", text: a },
+                })),
+              },
+              {
+                "@type": "BreadcrumbList",
+                itemListElement: [
+                  { "@type": "ListItem", position: 1, name: isFr ? "Accueil" : "Home", item: `${siteConfig.url}/${locale}` },
+                  { "@type": "ListItem", position: 2, name: "VIP", item: `${siteConfig.url}/${locale}/vip` },
+                ],
               },
             ],
           }),

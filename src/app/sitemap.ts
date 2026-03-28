@@ -1,6 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import type { MetadataRoute } from "next";
-import { siteConfig } from "@/lib/config";
+import { siteConfig, COVERED_LEAGUES } from "@/lib/config";
 
 const BASE_URL = siteConfig.url;
 const LOCALES = ["fr", "en"];
@@ -12,6 +12,7 @@ const STATIC_ROUTES = [
   { path: "/tickets", priority: 0.8, changeFreq: "daily" },
   { path: "/stats", priority: 0.8, changeFreq: "daily" },
   { path: "/vip", priority: 0.7, changeFreq: "weekly" },
+  { path: "/blog", priority: 0.8, changeFreq: "daily" },
   { path: "/responsible-gambling", priority: 0.3, changeFreq: "monthly" },
   { path: "/terms", priority: 0.3, changeFreq: "monthly" },
   { path: "/privacy", priority: 0.3, changeFreq: "monthly" },
@@ -42,6 +43,25 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           languages: {
             fr: `${BASE_URL}/fr${route.path}`,
             en: `${BASE_URL}/en${route.path}`,
+          },
+        },
+      });
+    }
+  }
+
+  // ── League landing pages ────────────────────────────────────────────
+  for (const league of COVERED_LEAGUES) {
+    const leagueSlug = toSlug(league.name);
+    for (const locale of LOCALES) {
+      entries.push({
+        url: `${BASE_URL}/${locale}/ligue/${leagueSlug}`,
+        lastModified: now,
+        changeFrequency: "daily",
+        priority: 0.7,
+        alternates: {
+          languages: {
+            fr: `${BASE_URL}/fr/ligue/${leagueSlug}`,
+            en: `${BASE_URL}/en/ligue/${leagueSlug}`,
           },
         },
       });
@@ -87,6 +107,43 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
   } catch {
     // Non-blocking — static pages still included
+  }
+
+  // ── Blog articles ──────────────────────────────────────────────────
+  try {
+    const supabaseBlog = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    );
+
+    const { data: articles } = await supabaseBlog
+      .from("seo_articles")
+      .select("slug, published_at")
+      .eq("published", true)
+      .order("published_at", { ascending: false })
+      .limit(200);
+
+    if (articles) {
+      for (const a of articles) {
+        const lastMod = new Date(a.published_at);
+        for (const locale of LOCALES) {
+          entries.push({
+            url: `${BASE_URL}/${locale}/blog/${a.slug}`,
+            lastModified: lastMod,
+            changeFrequency: "weekly",
+            priority: 0.7,
+            alternates: {
+              languages: {
+                fr: `${BASE_URL}/fr/blog/${a.slug}`,
+                en: `${BASE_URL}/en/blog/${a.slug}`,
+              },
+            },
+          });
+        }
+      }
+    }
+  } catch {
+    // Non-blocking
   }
 
   return entries;

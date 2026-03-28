@@ -138,6 +138,7 @@ export default async function LocaleLayout({
               dailyReport: common.dailyReport,
               tickets: common.tickets,
               stats: common.stats,
+              blog: common.blog,
               vip: common.vip,
               language: common.language,
               siteName: common.siteName,

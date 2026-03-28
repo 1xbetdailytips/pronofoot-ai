@@ -34,6 +34,14 @@ export async function generateMetadata({
   return {
     title,
     description: desc,
+    alternates: {
+      canonical: `/${params.locale}/predictions/${params.slug}`,
+      languages: {
+        fr: `/fr/predictions/${params.slug}`,
+        en: `/en/predictions/${params.slug}`,
+        "x-default": `/fr/predictions/${params.slug}`,
+      },
+    },
     openGraph: {
       title,
       description: desc,
@@ -469,18 +477,32 @@ export default async function MatchDetailPage({
         </Link>
       </div>
 
-      {/* JSON-LD SportsEvent Schema */}
+      {/* JSON-LD: SportsEvent + BreadcrumbList */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             "@context": "https://schema.org",
-            "@type": "SportsEvent",
-            name: `${match.home_team} vs ${match.away_team}`,
-            startDate: match.match_date,
-            homeTeam: { "@type": "SportsTeam", name: match.home_team },
-            awayTeam: { "@type": "SportsTeam", name: match.away_team },
-            organizer: { "@type": "Organization", name: match.league_name },
+            "@graph": [
+              {
+                "@type": "SportsEvent",
+                name: `${match.home_team} vs ${match.away_team}`,
+                startDate: match.match_date,
+                homeTeam: { "@type": "SportsTeam", name: match.home_team },
+                awayTeam: { "@type": "SportsTeam", name: match.away_team },
+                organizer: { "@type": "SportsOrganization", name: match.league_name },
+                description: tip?.ai_analysis || `${isFr ? "Pronostic IA pour" : "AI prediction for"} ${match.home_team} vs ${match.away_team}`,
+                eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+              },
+              {
+                "@type": "BreadcrumbList",
+                itemListElement: [
+                  { "@type": "ListItem", position: 1, name: isFr ? "Accueil" : "Home", item: `${siteConfig.url}/${locale}` },
+                  { "@type": "ListItem", position: 2, name: isFr ? "Pronostics" : "Predictions", item: `${siteConfig.url}/${locale}/predictions` },
+                  { "@type": "ListItem", position: 3, name: `${match.home_team} vs ${match.away_team}` },
+                ],
+              },
+            ],
           }),
         }}
       />

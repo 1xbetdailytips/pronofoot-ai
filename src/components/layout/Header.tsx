@@ -12,6 +12,7 @@ import {
   Ticket,
   Crown,
   BarChart3,
+  BookOpen,
   Globe,
 } from "lucide-react";
 import AuthButton from "@/components/auth/AuthButton";
@@ -24,6 +25,7 @@ type HeaderProps = {
     dailyReport: string;
     tickets: string;
     stats: string;
+    blog: string;
     vip: string;
     language: string;
     siteName: string;
@@ -39,6 +41,7 @@ export default function Header({ locale, translations: t }: HeaderProps) {
     { name: t.dailyReport, href: `/${locale}/rapport-du-jour`, icon: FileText },
     { name: t.tickets, href: `/${locale}/tickets`, icon: Ticket },
     { name: t.stats, href: `/${locale}/stats`, icon: BarChart3 },
+    { name: t.blog, href: `/${locale}/blog`, icon: BookOpen },
     { name: t.vip, href: `/${locale}/vip`, icon: Crown },
   ];
 
