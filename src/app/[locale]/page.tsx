@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import {
@@ -10,6 +11,8 @@ import {
 } from "lucide-react";
 import AffiliateCTA from "@/components/ui/AffiliateCTA";
 import MatchCard from "@/components/predictions/MatchCard";
+import SpinWheel from "@/components/spin/SpinWheel";
+import ReferralTracker from "@/components/spin/ReferralTracker";
 import { siteConfig } from "@/lib/config";
 import { getTodaysMatches, getTodaysTickets, matchToCardProps, getWinRateStats } from "@/lib/data";
 
@@ -209,6 +212,14 @@ export default async function HomePage({
         </div>
       </section>
 
+      {/* ============ SPIN WHEEL ============ */}
+      <SpinWheel locale={locale} />
+
+      {/* ============ REFERRAL TRACKER (handles ?ref= param) ============ */}
+      <Suspense fallback={null}>
+        <ReferralTracker locale={locale} />
+      </Suspense>
+
       {/* ============ FEATURES GRID ============ */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -269,13 +280,13 @@ export default async function HomePage({
 
             <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-8 mb-8">
               <div className="text-5xl font-bold text-white mb-2">
-                {isFr ? "1 800 FCFA" : "$3"}
+                {isFr ? `${siteConfig.vipPrice.classique.weeklyFcfa.toLocaleString()} FCFA` : `$${siteConfig.vipPrice.classique.weeklyUsd}`}
                 <span className="text-lg text-gray-400 font-normal">
                   /{isFr ? "semaine" : "week"}
                 </span>
               </div>
               <p className="text-gray-400 text-sm">
-                {isFr ? "~$3 USD/semaine" : "~1,800 FCFA/week"}
+                {isFr ? `~$${siteConfig.vipPrice.classique.weeklyUsd} USD/semaine` : `~${siteConfig.vipPrice.classique.weeklyFcfa.toLocaleString()} FCFA/week`}
               </p>
             </div>
 
