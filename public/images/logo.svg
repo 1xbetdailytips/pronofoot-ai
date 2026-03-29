@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <defs>
+    <!-- Shield gradient -->
+    <linearGradient id="shieldGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#10B981"/>
+      <stop offset="100%" stop-color="#047857"/>
+    </linearGradient>
+    <!-- Inner shine -->
+    <linearGradient id="shine" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="rgba(255,255,255,0.15)"/>
+      <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+    </linearGradient>
+    <!-- Gold accent gradient -->
+    <linearGradient id="goldGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FBBF24"/>
+      <stop offset="100%" stop-color="#F59E0B"/>
+    </linearGradient>
+    <!-- AI circuit glow -->
+    <linearGradient id="circuitGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#34D399"/>
+      <stop offset="100%" stop-color="#6EE7B7"/>
+    </linearGradient>
+    <!-- Drop shadow -->
+    <filter id="shadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#047857" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+
+  <!-- Shield shape — rounded crest -->
+  <path d="M256 28 C160 28, 72 60, 72 60 L72 240 C72 340, 160 440, 256 484 C352 440, 440 340, 440 240 L440 60 C440 60, 352 28, 256 28Z" fill="url(#shieldGrad)" filter="url(#shadow)"/>
+
+  <!-- Shield border -->
+  <path d="M256 28 C160 28, 72 60, 72 60 L72 240 C72 340, 160 440, 256 484 C352 440, 440 340, 440 240 L440 60 C440 60, 352 28, 256 28Z" fill="none" stroke="#059669" stroke-width="4"/>
+
+  <!-- Inner shield border (inset) -->
+  <path d="M256 48 C170 48, 92 76, 92 76 L92 236 C92 326, 170 418, 256 458 C342 418, 420 326, 420 236 L420 76 C420 76, 342 48, 256 48Z" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="2"/>
+
+  <!-- Shine overlay -->
+  <path d="M256 28 C160 28, 72 60, 72 60 L72 240 C72 340, 160 440, 256 484 C352 440, 440 340, 440 240 L440 60 C440 60, 352 28, 256 28Z" fill="url(#shine)"/>
+
+  <!-- Football (soccer ball) — center -->
+  <circle cx="256" cy="210" r="88" fill="white" stroke="rgba(0,0,0,0.08)" stroke-width="2"/>
+
+  <!-- Pentagon patches on ball -->
+  <g fill="#1a1a2e" opacity="0.85">
+    <!-- Center pentagon -->
+    <polygon points="256,180 275,192 270,214 242,214 237,192"/>
+    <!-- Top -->
+    <polygon points="256,138 268,152 256,160 244,152"/>
+    <!-- Bottom-left -->
+    <polygon points="210,232 220,220 234,226 230,242 216,242"/>
+    <!-- Bottom-right -->
+    <polygon points="302,232 292,220 278,226 282,242 296,242"/>
+    <!-- Left -->
+    <polygon points="184,186 196,178 204,192 196,204 184,200"/>
+    <!-- Right -->
+    <polygon points="328,186 316,178 308,192 316,204 328,200"/>
+  </g>
+
+  <!-- AI Neural network nodes — circuit pattern -->
+  <g stroke="url(#circuitGrad)" stroke-width="2" fill="none" opacity="0.7">
+    <!-- Left circuit lines -->
+    <line x1="130" y1="140" x2="172" y2="172"/>
+    <line x1="120" y1="200" x2="168" y2="200"/>
+    <line x1="130" y1="260" x2="172" y2="234"/>
+    <!-- Right circuit lines -->
+    <line x1="382" y1="140" x2="340" y2="172"/>
+    <line x1="392" y1="200" x2="344" y2="200"/>
+    <line x1="382" y1="260" x2="340" y2="234"/>
+  </g>
+
+  <!-- Circuit nodes (dots) -->
+  <g fill="url(#circuitGrad)">
+    <circle cx="126" cy="136" r="6"/>
+    <circle cx="116" cy="200" r="6"/>
+    <circle cx="126" cy="264" r="6"/>
+    <circle cx="386" cy="136" r="6"/>
+    <circle cx="396" cy="200" r="6"/>
+    <circle cx="386" cy="264" r="6"/>
+  </g>
+
+  <!-- AI Brain pulse — stylized signal wave above ball -->
+  <path d="M200 130 L218 130 L226 112 L234 148 L242 118 L250 138 L256 126 L262 138 L270 118 L278 148 L286 112 L294 130 L312 130" stroke="url(#goldGrad)" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Bottom banner ribbon -->
+  <path d="M120 360 L140 345 L372 345 L392 360 L372 375 L140 375Z" fill="url(#goldGrad)"/>
+  <path d="M120 360 L140 345 L372 345 L392 360 L372 375 L140 375Z" fill="none" stroke="#D97706" stroke-width="1.5"/>
+
+  <!-- "AI" text on ribbon -->
+  <text x="256" y="368" text-anchor="middle" font-family="Inter, system-ui, Arial, sans-serif" font-size="28" font-weight="800" fill="#1a1a2e" letter-spacing="4">A I</text>
+
+  <!-- Small star accents -->
+  <g fill="#FBBF24" opacity="0.9">
+    <polygon points="160,80 163,88 172,88 165,93 168,102 160,96 152,102 155,93 148,88 157,88"/>
+    <polygon points="352,80 355,88 364,88 357,93 360,102 352,96 344,102 347,93 340,88 349,88"/>
+    <polygon points="256,422 259,430 268,430 261,435 264,444 256,438 248,444 251,435 244,430 253,430"/>
+  </g>
+</svg>

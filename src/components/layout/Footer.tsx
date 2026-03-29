@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { Zap, Send, AlertTriangle } from "lucide-react";
+import { Send, AlertTriangle } from "lucide-react";
 import { siteConfig } from "@/lib/config";
+import Logo from "@/components/ui/Logo";
 
 type FooterProps = {
   locale: string;
@@ -51,13 +52,8 @@ export default function Footer({ locale, translations: t }: FooterProps) {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand */}
           <div className="md:col-span-2">
-            <div className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-emerald-700 rounded-lg flex items-center justify-center">
-                <Zap className="w-5 h-5 text-white" />
-              </div>
-              <span className="font-bold text-xl text-white">
-                Prono<span className="text-emerald-400">Foot</span> AI
-              </span>
+            <div className="mb-4">
+              <Logo size={34} variant="light" />
             </div>
             <p className="text-gray-400 text-sm max-w-md">
               {locale === "fr"

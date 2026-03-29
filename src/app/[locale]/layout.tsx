@@ -60,6 +60,13 @@ export async function generateMetadata({
       title: siteConfig.name,
       description: desc,
     },
+    icons: {
+      icon: [
+        { url: "/icon.svg", type: "image/svg+xml" },
+        { url: "/icon.png", type: "image/png", sizes: "32x32" },
+      ],
+      apple: "/apple-icon.png",
+    },
     robots: {
       index: true,
       follow: true,

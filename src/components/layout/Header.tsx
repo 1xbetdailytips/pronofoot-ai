@@ -6,7 +6,6 @@ import { useState } from "react";
 import {
   Menu,
   X,
-  Zap,
   TrendingUp,
   FileText,
   Ticket,
@@ -16,6 +15,7 @@ import {
   Globe,
 } from "lucide-react";
 import AuthButton from "@/components/auth/AuthButton";
+import Logo from "@/components/ui/Logo";
 
 type HeaderProps = {
   locale: string;
@@ -54,17 +54,8 @@ export default function Header({ locale, translations: t }: HeaderProps) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <Link
-            href={`/${locale}`}
-            className="flex items-center gap-2 font-bold text-xl"
-          >
-            <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-emerald-700 rounded-lg flex items-center justify-center">
-              <Zap className="w-5 h-5 text-white" />
-            </div>
-            <span className="text-gray-900">
-              Prono<span className="text-emerald-600">Foot</span>{" "}
-              <span className="text-sm font-medium text-emerald-500">AI</span>
-            </span>
+          <Link href={`/${locale}`}>
+            <Logo size={34} variant="dark" />
           </Link>
 
           {/* Desktop Navigation */}
