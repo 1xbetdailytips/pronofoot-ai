@@ -35,7 +35,16 @@ export default async function HomePage({
     getWinRateStats(),
   ]);
 
-  const topMatches = matches.slice(0, 4);
+  // Major leagues for homepage — only show the most important
+  const majorLeagues = new Set([
+    "Premier League", "La Liga", "Bundesliga", "Serie A", "Ligue 1",
+    "Champions League", "CAF Champions League", "Europa League",
+    "Elite One", "MTN Elite One", "Copa Libertadores",
+    "MLS", "Liga MX", "Saudi Pro League", "Botola Pro",
+    "FKF Premier League", "Premier Soccer League",
+  ]);
+  const majorMatches = matches.filter(m => majorLeagues.has(m.league_name) && m.tip);
+  const topMatches = majorMatches.length > 0 ? majorMatches.slice(0, 6) : matches.filter(m => m.tip).slice(0, 6);
   const freeTicket = tickets.find((t) => t.is_free) ?? null;
 
   return (
@@ -132,7 +141,18 @@ export default async function HomePage({
         </div>
 
         {topMatches.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="bg-white rounded-xl border border-gray-200 divide-y divide-gray-100 overflow-hidden">
+            {/* Table header (desktop) */}
+            <div className="hidden sm:flex items-center px-4 py-2 bg-gray-50 text-xs font-medium text-gray-500 uppercase tracking-wider gap-2">
+              <div className="w-14 text-center">{isFr ? "Heure" : "Time"}</div>
+              <div className="flex-1 text-right">{isFr ? "Domicile" : "Home"}</div>
+              <div className="w-16 text-center">Score</div>
+              <div className="flex-1 text-left">{isFr ? "Ext" : "Away"}</div>
+              <div className="w-10 text-center">Tip</div>
+              <div className="w-20 text-center">Conf.</div>
+              <div className="w-28 text-center">1 / X / 2</div>
+              <div className="w-24 text-right">Best Pick</div>
+            </div>
             {topMatches.map((match) => (
               <MatchCard
                 key={match.id}

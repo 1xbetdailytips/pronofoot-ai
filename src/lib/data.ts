@@ -194,26 +194,48 @@ export function matchToCardProps(m: MatchWithTip) {
     timeZone: "Africa/Douala",
   });
 
-  const prediction = m.tip ? mapPrediction(m.tip.prediction) : "draw";
-  const confidence = m.tip ? Math.round(m.tip.confidence) : 50;
-  const riskLevel = m.tip ? mapRiskLevel(m.tip.risk_level) : "medium";
+  const hasTip = !!m.tip;
+  const prediction = m.tip ? mapPrediction(m.tip.prediction) : null;
+  const confidence = m.tip ? Math.round(m.tip.confidence) : null;
+  const riskLevel = m.tip ? mapRiskLevel(m.tip.risk_level) : null;
+  const bestPick = m.tip?.best_pick ?? null;
 
   // Estimate 1X2 odds from probabilities (min 1.05)
-  const homeOdds = m.tip ? Math.max(1.05, parseFloat((100 / m.tip.home_prob).toFixed(2))) : 2.0;
-  const drawOdds = m.tip ? Math.max(1.05, parseFloat((100 / m.tip.draw_prob).toFixed(2))) : 3.4;
-  const awayOdds = m.tip ? Math.max(1.05, parseFloat((100 / m.tip.away_prob).toFixed(2))) : 3.2;
+  const homeOdds = m.tip ? Math.max(1.05, parseFloat((100 / m.tip.home_prob).toFixed(2))) : null;
+  const drawOdds = m.tip ? Math.max(1.05, parseFloat((100 / m.tip.draw_prob).toFixed(2))) : null;
+  const awayOdds = m.tip ? Math.max(1.05, parseFloat((100 / m.tip.away_prob).toFixed(2))) : null;
 
   return {
     homeTeam: m.home_team,
     awayTeam: m.away_team,
     league: m.league_name,
+    leagueId: m.league_id,
     kickoffTime: kickoff,
+    status: m.status,
+    homeScore: m.home_score,
+    awayScore: m.away_score,
+    hasTip,
     prediction,
     confidence,
     riskLevel,
+    bestPick,
     homeOdds,
     drawOdds,
     awayOdds,
     slug: m.slug,
   };
+}
+
+// Group matches by league for Forebet-style display
+export function groupMatchesByLeague(matches: MatchWithTip[]) {
+  const groups: Record<string, { leagueName: string; leagueId: number; matches: MatchWithTip[] }> = {};
+  for (const m of matches) {
+    const key = m.league_name;
+    if (!groups[key]) {
+      groups[key] = { leagueName: m.league_name, leagueId: m.league_id, matches: [] };
+    }
+    groups[key].matches.push(m);
+  }
+  // Sort: leagues with more matches first, then alphabetical
+  return Object.values(groups).sort((a, b) => b.matches.length - a.matches.length || a.leagueName.localeCompare(b.leagueName));
 }
