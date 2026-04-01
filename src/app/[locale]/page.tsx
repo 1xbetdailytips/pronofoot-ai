@@ -1,6 +1,9 @@
 import { Suspense } from "react";
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
+
+// Force dynamic rendering — homepage shows today's matches
+export const dynamic = "force-dynamic";
 import {
   Zap,
   FileText,

@@ -3,6 +3,9 @@ import type { Metadata } from "next";
 import { Ticket, Info, ArrowRight } from "lucide-react";
 import TicketCard from "@/components/tickets/TicketCard";
 import AffiliateCTA from "@/components/ui/AffiliateCTA";
+
+// Force dynamic rendering — tickets must be fresh
+export const dynamic = "force-dynamic";
 import { getTodaysTickets } from "@/lib/data";
 
 export function generateMetadata({

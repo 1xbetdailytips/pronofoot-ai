@@ -6,6 +6,9 @@ import AffiliateCTA from "@/components/ui/AffiliateCTA";
 import { COVERED_LEAGUES, siteConfig } from "@/lib/config";
 import { getTodaysMatches, matchToCardProps } from "@/lib/data";
 
+// Force dynamic rendering — predictions must be fresh on every request
+export const dynamic = "force-dynamic";
+
 export function generateMetadata({
   params,
 }: {
