@@ -235,6 +235,7 @@ export default function Header({ locale, translations: t }: HeaderProps) {
   const moreItems = [
     { name: t.stats, href: `/${locale}/stats`, icon: StatsIcon },
     { name: t.blog, href: `/${locale}/blog`, icon: BlogIcon },
+    { name: isFr ? "A Propos" : "About", href: `/${locale}/about`, icon: StatsIcon },
   ];
 
   const isToolsActive = toolsItems.some(item => pathname.startsWith(item.href));

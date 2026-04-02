@@ -130,6 +130,14 @@ export default function Footer({ locale, translations: t }: FooterProps) {
             <ul className="space-y-2 text-sm">
               <li>
                 <Link
+                  href={`/${locale}/about`}
+                  className="hover:text-white transition-colors"
+                >
+                  {locale === "fr" ? "Comment ca marche" : "How it works"}
+                </Link>
+              </li>
+              <li>
+                <Link
                   href={`/${locale}/responsible-gambling`}
                   className="hover:text-white transition-colors"
                 >

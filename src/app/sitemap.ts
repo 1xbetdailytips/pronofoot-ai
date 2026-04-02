@@ -16,6 +16,7 @@ const STATIC_ROUTES = [
   { path: "/bet-builder" },
   { path: "/vip" },
   { path: "/blog" },
+  { path: "/about" },
   { path: "/responsible-gambling" },
   { path: "/terms" },
   { path: "/privacy" },
