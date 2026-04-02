@@ -3,6 +3,7 @@ import { Activity } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { siteConfig } from "@/lib/config";
 import LivescoreClient from "@/components/livescore/LivescoreClient";
+import PromoBanner from "@/components/ui/PromoBanner";
 import type { Fixture } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
@@ -135,11 +136,21 @@ export default async function LivescorePage({
           </div>
         </div>
 
+        {/* 1xBet Live Betting Banner */}
+        <div className="mb-4">
+          <PromoBanner locale={locale} variant="live-betting" campaign="livescore_live" />
+        </div>
+
         {/* Client wrapper for auto-refresh */}
         <LivescoreClient
           initialFixtures={fixtures}
           locale={locale}
         />
+
+        {/* 1xBet Slim Banner */}
+        <div className="mt-6">
+          <PromoBanner locale={locale} variant="slim" campaign="livescore_bottom" />
+        </div>
       </div>
     </>
   );

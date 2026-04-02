@@ -2,7 +2,7 @@ import { getTranslations } from "next-intl/server";
 import type { Metadata } from "next";
 import { TrendingUp, Send, Zap } from "lucide-react";
 import MatchCard from "@/components/predictions/MatchCard";
-import AffiliateCTA from "@/components/ui/AffiliateCTA";
+import PromoBanner from "@/components/ui/PromoBanner";
 import { siteConfig } from "@/lib/config";
 import { getTodaysMatches, matchToCardProps, groupMatchesByLeague } from "@/lib/data";
 
@@ -39,7 +39,6 @@ export default async function PredictionsPage({
   params: { locale: string };
 }) {
   const t = await getTranslations("predictions");
-  const tc = await getTranslations("common");
   const locale = params.locale;
   const isFr = locale === "fr";
 
@@ -69,6 +68,11 @@ export default async function PredictionsPage({
           <span className="text-gray-300">|</span>
           <span className="text-emerald-600 font-medium">{predictedCount} {isFr ? "pr\u00e9dits" : "predicted"}</span>
         </div>
+      </div>
+
+      {/* 1xBet Slim Banner */}
+      <div className="mb-4">
+        <PromoBanner locale={locale} variant="slim" campaign="predictions_top" />
       </div>
 
       {/* Table header (desktop) */}
@@ -118,13 +122,9 @@ export default async function PredictionsPage({
         </div>
       )}
 
-      {/* Affiliate Banner */}
-      <div className="bg-gradient-to-r from-emerald-600 to-emerald-700 rounded-xl p-5 mb-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-        <div className="text-white">
-          <p className="font-bold">{isFr ? "Placez vos paris avec les meilleures cotes" : "Place your bets with the best odds"}</p>
-          <p className="text-emerald-100 text-sm">{isFr ? "Ouvrez votre compte 1xBet et profitez d'un bonus" : "Open your 1xBet account and enjoy a welcome bonus"}</p>
-        </div>
-        <AffiliateCTA text={tc("betNow")} variant="banner" campaign="predictions_banner" />
+      {/* 1xBet Promotional Banner */}
+      <div className="mb-6">
+        <PromoBanner locale={locale} variant="high-odds" campaign="predictions_bonus" />
       </div>
 
       {/* Telegram channels */}

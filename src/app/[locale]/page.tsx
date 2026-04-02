@@ -13,6 +13,7 @@ import {
   Send,
 } from "lucide-react";
 import AffiliateCTA from "@/components/ui/AffiliateCTA";
+import PromoBanner from "@/components/ui/PromoBanner";
 import MatchCard from "@/components/predictions/MatchCard";
 import SpinWheel from "@/components/spin/SpinWheel";
 import ReferralTracker from "@/components/spin/ReferralTracker";
@@ -114,6 +115,11 @@ export default async function HomePage({
             </div>
           </div>
         </div>
+      </section>
+
+      {/* ============ 1XBET PROMO BANNER ============ */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
+        <PromoBanner locale={locale} variant="best-odds" campaign="home_top" />
       </section>
 
       {/* ============ TODAY'S TOP PICKS ============ */}
@@ -235,6 +241,11 @@ export default async function HomePage({
         </div>
       </section>
 
+      {/* ============ 1XBET WELCOME BONUS BANNER ============ */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <PromoBanner locale={locale} variant="welcome-bonus" campaign="home_mid" />
+      </section>
+
       {/* ============ SPIN WHEEL ============ */}
       <SpinWheel locale={locale} />
 
@@ -285,6 +296,11 @@ export default async function HomePage({
             <p className="text-gray-500 text-sm">{t("vipDesc")}</p>
           </Link>
         </div>
+      </section>
+
+      {/* ============ 1XBET LIVE BETTING BANNER ============ */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-6">
+        <PromoBanner locale={locale} variant="live-betting" campaign="home_live" />
       </section>
 
       {/* ============ VIP UPSELL SECTION ============ */}
