@@ -161,13 +161,11 @@ function Section({
   icon,
   accentColor,
   fixtures,
-  emptyText,
 }: {
   title: string;
   icon: React.ReactNode;
   accentColor: string;
   fixtures: Fixture[];
-  emptyText: string;
 }) {
   if (fixtures.length === 0) return null;
 
@@ -282,7 +280,7 @@ export default function LivescoreClient({ initialFixtures, locale }: Props) {
         }
         accentColor="text-red-600"
         fixtures={live}
-        emptyText={isFr ? "Aucun match en direct" : "No live matches"}
+
       />
 
       {/* UPCOMING */}
@@ -291,7 +289,7 @@ export default function LivescoreClient({ initialFixtures, locale }: Props) {
         icon={<Clock className="w-4 h-4" />}
         accentColor="text-gray-700"
         fixtures={upcoming}
-        emptyText={isFr ? "Aucun match a venir" : "No upcoming matches"}
+
       />
 
       {/* FINISHED */}
@@ -300,7 +298,7 @@ export default function LivescoreClient({ initialFixtures, locale }: Props) {
         icon={<span className="w-4 h-4 text-center font-bold text-xs">FT</span>}
         accentColor="text-gray-400"
         fixtures={finished}
-        emptyText={isFr ? "Aucun match termine" : "No finished matches"}
+
       />
     </div>
   );

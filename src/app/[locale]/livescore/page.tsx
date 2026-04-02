@@ -28,15 +28,7 @@ function categorizeFixtures(fixtures: Fixture[]) {
   return { live, upcoming, finished };
 }
 
-function groupByLeague(fixtures: Fixture[]): Record<string, Fixture[]> {
-  const groups: Record<string, Fixture[]> = {};
-  for (const f of fixtures) {
-    const key = f.league_name || "Other";
-    if (!groups[key]) groups[key] = [];
-    groups[key].push(f);
-  }
-  return groups;
-}
+
 
 async function getTodayFixtures(): Promise<Fixture[]> {
   const today = new Date().toISOString().slice(0, 10);
