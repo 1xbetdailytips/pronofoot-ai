@@ -1,12 +1,27 @@
 "use client";
 
 import { ExternalLink } from "lucide-react";
+import Image from "next/image";
 import { siteConfig } from "@/lib/config";
 
 type PromoBannerProps = {
   locale: string;
   variant?: "best-odds" | "welcome-bonus" | "high-odds" | "live-betting" | "slim";
   campaign?: string;
+};
+
+// Free-to-use football imagery (Unsplash license — free for commercial use)
+const BANNER_IMAGES = {
+  // African football stadium crowd energy
+  stadium: "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=1200&h=400&fit=crop&crop=center&q=80",
+  // Football action shot
+  action: "https://images.unsplash.com/photo-1553778263-73a83bab9b0c?w=1200&h=400&fit=crop&crop=center&q=80",
+  // Night stadium floodlights
+  nightStadium: "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=1200&h=600&fit=crop&crop=center&q=80",
+  // Football goal celebration
+  celebration: "https://images.unsplash.com/photo-1431324155629-1a6deb1dec8d?w=1200&h=400&fit=crop&crop=center&q=80",
+  // Close-up football on pitch
+  football: "https://images.unsplash.com/photo-1606925797300-0b35e9d1794e?w=400&h=400&fit=crop&crop=center&q=80",
 };
 
 export default function PromoBanner({
@@ -41,6 +56,9 @@ export default function PromoBanner({
                 ? "Les meilleures cotes du marche"
                 : "Best odds on the market"}
             </span>
+            <span className="hidden md:inline-flex items-center gap-1 bg-amber-500/20 text-amber-400 text-[10px] font-bold px-2 py-0.5 rounded-full border border-amber-500/30">
+              FLYUP777
+            </span>
           </div>
           <span className="flex items-center gap-1.5 bg-[#2dc653] hover:bg-[#25a847] text-white text-xs font-bold px-4 py-2 rounded-lg transition-colors group-hover:scale-105 transform duration-200">
             {isFr ? "PARIER" : "BET NOW"}
@@ -59,8 +77,19 @@ export default function PromoBanner({
         rel="noopener noreferrer"
         className="group block relative overflow-hidden rounded-2xl"
       >
-        {/* Background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[#0d1b2a] via-[#1b2838] to-[#0d2137]" />
+        {/* Background image */}
+        <div className="absolute inset-0">
+          <Image
+            src={BANNER_IMAGES.nightStadium}
+            alt=""
+            fill
+            className="object-cover"
+            sizes="(max-width: 768px) 100vw, 1200px"
+            priority
+          />
+          {/* Dark overlay for text readability */}
+          <div className="absolute inset-0 bg-gradient-to-r from-[#0d1b2a]/95 via-[#1b2838]/90 to-[#0d2137]/80" />
+        </div>
 
         {/* Radial glow */}
         <div className="absolute top-0 right-1/4 w-80 h-80 bg-[#4ba3f5]/15 rounded-full blur-3xl" />
@@ -77,12 +106,12 @@ export default function PromoBanner({
           <div className="flex-1 text-center sm:text-left">
             {/* 1XBET Logo */}
             <div className="mb-3">
-              <span className="text-white font-black text-3xl sm:text-4xl tracking-tight">
+              <span className="text-white font-black text-3xl sm:text-4xl tracking-tight drop-shadow-lg">
                 1<span className="text-[#4ba3f5]">X</span>BET
               </span>
             </div>
 
-            <h3 className="text-white font-extrabold text-xl sm:text-2xl leading-tight mb-2 uppercase">
+            <h3 className="text-white font-extrabold text-xl sm:text-2xl leading-tight mb-2 uppercase drop-shadow-md">
               {isFr
                 ? "Choisissez la Meilleure Cote"
                 : "Choose the Best Odds"}
@@ -92,7 +121,7 @@ export default function PromoBanner({
               </span>
             </h3>
 
-            <p className="text-white/50 text-xs mb-4">
+            <p className="text-white/60 text-xs mb-4">
               {isFr
                 ? "Code promo: FLYUP777 | Bonus 200% jusqu'a 85,000 XAF"
                 : "Promo code: FLYUP777 | 200% Bonus up to 85,000 XAF"}
@@ -104,8 +133,18 @@ export default function PromoBanner({
             </span>
           </div>
 
-          {/* Right side - visual element */}
-          <div className="hidden sm:flex flex-col items-center gap-2">
+          {/* Right side - odds display + football image */}
+          <div className="hidden sm:flex flex-col items-center gap-3">
+            {/* Football image accent */}
+            <div className="relative w-24 h-24 rounded-full overflow-hidden border-2 border-white/20 shadow-xl shadow-blue-500/20">
+              <Image
+                src={BANNER_IMAGES.football}
+                alt=""
+                fill
+                className="object-cover"
+                sizes="96px"
+              />
+            </div>
             {/* Odds display */}
             <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl px-5 py-3">
               <p className="text-white/60 text-[10px] uppercase tracking-wider mb-1 text-center">
@@ -153,7 +192,17 @@ export default function PromoBanner({
         rel="noopener noreferrer"
         className="group block relative overflow-hidden rounded-2xl"
       >
-        <div className="absolute inset-0 bg-gradient-to-r from-[#1a0a3e] via-[#2d1b69] to-[#1a0a3e]" />
+        {/* Background image */}
+        <div className="absolute inset-0">
+          <Image
+            src={BANNER_IMAGES.celebration}
+            alt=""
+            fill
+            className="object-cover"
+            sizes="(max-width: 768px) 100vw, 1200px"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#1a0a3e]/95 via-[#2d1b69]/90 to-[#1a0a3e]/95" />
+        </div>
 
         {/* Animated rays */}
         <div className="absolute inset-0 opacity-20">
@@ -161,7 +210,7 @@ export default function PromoBanner({
         </div>
 
         <div className="relative px-6 py-8 text-center">
-          <span className="text-white font-black text-2xl tracking-tight">
+          <span className="text-white font-black text-2xl tracking-tight drop-shadow-lg">
             1<span className="text-[#4ba3f5]">X</span>BET
           </span>
 
@@ -169,7 +218,7 @@ export default function PromoBanner({
             <p className="text-amber-400 text-sm font-bold uppercase tracking-wider mb-1">
               {isFr ? "Bonus de Bienvenue" : "Welcome Bonus"}
             </p>
-            <p className="text-white font-black text-5xl sm:text-6xl leading-none">
+            <p className="text-white font-black text-5xl sm:text-6xl leading-none drop-shadow-xl">
               200<span className="text-amber-400">%</span>
             </p>
             <p className="text-white/70 text-sm mt-1">
@@ -178,7 +227,7 @@ export default function PromoBanner({
             </p>
           </div>
 
-          <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-lg px-4 py-2 mb-5">
+          <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-lg px-4 py-2 mb-5 backdrop-blur-sm">
             <span className="text-white/60 text-xs">
               {isFr ? "Code:" : "Code:"}
             </span>
@@ -208,8 +257,20 @@ export default function PromoBanner({
         href={link}
         target="_blank"
         rel="noopener noreferrer"
-        className="group block relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#0a1628] via-[#162d50] to-[#0a1628] border border-blue-500/20"
+        className="group block relative overflow-hidden rounded-2xl border border-blue-500/20"
       >
+        {/* Background image */}
+        <div className="absolute inset-0">
+          <Image
+            src={BANNER_IMAGES.action}
+            alt=""
+            fill
+            className="object-cover"
+            sizes="(max-width: 768px) 100vw, 1200px"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#0a1628]/95 via-[#162d50]/90 to-[#0a1628]/85" />
+        </div>
+
         {/* Animated pulse background */}
         <div className="absolute inset-0">
           <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-blue-500/5 to-transparent animate-shimmer" />
@@ -227,22 +288,22 @@ export default function PromoBanner({
               <span className="text-red-400 text-xs font-bold uppercase">Live</span>
             </div>
 
-            <span className="text-white font-black text-xl tracking-tight">
+            <span className="text-white font-black text-xl tracking-tight drop-shadow-lg">
               1<span className="text-[#4ba3f5]">X</span>BET
             </span>
           </div>
 
           {/* Center */}
           <div className="flex-1 text-center sm:text-left">
-            <p className="text-white font-bold text-sm sm:text-base">
+            <p className="text-white font-bold text-sm sm:text-base drop-shadow-md">
               {isFr
                 ? "Pariez en Direct sur les Matchs d'Aujourd'hui"
                 : "Bet Live on Today's Matches"}
             </p>
             <p className="text-white/50 text-xs">
               {isFr
-                ? "Cash-out disponible | Cotes en temps reel"
-                : "Cash-out available | Real-time odds"}
+                ? "Cash-out disponible | Cotes en temps reel | Code: FLYUP777"
+                : "Cash-out available | Real-time odds | Code: FLYUP777"}
             </p>
           </div>
 
@@ -264,11 +325,21 @@ export default function PromoBanner({
       rel="noopener noreferrer"
       className="group block relative overflow-hidden rounded-2xl"
     >
-      {/* Background */}
-      <div className="absolute inset-0 bg-gradient-to-r from-[#003d99] via-[#0050cc] to-[#003d99]" />
+      {/* Background image */}
+      <div className="absolute inset-0">
+        <Image
+          src={BANNER_IMAGES.stadium}
+          alt=""
+          fill
+          className="object-cover"
+          sizes="(max-width: 768px) 100vw, 1200px"
+          priority
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#003d99]/92 via-[#0050cc]/88 to-[#003d99]/85" />
+      </div>
 
       {/* Animated starburst */}
-      <div className="absolute inset-0 opacity-30">
+      <div className="absolute inset-0 opacity-20">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[150%] h-[150%]">
           {Array.from({ length: 12 }).map((_, i) => (
             <div
@@ -290,10 +361,10 @@ export default function PromoBanner({
       <div className="relative px-6 py-7 sm:py-8 flex flex-col sm:flex-row items-center gap-5">
         {/* Left */}
         <div className="flex-1 text-center sm:text-left">
-          <span className="text-white font-black text-3xl tracking-tight mb-2 block">
+          <span className="text-white font-black text-3xl tracking-tight mb-2 block drop-shadow-lg">
             1<span className="text-[#4ba3f5]">X</span>BET
           </span>
-          <h3 className="text-white font-extrabold text-lg sm:text-xl uppercase leading-tight">
+          <h3 className="text-white font-extrabold text-lg sm:text-xl uppercase leading-tight drop-shadow-md">
             {isFr
               ? "Choisissez la Meilleure Cote"
               : "Choose the Best Odds"}
@@ -304,6 +375,22 @@ export default function PromoBanner({
                 : "and Win More Today"}
             </span>
           </h3>
+          <p className="text-white/50 text-xs mt-2">
+            {isFr ? "Code promo:" : "Promo code:"}{" "}
+            <span className="text-amber-400 font-bold">FLYUP777</span>
+          </p>
+        </div>
+
+        {/* Right: football accent image */}
+        <div className="hidden sm:block relative w-28 h-28 rounded-full overflow-hidden border-3 border-white/20 shadow-2xl shadow-blue-500/30 flex-shrink-0">
+          <Image
+            src={BANNER_IMAGES.football}
+            alt=""
+            fill
+            className="object-cover"
+            sizes="112px"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-blue-900/40 to-transparent" />
         </div>
 
         {/* CTA */}
