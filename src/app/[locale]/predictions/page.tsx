@@ -118,6 +118,13 @@ export default async function PredictionsPage({
         </div>
       </div>
 
+      {/* Citable intro paragraph — AI search engines extract this */}
+      <p className="text-sm text-gray-600 leading-relaxed mb-4 max-w-3xl">
+        {isFr
+          ? `PronoFoot AI genere des pronostics football quotidiens en analysant plus de 500 statistiques par match grace a l'intelligence artificielle Claude (Anthropic). Aujourd'hui, ${predictedCount} matchs sur ${matches.length} ont ete analyses sur 7 marches de paris : 1X2, Over 2.5, Over 1.5, BTTS, Home to Score, Away to Score et Best Pick. Chaque pronostic inclut un score de confiance et un niveau de risque. Tous les resultats sont verifies automatiquement et affiches sur notre page Statistiques.`
+          : `PronoFoot AI generates daily football predictions by analyzing 500+ statistics per match using Claude AI (Anthropic). Today, ${predictedCount} out of ${matches.length} matches have been analyzed across 7 betting markets: 1X2, Over 2.5, Over 1.5, BTTS, Home to Score, Away to Score, and Best Pick. Each prediction includes a confidence score and risk level. All results are automatically verified and displayed on our Stats page.`}
+      </p>
+
       {/* 1xBet Slim Banner */}
       <div className="mb-4">
         <PromoBanner locale={locale} variant="slim" campaign="predictions_top" />

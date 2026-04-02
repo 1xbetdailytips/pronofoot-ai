@@ -379,8 +379,60 @@ export default async function HomePage({
         </div>
       </section>
 
+      {/* ============ HOW IT WORKS — CITABLE PROSE SECTION ============ */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
+          {isFr ? "Comment Fonctionne PronoFoot AI" : "How PronoFoot AI Works"}
+        </h2>
+        <div className="max-w-3xl mx-auto">
+          <p className="text-gray-700 leading-relaxed mb-4">
+            {isFr
+              ? `PronoFoot AI est une plateforme de pronostics football alimentee par intelligence artificielle. Chaque matin, notre systeme analyse plus de 500 statistiques par match — forme recente des equipes, confrontations directes, performances domicile et exterieur, tendances de buts et dynamique de momentum — pour generer des predictions sur 7 marches de paris. Notre taux de reussite actuel est de ${winStats.overall.rate}% sur ${winStats.overall.total} predictions verifiees automatiquement.`
+              : `PronoFoot AI is a football prediction platform powered by artificial intelligence. Every morning, our system analyzes 500+ statistics per match — recent team form, head-to-head history, home and away performance, goal trends, and momentum dynamics — to generate predictions across 7 betting markets. Our current win rate is ${winStats.overall.rate}% across ${winStats.overall.total} automatically verified predictions.`}
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+            {[
+              { step: "1", title: isFr ? "Donnees" : "Data", desc: isFr ? "500+ stats par match via API-Football Pro chaque matin a 6h" : "500+ stats per match via API-Football Pro every morning at 6am" },
+              { step: "2", title: isFr ? "Analyse IA" : "AI Analysis", desc: isFr ? "Claude AI (Anthropic) analyse et genere 7 predictions par match a 7h" : "Claude AI (Anthropic) analyzes and generates 7 predictions per match at 7am" },
+              { step: "3", title: isFr ? "Verification" : "Verification", desc: isFr ? "Resultats verifies automatiquement a 23h. Tout est public sur la page Stats" : "Results auto-verified at 11pm. Everything is public on the Stats page" },
+            ].map((s) => (
+              <div key={s.step} className="bg-white rounded-xl border border-gray-100 p-4 text-center">
+                <div className="w-8 h-8 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center mx-auto mb-2 text-sm font-bold">{s.step}</div>
+                <h3 className="font-bold text-gray-900 text-sm mb-1">{s.title}</h3>
+                <p className="text-xs text-gray-500">{s.desc}</p>
+              </div>
+            ))}
+          </div>
+          <p className="text-center">
+            <Link href={`/${locale}/about`} className="text-emerald-600 font-medium text-sm hover:text-emerald-700">
+              {isFr ? "En savoir plus sur notre methodologie →" : "Learn more about our methodology →"}
+            </Link>
+          </p>
+        </div>
+      </section>
+
+      {/* ============ HOMEPAGE FAQ — VISIBLE + SCHEMA ============ */}
+      <section className="bg-gray-50 border-y border-gray-100">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
+            {isFr ? "Questions Frequentes" : "Frequently Asked Questions"}
+          </h2>
+          <div className="space-y-3">
+            {homeFaqs.map((faq, i) => (
+              <details key={i} className="bg-white rounded-xl border border-gray-200 group">
+                <summary className="cursor-pointer px-5 py-4 text-sm font-semibold text-gray-800 hover:text-emerald-600 transition-colors list-none flex items-center gap-2">
+                  <span className="text-emerald-500 group-open:rotate-90 transition-transform flex-shrink-0">&#9654;</span>
+                  {faq.q}
+                </summary>
+                <p className="text-sm text-gray-600 px-5 pb-4 ml-5 leading-relaxed">{faq.a}</p>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ============ 1XBET LIVE BETTING BANNER ============ */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-6">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <PromoBanner locale={locale} variant="live-betting" campaign="home_live" />
       </section>
 
