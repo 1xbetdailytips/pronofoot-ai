@@ -227,7 +227,7 @@ export default function Header({ locale, translations: t }: HeaderProps) {
   // Tools dropdown items
   const toolsItems = [
     { name: isFr ? "Labo IA" : "AI Lab", href: `/${locale}/ai-lab`, icon: LabIcon },
-    { name: isFr ? "Generateur Combis" : "Combo Builder", href: `/${locale}/bet-builder`, icon: ComboIcon },
+    { name: isFr ? "Générateur Combos" : "Combo Builder", href: `/${locale}/bet-builder`, icon: ComboIcon },
     { name: t.dailyReport, href: `/${locale}/rapport-du-jour`, icon: ReportIcon },
   ];
 
@@ -235,7 +235,7 @@ export default function Header({ locale, translations: t }: HeaderProps) {
   const moreItems = [
     { name: t.stats, href: `/${locale}/stats`, icon: StatsIcon },
     { name: t.blog, href: `/${locale}/blog`, icon: BlogIcon },
-    { name: isFr ? "A Propos" : "About", href: `/${locale}/about`, icon: StatsIcon },
+    { name: isFr ? "À Propos" : "About", href: `/${locale}/about`, icon: StatsIcon },
   ];
 
   const isToolsActive = toolsItems.some(item => pathname.startsWith(item.href));

@@ -12,9 +12,9 @@ export const revalidate = 120;
 export function generateMetadata({ params }: { params: { locale: string } }): Metadata {
   const isFr = params.locale === "fr";
   return {
-    title: isFr ? "Labo IA Football - Analyse Avancee" : "AI Football Lab - Advanced Analysis",
+    title: isFr ? "Labo IA Football - Analyse Avancée" : "AI Football Lab - Advanced Analysis",
     description: isFr
-      ? "Analyses avancees par intelligence artificielle: detecteur de tendances, generateur de paris intelligents, et analyse de patterns."
+      ? "Analyses avancées par intelligence artificielle : détecteur de tendances, générateur de paris intelligents, et analyse de patterns."
       : "Advanced AI analysis: trend detector, smart bet generator, and pattern analysis.",
     alternates: {
       canonical: `/${params.locale}/ai-lab`,
@@ -127,14 +127,14 @@ export default async function AILabPage({ params }: { params: { locale: string }
                 {isFr ? "Labo IA Football" : "AI Football Lab"}
               </h1>
               <p className="text-indigo-300 text-sm">
-                {isFr ? "Analyses avancees par intelligence artificielle" : "Advanced artificial intelligence analysis"}
+                {isFr ? "Analyses avancées par intelligence artificielle" : "Advanced artificial intelligence analysis"}
               </p>
             </div>
           </div>
           <div className="grid grid-cols-3 gap-4 mt-6 max-w-md">
             <div className="text-center bg-white/5 rounded-lg px-3 py-2">
               <p className="text-xl font-bold text-white">{tippedMatches.length}</p>
-              <p className="text-indigo-300 text-[10px]">{isFr ? "Matchs analyses" : "Matches analyzed"}</p>
+              <p className="text-indigo-300 text-[10px]">{isFr ? "Matchs analysés" : "Matches analyzed"}</p>
             </div>
             <div className="text-center bg-white/5 rounded-lg px-3 py-2">
               <p className="text-xl font-bold text-white">{patterns.filter(p => p.suspicion < 30).length}</p>
@@ -142,13 +142,92 @@ export default async function AILabPage({ params }: { params: { locale: string }
             </div>
             <div className="text-center bg-white/5 rounded-lg px-3 py-2">
               <p className="text-xl font-bold text-white">3</p>
-              <p className="text-indigo-300 text-[10px]">{isFr ? "Combos generes" : "Combos generated"}</p>
+              <p className="text-indigo-300 text-[10px]">{isFr ? "Combos générés" : "Combos generated"}</p>
             </div>
           </div>
         </div>
       </section>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+
+        {/* ─── EXPLANATORY PROSE — GEO / E-E-A-T ─────────────── */}
+        <section className="bg-white rounded-xl border border-gray-200 p-6">
+          <h2 className="text-lg font-bold text-gray-900 mb-3">
+            {isFr ? "Comment fonctionne le Labo IA" : "How the AI Lab Works"}
+          </h2>
+          <div className="prose prose-sm max-w-none text-gray-600 space-y-3">
+            {isFr ? (
+              <>
+                <p>
+                  Le Labo IA de PronoFoot est un espace d&apos;analyse avancée qui va au-delà des simples pronostics.
+                  Notre intelligence artificielle, propulsée par Claude (Anthropic), analyse plus de 500 données statistiques
+                  par match pour identifier des patterns invisibles à l&apos;oeil humain : tendances de forme, anomalies de cotes,
+                  convergences statistiques et signaux de risque.
+                </p>
+                <p>
+                  <strong>L&apos;Analyseur de Tendances</strong> classe chaque équipe selon sa dynamique récente :
+                  en forme (hot), en progression (warming), en déclin (cooling) ou en difficulté (cold).
+                  Cette classification repose sur les 5 derniers résultats et le ratio victoires/défaites pondéré.
+                  Un indicateur visuel (point coloré) permet d&apos;identifier instantanément les équipes en confiance
+                  et celles à éviter.
+                </p>
+                <p>
+                  <strong>Le Générateur de Paris Intelligents</strong> construit automatiquement trois combinés
+                  à partir des prédictions du jour : un combo sûr (confiance ≥65%), un combo équilibré
+                  (confiance 50-65%, cotes ≥1.50), et un combo risqué (cotes ≥2.50). Les cotes totales
+                  sont calculées en temps réel. Le combo risqué est verrouillé derrière un partage social
+                  pour encourager la viralité.
+                </p>
+                <p>
+                  <strong>Le Détecteur de Matchs Suspects</strong> attribue un score de suspicion (5-85) basé
+                  sur l&apos;écart entre les probabilités et la confiance de l&apos;IA. Un match avec des cotes très équilibrées
+                  et une faible confiance obtient un score élevé — signe d&apos;imprévisibilité ou de données insuffisantes.
+                  Ce n&apos;est pas un détecteur de matchs truqués, mais un filtre de prudence.
+                </p>
+                <p>
+                  Les données de la communauté (CrowdBacking) montrent les tendances de soutien populaire
+                  dérivées des probabilités IA avec une randomisation contrôlée.
+                  Toutes les données sont mises à jour quotidiennement à 7h00 (UTC+1) et les résultats
+                  sont vérifiés automatiquement à 23h00.
+                </p>
+              </>
+            ) : (
+              <>
+                <p>
+                  PronoFoot&apos;s AI Lab is an advanced analysis space that goes beyond basic predictions.
+                  Our artificial intelligence, powered by Claude (Anthropic), analyzes 500+ statistical data points
+                  per match to identify patterns invisible to the human eye: form trends, odds anomalies,
+                  statistical convergences, and risk signals.
+                </p>
+                <p>
+                  <strong>The Pattern Analyzer</strong> classifies each team by recent momentum:
+                  hot (winning streak), warming (improving), cooling (declining), or cold (struggling).
+                  This classification is based on the last 5 results and a weighted win/loss ratio.
+                  A visual indicator (colored dot) lets you instantly spot confident teams
+                  and those to avoid.
+                </p>
+                <p>
+                  <strong>The Smart Bet Generator</strong> automatically builds three combo bets
+                  from today&apos;s predictions: a safe combo (confidence ≥65%), a balanced combo
+                  (confidence 50-65%, odds ≥1.50), and a risky combo (odds ≥2.50). Total odds
+                  are calculated in real time. The risky combo is locked behind a social share
+                  to encourage virality.
+                </p>
+                <p>
+                  <strong>The Suspicious Match Detector</strong> assigns a suspicion score (5-85) based
+                  on the gap between probabilities and AI confidence. A match with very balanced odds
+                  and low confidence scores high — a sign of unpredictability or insufficient data.
+                  This is not a match-fixing detector, but a caution filter.
+                </p>
+                <p>
+                  Community data (CrowdBacking) shows popular support trends derived from AI probabilities
+                  with controlled randomization.
+                  All data is updated daily at 7:00 AM (UTC+1) and results are automatically verified at 11:00 PM.
+                </p>
+              </>
+            )}
+          </div>
+        </section>
 
         {/* ─── PATTERN ANALYZER ──────────────────────────────── */}
         <section>
@@ -232,7 +311,7 @@ export default async function AILabPage({ params }: { params: { locale: string }
           <div className="flex items-center gap-2 mb-4">
             <Zap className="w-5 h-5 text-amber-500" />
             <h2 className="text-lg font-bold text-gray-900">
-              {isFr ? "Generateur de Paris Intelligents" : "Smart Bet Generator"}
+              {isFr ? "Générateur de Paris Intelligents" : "Smart Bet Generator"}
             </h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -290,12 +369,12 @@ export default async function AILabPage({ params }: { params: { locale: string }
           <div className="flex items-center gap-2 mb-4">
             <AlertTriangle className="w-5 h-5 text-red-500" />
             <h2 className="text-lg font-bold text-gray-900">
-              {isFr ? "Detecteur de Matchs Suspects" : "Suspicious Match Detector"}
+              {isFr ? "Détecteur de Matchs Suspects" : "Suspicious Match Detector"}
             </h2>
           </div>
           <p className="text-xs text-gray-500 mb-4">
             {isFr
-              ? "Score de suspicion base sur les ecarts de cotes et les patterns inhabituels. Plus le score est eleve, plus le match est imprevisible."
+              ? "Score de suspicion basé sur les écarts de cotes et les patterns inhabituels. Plus le score est élevé, plus le match est imprévisible."
               : "Suspicion score based on odds spreads and unusual patterns. Higher score = more unpredictable match."}
           </p>
           <ShareToUnlock contentId="lab-suspicion" locale={locale} variant="analysis" previewLines={3}>
@@ -337,7 +416,7 @@ export default async function AILabPage({ params }: { params: { locale: string }
             <div className="flex items-center gap-2 mb-4">
               <BarChart3 className="w-5 h-5 text-blue-500" />
               <h2 className="text-lg font-bold text-gray-900">
-                {isFr ? "Donnees de la Communaute" : "Community Data"}
+                {isFr ? "Données de la Communauté" : "Community Data"}
               </h2>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -365,7 +444,7 @@ export default async function AILabPage({ params }: { params: { locale: string }
             "@context": "https://schema.org",
             "@type": "WebPage",
             name: isFr ? "Labo IA Football" : "AI Football Lab",
-            description: isFr ? "Analyses avancees par IA" : "Advanced AI analysis",
+            description: isFr ? "Analyses avancées par IA" : "Advanced AI analysis",
             url: `https://parifoot.online/${locale}/ai-lab`,
             isPartOf: { "@type": "WebSite", name: "PronoFoot AI", url: "https://parifoot.online" },
           }),

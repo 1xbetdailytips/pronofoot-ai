@@ -58,7 +58,7 @@ export default function TicketsPage({
 
           <p className="text-emerald-100 text-lg md:text-xl max-w-2xl mx-auto mb-8">
             {isFr
-              ? "Des codes de reservation 1xBet prets a l'emploi, generes quotidiennement par notre IA. Copiez, collez, et votre coupon se charge instantanement."
+              ? "Des codes de réservation 1xBet prêts à l'emploi, générés quotidiennement par notre IA. Copiez, collez, et votre coupon se charge instantanément."
               : "Ready-to-use 1xBet booking codes, generated daily by our AI. Copy, paste, and your bet slip loads instantly."}
           </p>
 
@@ -153,13 +153,13 @@ export default function TicketsPage({
               step: "01",
               title: isFr ? "L'IA Analyse" : "AI Analyzes",
               desc: isFr
-                ? "Notre IA selectionne les meilleurs matchs et genere des combines optimises."
+                ? "Notre IA sélectionne les meilleurs matchs et génère des combinés optimisés."
                 : "Our AI selects the best matches and generates optimized combos.",
               color: "bg-emerald-100 text-emerald-700",
             },
             {
               step: "02",
-              title: isFr ? "Code Genere" : "Code Generated",
+              title: isFr ? "Code Généré" : "Code Generated",
               desc: isFr
                 ? "Un code de reservation 1xBet unique est cree pour chaque combine."
                 : "A unique 1xBet booking code is created for each combo.",
@@ -216,7 +216,7 @@ export default function TicketsPage({
               className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-5 py-2.5 rounded-xl transition-colors"
             >
               <Sparkles className="w-4 h-4" />
-              {isFr ? "Generateur de Combines" : "Combo Builder"}
+              {isFr ? "Générateur de Combinés" : "Combo Builder"}
             </Link>
             <AffiliateCTA
               text={isFr ? "Ouvrir 1xBet" : "Open 1xBet"}

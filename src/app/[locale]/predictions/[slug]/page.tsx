@@ -475,7 +475,7 @@ export default async function MatchDetailPage({
           <div className="px-1 mb-2 flex items-center gap-2">
             <Users className="w-4 h-4 text-blue-500" />
             <h3 className="font-bold text-gray-900 text-sm">
-              {isFr ? "Tendance Communaute" : "Community Trend"}
+              {isFr ? "Tendance Communauté" : "Community Trend"}
             </h3>
           </div>
           <CrowdBacking

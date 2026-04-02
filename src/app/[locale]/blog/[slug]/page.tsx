@@ -110,9 +110,15 @@ export default async function BlogArticlePage({
         datePublished: article.published_at,
         dateModified: article.published_at,
         author: {
-          "@type": "Organization",
-          name: siteConfig.name,
-          url: siteConfig.url,
+          "@type": "Person",
+          name: "PronoFoot AI Team",
+          url: `${siteConfig.url}/${locale}/about`,
+          jobTitle: isFr ? "Analyste IA Football" : "AI Football Analyst",
+          worksFor: {
+            "@type": "Organization",
+            name: siteConfig.name,
+            url: siteConfig.url,
+          },
         },
         publisher: {
           "@type": "Organization",
