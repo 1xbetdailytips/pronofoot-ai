@@ -242,13 +242,6 @@ export default function Header({ locale, translations: t }: HeaderProps) {
   const otherLocale = locale === "fr" ? "en" : "fr";
   const localeSwitchPath = pathname.replace(`/${locale}`, `/${otherLocale}`);
 
-  // All items for mobile
-  const allMobileItems = [
-    ...primaryNav,
-    ...toolsItems.map(i => ({ ...i, colorKey: "tools" })),
-    ...moreItems.map(i => ({ ...i, colorKey: "more" })),
-  ];
-
   return (
     <header className="bg-white/95 backdrop-blur-md border-b border-gray-200/80 sticky top-0 z-50 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

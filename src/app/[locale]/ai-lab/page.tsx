@@ -1,8 +1,7 @@
-import { getTranslations } from "next-intl/server";
 import type { Metadata } from "next";
-import { Brain, TrendingUp, Shield, Zap, AlertTriangle, BarChart3, Target, Activity } from "lucide-react";
+import { Brain, Shield, Zap, AlertTriangle, BarChart3, Target, Activity } from "lucide-react";
 import Link from "next/link";
-import { getTodaysMatches, matchToCardProps } from "@/lib/data";
+import { getTodaysMatches } from "@/lib/data";
 import ShareToUnlock from "@/components/viral/ShareToUnlock";
 import CrowdBacking from "@/components/social/CrowdBacking";
 import PromoBanner from "@/components/ui/PromoBanner";
@@ -68,8 +67,7 @@ export default async function AILabPage({ params }: { params: { locale: string }
   const patterns = tippedMatches.slice(0, 12).map(m => {
     const homeForm = analyzeForm(m.home_form);
     const awayForm = analyzeForm(m.away_form);
-    const props = matchToCardProps(m);
-
+    // matchToCardProps used for slug only
     return {
       id: m.id,
       homeTeam: m.home_team,
