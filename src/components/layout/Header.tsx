@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
-import { Menu, X, Globe } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { Menu, X, Globe, ChevronDown } from "lucide-react";
 import AuthButton from "@/components/auth/AuthButton";
 import Logo from "@/components/ui/Logo";
 
@@ -92,6 +92,29 @@ function BlogIcon({ className }: { className?: string }) {
   );
 }
 
+function LabIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M9 3h6v5l4 8a2 2 0 01-1.8 2.9H6.8A2 2 0 015 16L9 8V3z" fill="#ede9fe" stroke="#7c3aed" strokeWidth="1.5" strokeLinejoin="round" />
+      <path d="M9 3h6" stroke="#7c3aed" strokeWidth="2" strokeLinecap="round" />
+      <circle cx="10" cy="15" r="1" fill="#7c3aed" />
+      <circle cx="14" cy="13" r="1.5" fill="#7c3aed" opacity="0.5" />
+    </svg>
+  );
+}
+
+function ComboIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="3" y="3" width="7" height="7" rx="1.5" fill="#dbeafe" stroke="#3b82f6" strokeWidth="1.5" />
+      <rect x="14" y="3" width="7" height="7" rx="1.5" fill="#dcfce7" stroke="#22c55e" strokeWidth="1.5" />
+      <rect x="3" y="14" width="7" height="7" rx="1.5" fill="#fef3c7" stroke="#f59e0b" strokeWidth="1.5" />
+      <rect x="14" y="14" width="7" height="7" rx="1.5" fill="#fce7f3" stroke="#ec4899" strokeWidth="1.5" />
+      <circle cx="12" cy="12" r="2.5" fill="#6366f1" />
+    </svg>
+  );
+}
+
 function VipIcon({ className }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -108,82 +131,123 @@ function VipIcon({ className }: { className?: string }) {
   );
 }
 
-/* ─── Navigation item color mapping ─── */
+/* ─── Navigation color mapping ─── */
 type NavColor = {
   bg: string;
   bgActive: string;
   text: string;
   textActive: string;
   border: string;
+  borderActive: string;
   hoverBg: string;
 };
 
 const navColors: Record<string, NavColor> = {
   livescore: {
-    bg: "bg-red-50/80",
-    bgActive: "bg-red-100",
-    text: "text-red-700",
-    textActive: "text-red-800",
-    border: "border-red-200",
-    hoverBg: "hover:bg-red-50",
+    bg: "bg-white",
+    bgActive: "bg-red-50",
+    text: "text-gray-700",
+    textActive: "text-red-700",
+    border: "border-gray-200",
+    borderActive: "border-red-400",
+    hoverBg: "hover:bg-red-50/60 hover:border-red-200",
   },
   predictions: {
-    bg: "bg-amber-50/80",
-    bgActive: "bg-amber-100",
-    text: "text-amber-700",
-    textActive: "text-amber-800",
-    border: "border-amber-200",
-    hoverBg: "hover:bg-amber-50",
-  },
-  dailyReport: {
-    bg: "bg-blue-50/80",
-    bgActive: "bg-blue-100",
-    text: "text-blue-700",
-    textActive: "text-blue-800",
-    border: "border-blue-200",
-    hoverBg: "hover:bg-blue-50",
+    bg: "bg-white",
+    bgActive: "bg-amber-50",
+    text: "text-gray-700",
+    textActive: "text-amber-700",
+    border: "border-gray-200",
+    borderActive: "border-amber-400",
+    hoverBg: "hover:bg-amber-50/60 hover:border-amber-200",
   },
   tickets: {
-    bg: "bg-emerald-50/80",
-    bgActive: "bg-emerald-100",
-    text: "text-emerald-700",
-    textActive: "text-emerald-800",
-    border: "border-emerald-200",
-    hoverBg: "hover:bg-emerald-50",
+    bg: "bg-white",
+    bgActive: "bg-emerald-50",
+    text: "text-gray-700",
+    textActive: "text-emerald-700",
+    border: "border-gray-200",
+    borderActive: "border-emerald-400",
+    hoverBg: "hover:bg-emerald-50/60 hover:border-emerald-200",
   },
-  stats: {
-    bg: "bg-purple-50/80",
-    bgActive: "bg-purple-100",
-    text: "text-purple-700",
-    textActive: "text-purple-800",
-    border: "border-purple-200",
-    hoverBg: "hover:bg-purple-50",
+  tools: {
+    bg: "bg-white",
+    bgActive: "bg-indigo-50",
+    text: "text-gray-700",
+    textActive: "text-indigo-700",
+    border: "border-gray-200",
+    borderActive: "border-indigo-400",
+    hoverBg: "hover:bg-indigo-50/60 hover:border-indigo-200",
   },
-  blog: {
-    bg: "bg-orange-50/80",
-    bgActive: "bg-orange-100",
-    text: "text-orange-700",
-    textActive: "text-orange-800",
-    border: "border-orange-200",
-    hoverBg: "hover:bg-orange-50",
+  more: {
+    bg: "bg-white",
+    bgActive: "bg-purple-50",
+    text: "text-gray-700",
+    textActive: "text-purple-700",
+    border: "border-gray-200",
+    borderActive: "border-purple-400",
+    hoverBg: "hover:bg-purple-50/60 hover:border-purple-200",
   },
 };
+
+/* ─── Dropdown Hook ─── */
+function useDropdown() {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (ref.current && !ref.current.contains(event.target as Node)) {
+        setOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  return { open, setOpen, ref };
+}
 
 export default function Header({ locale, translations: t }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const pathname = usePathname();
 
-  const navigation = [
+  const toolsDropdown = useDropdown();
+  const moreDropdown = useDropdown();
+
+  // Primary nav items (always visible as buttons)
+  const primaryNav = [
     { name: t.livescore, href: `/${locale}/livescore`, icon: LivescoreIcon, colorKey: "livescore" },
     { name: t.predictions, href: `/${locale}/predictions`, icon: PredictionsIcon, colorKey: "predictions" },
-    { name: t.dailyReport, href: `/${locale}/rapport-du-jour`, icon: ReportIcon, colorKey: "dailyReport" },
     { name: t.tickets, href: `/${locale}/tickets`, icon: TicketsIcon, colorKey: "tickets" },
-    { name: t.stats, href: `/${locale}/stats`, icon: StatsIcon, colorKey: "stats" },
-    { name: t.blog, href: `/${locale}/blog`, icon: BlogIcon, colorKey: "blog" },
   ];
+
+  // Tools dropdown items
+  const isFr = locale === "fr";
+  const toolsItems = [
+    { name: isFr ? "Labo IA" : "AI Lab", href: `/${locale}/ai-lab`, icon: LabIcon },
+    { name: isFr ? "Generateur Combis" : "Combo Builder", href: `/${locale}/bet-builder`, icon: ComboIcon },
+    { name: t.dailyReport, href: `/${locale}/rapport-du-jour`, icon: ReportIcon },
+  ];
+
+  // More dropdown items
+  const moreItems = [
+    { name: t.stats, href: `/${locale}/stats`, icon: StatsIcon },
+    { name: t.blog, href: `/${locale}/blog`, icon: BlogIcon },
+  ];
+
+  const isToolsActive = toolsItems.some(item => pathname.startsWith(item.href));
+  const isMoreActive = moreItems.some(item => pathname.startsWith(item.href));
 
   const otherLocale = locale === "fr" ? "en" : "fr";
   const localeSwitchPath = pathname.replace(`/${locale}`, `/${otherLocale}`);
+
+  // All items for mobile
+  const allMobileItems = [
+    ...primaryNav,
+    ...toolsItems.map(i => ({ ...i, colorKey: "tools" })),
+    ...moreItems.map(i => ({ ...i, colorKey: "more" })),
+  ];
 
   return (
     <header className="bg-white/95 backdrop-blur-md border-b border-gray-200/80 sticky top-0 z-50 shadow-sm">
@@ -196,17 +260,18 @@ export default function Header({ locale, translations: t }: HeaderProps) {
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center gap-1.5">
-            {navigation.map((item) => {
+            {/* Primary buttons */}
+            {primaryNav.map((item) => {
               const isActive = pathname.startsWith(item.href);
               const colors = navColors[item.colorKey];
               return (
                 <Link
                   key={item.name}
                   href={item.href}
-                  className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold transition-all duration-200 border ${
+                  className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all duration-200 border-2 ${
                     isActive
-                      ? `${colors.bgActive} ${colors.textActive} ${colors.border} shadow-sm`
-                      : `border-transparent ${colors.hoverBg} text-gray-600 hover:text-gray-900 hover:border-gray-200 hover:shadow-sm`
+                      ? `${colors.bgActive} ${colors.textActive} ${colors.borderActive} shadow-sm`
+                      : `${colors.bg} ${colors.text} ${colors.border} ${colors.hoverBg}`
                   }`}
                 >
                   <item.icon className="w-[18px] h-[18px]" />
@@ -215,13 +280,91 @@ export default function Header({ locale, translations: t }: HeaderProps) {
               );
             })}
 
+            {/* Tools dropdown */}
+            <div ref={toolsDropdown.ref} className="relative">
+              <button
+                onClick={() => { toolsDropdown.setOpen(!toolsDropdown.open); moreDropdown.setOpen(false); }}
+                className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all duration-200 border-2 ${
+                  isToolsActive
+                    ? `${navColors.tools.bgActive} ${navColors.tools.textActive} ${navColors.tools.borderActive} shadow-sm`
+                    : `${navColors.tools.bg} ${navColors.tools.text} ${navColors.tools.border} ${navColors.tools.hoverBg}`
+                }`}
+              >
+                <LabIcon className="w-[18px] h-[18px]" />
+                {isFr ? "Outils IA" : "AI Tools"}
+                <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${toolsDropdown.open ? "rotate-180" : ""}`} />
+              </button>
+
+              {toolsDropdown.open && (
+                <div className="absolute top-full left-0 mt-1.5 w-52 bg-white rounded-xl border-2 border-indigo-100 shadow-lg shadow-indigo-100/50 overflow-hidden z-50">
+                  {toolsItems.map((item) => {
+                    const isActive = pathname.startsWith(item.href);
+                    return (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        onClick={() => toolsDropdown.setOpen(false)}
+                        className={`flex items-center gap-2.5 px-4 py-3 text-sm transition-colors ${
+                          isActive
+                            ? "bg-indigo-50 text-indigo-700 font-semibold"
+                            : "text-gray-700 hover:bg-indigo-50/50 hover:text-indigo-700"
+                        }`}
+                      >
+                        <item.icon className="w-5 h-5" />
+                        {item.name}
+                      </Link>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+
+            {/* More dropdown */}
+            <div ref={moreDropdown.ref} className="relative">
+              <button
+                onClick={() => { moreDropdown.setOpen(!moreDropdown.open); toolsDropdown.setOpen(false); }}
+                className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all duration-200 border-2 ${
+                  isMoreActive
+                    ? `${navColors.more.bgActive} ${navColors.more.textActive} ${navColors.more.borderActive} shadow-sm`
+                    : `${navColors.more.bg} ${navColors.more.text} ${navColors.more.border} ${navColors.more.hoverBg}`
+                }`}
+              >
+                <StatsIcon className="w-[18px] h-[18px]" />
+                {isFr ? "Plus" : "More"}
+                <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${moreDropdown.open ? "rotate-180" : ""}`} />
+              </button>
+
+              {moreDropdown.open && (
+                <div className="absolute top-full left-0 mt-1.5 w-48 bg-white rounded-xl border-2 border-purple-100 shadow-lg shadow-purple-100/50 overflow-hidden z-50">
+                  {moreItems.map((item) => {
+                    const isActive = pathname.startsWith(item.href);
+                    return (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        onClick={() => moreDropdown.setOpen(false)}
+                        className={`flex items-center gap-2.5 px-4 py-3 text-sm transition-colors ${
+                          isActive
+                            ? "bg-purple-50 text-purple-700 font-semibold"
+                            : "text-gray-700 hover:bg-purple-50/50 hover:text-purple-700"
+                        }`}
+                      >
+                        <item.icon className="w-5 h-5" />
+                        {item.name}
+                      </Link>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+
             {/* VIP — always stands out */}
             <Link
               href={`/${locale}/vip`}
-              className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold transition-all duration-200 border ${
+              className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition-all duration-200 border-2 ${
                 pathname.startsWith(`/${locale}/vip`)
-                  ? "bg-gradient-to-r from-amber-400 to-orange-400 text-white border-amber-500 shadow-md shadow-amber-200"
-                  : "bg-gradient-to-r from-amber-500 to-orange-500 text-white border-amber-600 hover:from-amber-400 hover:to-orange-400 shadow-sm hover:shadow-md hover:shadow-amber-200"
+                  ? "bg-gradient-to-r from-amber-400 to-orange-400 text-white border-amber-500 shadow-md shadow-amber-200/50"
+                  : "bg-gradient-to-r from-amber-500 to-orange-500 text-white border-amber-600 hover:from-amber-400 hover:to-orange-400 shadow-sm hover:shadow-md hover:shadow-amber-200/50"
               }`}
             >
               <VipIcon className="w-[18px] h-[18px]" />
@@ -231,7 +374,7 @@ export default function Header({ locale, translations: t }: HeaderProps) {
             {/* Language Switcher */}
             <Link
               href={localeSwitchPath}
-              className="flex items-center gap-1 px-2.5 py-2 rounded-xl text-xs font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700 transition-colors border border-transparent hover:border-gray-200"
+              className="flex items-center gap-1 px-2.5 py-2 rounded-xl text-xs font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700 transition-colors border-2 border-transparent hover:border-gray-200"
             >
               <Globe className="w-4 h-4" />
               {otherLocale.toUpperCase()}
@@ -246,11 +389,7 @@ export default function Header({ locale, translations: t }: HeaderProps) {
             className="lg:hidden p-2 rounded-xl text-gray-600 hover:bg-gray-100 transition-colors"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           >
-            {mobileMenuOpen ? (
-              <X className="w-6 h-6" />
-            ) : (
-              <Menu className="w-6 h-6" />
-            )}
+            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
         </div>
 
@@ -258,7 +397,11 @@ export default function Header({ locale, translations: t }: HeaderProps) {
         {mobileMenuOpen && (
           <div className="lg:hidden pb-4 border-t border-gray-100 animate-in">
             <nav className="flex flex-col gap-1 pt-3">
-              {navigation.map((item) => {
+              {/* Section: Main */}
+              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider px-4 pt-2 pb-1">
+                {isFr ? "Principal" : "Main"}
+              </p>
+              {primaryNav.map((item) => {
                 const isActive = pathname.startsWith(item.href);
                 const colors = navColors[item.colorKey];
                 return (
@@ -266,13 +409,63 @@ export default function Header({ locale, translations: t }: HeaderProps) {
                     key={item.name}
                     href={item.href}
                     onClick={() => setMobileMenuOpen(false)}
-                    className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 border ${
+                    className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 border-2 mx-2 ${
                       isActive
-                        ? `${colors.bgActive} ${colors.textActive} ${colors.border}`
+                        ? `${colors.bgActive} ${colors.textActive} ${colors.borderActive}`
                         : `border-transparent text-gray-600 hover:bg-gray-50 active:bg-gray-100`
                     }`}
                   >
-                    <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${isActive ? colors.bgActive : colors.bg}`}>
+                    <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${isActive ? colors.bgActive : "bg-gray-100"}`}>
+                      <item.icon className="w-5 h-5" />
+                    </div>
+                    {item.name}
+                  </Link>
+                );
+              })}
+
+              {/* Section: AI Tools */}
+              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider px-4 pt-4 pb-1">
+                {isFr ? "Outils IA" : "AI Tools"}
+              </p>
+              {toolsItems.map((item) => {
+                const isActive = pathname.startsWith(item.href);
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 border-2 mx-2 ${
+                      isActive
+                        ? "bg-indigo-50 text-indigo-700 border-indigo-300"
+                        : "border-transparent text-gray-600 hover:bg-gray-50"
+                    }`}
+                  >
+                    <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${isActive ? "bg-indigo-100" : "bg-gray-100"}`}>
+                      <item.icon className="w-5 h-5" />
+                    </div>
+                    {item.name}
+                  </Link>
+                );
+              })}
+
+              {/* Section: More */}
+              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider px-4 pt-4 pb-1">
+                {isFr ? "Plus" : "More"}
+              </p>
+              {moreItems.map((item) => {
+                const isActive = pathname.startsWith(item.href);
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 border-2 mx-2 ${
+                      isActive
+                        ? "bg-purple-50 text-purple-700 border-purple-300"
+                        : "border-transparent text-gray-600 hover:bg-gray-50"
+                    }`}
+                  >
+                    <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${isActive ? "bg-purple-100" : "bg-gray-100"}`}>
                       <item.icon className="w-5 h-5" />
                     </div>
                     {item.name}
@@ -281,27 +474,29 @@ export default function Header({ locale, translations: t }: HeaderProps) {
               })}
 
               {/* VIP mobile */}
-              <Link
-                href={`/${locale}/vip`}
-                onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold bg-gradient-to-r from-amber-500 to-orange-500 text-white border border-amber-600 shadow-sm"
-              >
-                <div className="w-9 h-9 rounded-lg flex items-center justify-center bg-white/20">
-                  <VipIcon className="w-5 h-5" />
-                </div>
-                {t.vip}
-              </Link>
+              <div className="mx-2 mt-2">
+                <Link
+                  href={`/${locale}/vip`}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold bg-gradient-to-r from-amber-500 to-orange-500 text-white border-2 border-amber-600 shadow-sm"
+                >
+                  <div className="w-9 h-9 rounded-lg flex items-center justify-center bg-white/20">
+                    <VipIcon className="w-5 h-5" />
+                  </div>
+                  {t.vip}
+                </Link>
+              </div>
 
               <Link
                 href={localeSwitchPath}
-                className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-gray-500 hover:bg-gray-50"
+                className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-gray-500 hover:bg-gray-50 mx-2 mt-1"
               >
                 <div className="w-9 h-9 rounded-lg flex items-center justify-center bg-gray-100">
                   <Globe className="w-5 h-5 text-gray-500" />
                 </div>
                 {locale === "fr" ? "Switch to English" : "Passer au Francais"}
               </Link>
-              <div className="px-1 pt-2 border-t border-gray-100 mt-1">
+              <div className="px-3 pt-2 border-t border-gray-100 mt-1">
                 <AuthButton locale={locale} />
               </div>
             </nav>

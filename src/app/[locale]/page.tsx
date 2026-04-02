@@ -15,6 +15,7 @@ import {
 import AffiliateCTA from "@/components/ui/AffiliateCTA";
 import PromoBanner from "@/components/ui/PromoBanner";
 import MatchCard from "@/components/predictions/MatchCard";
+import { MostPopularBet } from "@/components/social/CrowdBacking";
 import SpinWheel from "@/components/spin/SpinWheel";
 import ReferralTracker from "@/components/spin/ReferralTracker";
 import { siteConfig } from "@/lib/config";
@@ -121,6 +122,24 @@ export default async function HomePage({
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
         <PromoBanner locale={locale} variant="best-odds" campaign="home_top" />
       </section>
+
+      {/* ============ MOST POPULAR BET ============ */}
+      {topMatches.length > 0 && (
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+          <MostPopularBet
+            matches={topMatches.filter(m => m.tip).map(m => ({
+              homeTeam: m.home_team,
+              awayTeam: m.away_team,
+              homeProb: m.tip!.home_prob,
+              drawProb: m.tip!.draw_prob,
+              awayProb: m.tip!.away_prob,
+              confidence: m.tip!.confidence,
+              league: m.league_name,
+            }))}
+            locale={locale}
+          />
+        </section>
+      )}
 
       {/* ============ TODAY'S TOP PICKS ============ */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">

@@ -106,5 +106,13 @@
     "feature6": "Downloadable PDF reports",
     "subscribe": "Subscribe Now",
     "guarantee": "Cancel anytime. No commitment."
+  },
+  "aiLab": {
+    "title": "AI Football Lab",
+    "subtitle": "Advanced analysis powered by artificial intelligence"
+  },
+  "betBuilder": {
+    "title": "AI Combo Builder",
+    "subtitle": "Smart combos generated automatically"
   }
 }

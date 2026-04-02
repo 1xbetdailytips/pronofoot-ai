@@ -11,6 +11,7 @@ import {
   Zap,
 } from "lucide-react";
 import AffiliateCTA from "@/components/ui/AffiliateCTA";
+import CrowdBacking from "@/components/social/CrowdBacking";
 import { siteConfig } from "@/lib/config";
 import { getMatchBySlug, mapPrediction, mapRiskLevel } from "@/lib/data";
 
@@ -444,6 +445,26 @@ export default async function MatchDetailPage({
           </div>
         )}
       </div>
+
+      {/* Community Backing */}
+      {tip && (
+        <div className="mb-6">
+          <div className="px-1 mb-2 flex items-center gap-2">
+            <Users className="w-4 h-4 text-blue-500" />
+            <h3 className="font-bold text-gray-900 text-sm">
+              {isFr ? "Tendance Communaute" : "Community Trend"}
+            </h3>
+          </div>
+          <CrowdBacking
+            homeProb={tip.home_prob}
+            drawProb={tip.draw_prob}
+            awayProb={tip.away_prob}
+            homeTeam={match.home_team}
+            awayTeam={match.away_team}
+            locale={locale}
+          />
+        </div>
+      )}
 
       {/* Bottom CTA */}
       <div className="bg-gradient-to-r from-emerald-600 to-emerald-700 rounded-2xl p-6 text-center mb-6">
