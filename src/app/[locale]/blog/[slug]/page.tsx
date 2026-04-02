@@ -118,6 +118,12 @@ export default async function BlogArticlePage({
           "@type": "Organization",
           name: siteConfig.name,
           url: siteConfig.url,
+          logo: {
+            "@type": "ImageObject",
+            url: `${siteConfig.url}/images/logo.png`,
+            width: 512,
+            height: 512,
+          },
         },
         mainEntityOfPage: `${siteConfig.url}/${locale}/blog/${article.slug}`,
         ...(article.image_url ? { image: article.image_url } : {}),
@@ -246,6 +252,30 @@ export default async function BlogArticlePage({
           </Link>
         </div>
       </div>
+
+      {/* Internal links — SEO link equity distribution */}
+      <nav className="mt-8 pt-6 border-t border-gray-200">
+        <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">
+          {isFr ? "A decouvrir aussi" : "Also discover"}
+        </p>
+        <div className="flex flex-wrap gap-2">
+          <Link href={`/${locale}/predictions`} className="text-xs bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-full hover:bg-emerald-100 transition-colors font-medium">
+            {isFr ? "Pronostics du Jour" : "Today's Predictions"}
+          </Link>
+          <Link href={`/${locale}/stats`} className="text-xs bg-blue-50 text-blue-700 px-3 py-1.5 rounded-full hover:bg-blue-100 transition-colors font-medium">
+            {isFr ? "Performance IA" : "AI Performance"}
+          </Link>
+          <Link href={`/${locale}/ai-lab`} className="text-xs bg-indigo-50 text-indigo-700 px-3 py-1.5 rounded-full hover:bg-indigo-100 transition-colors font-medium">
+            {isFr ? "Labo IA" : "AI Lab"}
+          </Link>
+          <Link href={`/${locale}/about`} className="text-xs bg-gray-100 text-gray-700 px-3 py-1.5 rounded-full hover:bg-gray-200 transition-colors font-medium">
+            {isFr ? "Comment ca marche" : "How it works"}
+          </Link>
+          <Link href={`/${locale}/bet-builder`} className="text-xs bg-amber-50 text-amber-700 px-3 py-1.5 rounded-full hover:bg-amber-100 transition-colors font-medium">
+            {isFr ? "Combo Builder" : "Combo Builder"}
+          </Link>
+        </div>
+      </nav>
 
       {/* JSON-LD */}
       <script

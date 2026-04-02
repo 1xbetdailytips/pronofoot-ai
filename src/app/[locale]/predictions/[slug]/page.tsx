@@ -508,18 +508,29 @@ export default async function MatchDetailPage({
         />
       </div>
 
-      {/* Internal links */}
-      <div className="flex flex-wrap gap-3">
-        <Link href={`/${locale}/predictions`} className="text-sm text-emerald-600 hover:text-emerald-700 font-medium">
-          ← {isFr ? "Tous les Pronostics" : "All Predictions"}
-        </Link>
-        <Link href={`/${locale}/rapport-du-jour`} className="text-sm text-emerald-600 hover:text-emerald-700 font-medium">
-          {isFr ? "Rapport du Jour" : "Daily Report"} →
-        </Link>
-        <Link href={`/${locale}/tickets`} className="text-sm text-emerald-600 hover:text-emerald-700 font-medium">
-          {isFr ? "Codes Ticket" : "Ticket Codes"} →
-        </Link>
-      </div>
+      {/* Internal links — SEO cross-linking */}
+      <nav className="pt-4 border-t border-gray-100">
+        <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">
+          {isFr ? "Explorer aussi" : "Also explore"}
+        </p>
+        <div className="flex flex-wrap gap-2">
+          <Link href={`/${locale}/predictions`} className="text-xs bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-full hover:bg-emerald-100 transition-colors font-medium">
+            {isFr ? "Tous les Pronostics" : "All Predictions"}
+          </Link>
+          <Link href={`/${locale}/stats`} className="text-xs bg-blue-50 text-blue-700 px-3 py-1.5 rounded-full hover:bg-blue-100 transition-colors font-medium">
+            {isFr ? "Performance IA" : "AI Stats"}
+          </Link>
+          <Link href={`/${locale}/rapport-du-jour`} className="text-xs bg-purple-50 text-purple-700 px-3 py-1.5 rounded-full hover:bg-purple-100 transition-colors font-medium">
+            {isFr ? "Rapport du Jour" : "Daily Report"}
+          </Link>
+          <Link href={`/${locale}/blog`} className="text-xs bg-gray-100 text-gray-700 px-3 py-1.5 rounded-full hover:bg-gray-200 transition-colors font-medium">
+            Blog
+          </Link>
+          <Link href={`/${locale}/about`} className="text-xs bg-amber-50 text-amber-700 px-3 py-1.5 rounded-full hover:bg-amber-100 transition-colors font-medium">
+            {isFr ? "Comment ca marche" : "How it works"}
+          </Link>
+        </div>
+      </nav>
 
       {/* JSON-LD: SportsEvent + BreadcrumbList */}
       <script
