@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { TrendingUp, Target, CheckCircle, XCircle, Clock, Zap, Shield, Flame } from "lucide-react";
 import { getWinRateStats } from "@/lib/data";
+import { siteConfig } from "@/lib/config";
 
 // ISR: revalidate every 5 minutes (stats change once daily at most)
 export const revalidate = 300;
@@ -463,18 +464,31 @@ export default async function StatsPage({ params }: { params: { locale: string }
         </div>
       )}
 
-      {/* JSON-LD */}
+      {/* JSON-LD: WebPage + BreadcrumbList */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             "@context": "https://schema.org",
-            "@type": "WebPage",
-            name: isFr ? "Performance IA PronoFoot" : "PronoFoot AI Performance",
-            description: isFr
-              ? `Taux de réussite global : ${stats.overall.rate}% sur ${stats.overall.total} prédictions`
-              : `Overall win rate: ${stats.overall.rate}% across ${stats.overall.total} predictions`,
-            url: `https://parifoot.online/${params.locale}/stats`,
+            "@graph": [
+              {
+                "@type": "WebPage",
+                name: isFr ? "Performance IA PronoFoot" : "PronoFoot AI Performance",
+                description: isFr
+                  ? `Taux de réussite global : ${stats.overall.rate}% sur ${stats.overall.total} prédictions vérifiées. 7 marchés suivis.`
+                  : `Overall win rate: ${stats.overall.rate}% across ${stats.overall.total} verified predictions. 7 markets tracked.`,
+                url: `${siteConfig.url}/${params.locale}/stats`,
+                isPartOf: { "@id": `${siteConfig.url}/#website` },
+                inLanguage: params.locale === "fr" ? "fr-FR" : "en-US",
+              },
+              {
+                "@type": "BreadcrumbList",
+                itemListElement: [
+                  { "@type": "ListItem", position: 1, name: isFr ? "Accueil" : "Home", item: `${siteConfig.url}/${params.locale}` },
+                  { "@type": "ListItem", position: 2, name: isFr ? "Statistiques" : "Stats", item: `${siteConfig.url}/${params.locale}/stats` },
+                ],
+              },
+            ],
           }),
         }}
       />

@@ -73,8 +73,59 @@ export default async function HomePage({
   const majorMatches = matches.filter(m => majorLeagues.has(m.league_name) && m.tip);
   const topMatches = majorMatches.length > 0 ? majorMatches.slice(0, 6) : matches.filter(m => m.tip).slice(0, 6);
 
+  // Homepage FAQ data (visible on page + structured data)
+  const homeFaqs = isFr ? [
+    { q: "Comment fonctionne PronoFoot AI ?", a: "Notre intelligence artificielle analyse plus de 500 statistiques par match (forme des equipes, historique des confrontations, performances domicile/exterieur, buts marques et encaisses) pour generer des pronostics quotidiens sur 7 marches : 1X2, Over 2.5, Over 1.5, BTTS, Home to Score, Away to Score et Best Pick." },
+    { q: "Les pronostics sont-ils gratuits ?", a: "Oui, tous les pronostics de base sont gratuits et mis a jour chaque matin a 7h (heure de Douala). Les abonnes VIP recoivent des analyses approfondies et des marches exclusifs." },
+    { q: "Quel est le taux de reussite de l'IA ?", a: `Notre taux de reussite global est de ${winStats.overall.rate}% sur ${winStats.overall.total} pronostics verifies. Tous les resultats sont suivis automatiquement et affiches en toute transparence sur notre page Statistiques.` },
+    { q: "Quels championnats sont couverts ?", a: "Nous couvrons les championnats camerounais (MTN Elite One et Two), les grandes ligues europeennes (Premier League, La Liga, Ligue 1, Serie A, Bundesliga), la Ligue des Champions, l'Europa League, la Ligue des Champions de la CAF et la CAN." },
+    { q: "Comment sont calcules les niveaux de confiance ?", a: "Chaque pronostic recoit un score de confiance (0-100%) base sur la force des preuves statistiques. Un score eleve signifie que plusieurs indicateurs convergent vers le meme resultat. Le niveau de risque (Faible/Moyen/Eleve) reflete la volatilite du match." },
+  ] : [
+    { q: "How does PronoFoot AI work?", a: "Our artificial intelligence analyzes 500+ statistics per match (team form, head-to-head history, home/away performance, goals scored and conceded) to generate daily predictions across 7 markets: 1X2, Over 2.5, Over 1.5, BTTS, Home to Score, Away to Score, and Best Pick." },
+    { q: "Are the predictions free?", a: "Yes, all basic predictions are free and updated every morning at 7am (Douala time). VIP subscribers receive deeper analysis and exclusive markets." },
+    { q: "What is the AI win rate?", a: `Our overall win rate is ${winStats.overall.rate}% across ${winStats.overall.total} verified predictions. All results are automatically tracked and displayed transparently on our Stats page.` },
+    { q: "Which leagues are covered?", a: "We cover Cameroonian leagues (MTN Elite One and Two), top European leagues (Premier League, La Liga, Ligue 1, Serie A, Bundesliga), Champions League, Europa League, CAF Champions League, and AFCON." },
+    { q: "How are confidence levels calculated?", a: "Each prediction receives a confidence score (0-100%) based on statistical evidence strength. A high score means multiple indicators point to the same result. The risk level (Low/Medium/High) reflects match volatility." },
+  ];
+
+  // Homepage JSON-LD: WebPage + BreadcrumbList + FAQPage
+  const homepageJsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebPage",
+        "@id": `${siteConfig.url}/${locale}/#webpage`,
+        url: `${siteConfig.url}/${locale}`,
+        name: isFr ? "PronoFoot AI — Pronostics Football IA Gratuits" : "PronoFoot AI — Free AI Football Predictions",
+        description: isFr
+          ? `Pronostics football gratuits par IA. Taux de reussite de ${winStats.overall.rate}% sur ${winStats.overall.total} predictions verifiees.`
+          : `Free AI football predictions. ${winStats.overall.rate}% win rate across ${winStats.overall.total} verified predictions.`,
+        isPartOf: { "@id": `${siteConfig.url}/#website` },
+        about: { "@id": `${siteConfig.url}/#organization` },
+        inLanguage: locale === "fr" ? "fr-FR" : "en-US",
+      },
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: isFr ? "Accueil" : "Home", item: `${siteConfig.url}/${locale}` },
+        ],
+      },
+      {
+        "@type": "FAQPage",
+        mainEntity: homeFaqs.map(faq => ({
+          "@type": "Question",
+          name: faq.q,
+          acceptedAnswer: { "@type": "Answer", text: faq.a },
+        })),
+      },
+    ],
+  };
+
   return (
     <div>
+      {/* Homepage structured data */}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(homepageJsonLd) }} />
+
       {/* ============ HERO SECTION ============ */}
       <section className="relative bg-gradient-to-br from-emerald-600 via-emerald-700 to-emerald-900 overflow-hidden">
         <div className="absolute inset-0 opacity-10">

@@ -158,6 +158,9 @@ export default async function MatchDetailPage({
         </span>
       </div>
 
+      {/* SEO H1 — visually integrated but semantic */}
+      <h1 className="sr-only">{match.home_team} vs {match.away_team} — {isFr ? "Pronostic" : "Prediction"} {match.league_name}</h1>
+
       {/* Match Header */}
       <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden mb-6">
         <div className="bg-gradient-to-r from-emerald-600 to-emerald-700 px-6 py-3">
@@ -177,7 +180,7 @@ export default async function MatchDetailPage({
               <div className="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-3 text-2xl font-bold text-gray-400">
                 {match.home_team.charAt(0)}
               </div>
-              <h2 className="text-xl font-bold text-gray-900">{match.home_team}</h2>
+              <p className="text-xl font-bold text-gray-900">{match.home_team}</p>
               <p className="text-sm text-gray-500">{isFr ? "Domicile" : "Home"}</p>
             </div>
 
@@ -190,7 +193,7 @@ export default async function MatchDetailPage({
               <div className="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-3 text-2xl font-bold text-gray-400">
                 {match.away_team.charAt(0)}
               </div>
-              <h2 className="text-xl font-bold text-gray-900">{match.away_team}</h2>
+              <p className="text-xl font-bold text-gray-900">{match.away_team}</p>
               <p className="text-sm text-gray-500">{isFr ? "Exterieur" : "Away"}</p>
             </div>
           </div>

@@ -46,8 +46,56 @@ export default async function PredictionsPage({
   const leagueGroups = groupMatchesByLeague(matches);
   const predictedCount = matches.filter((m) => !!m.tip).length;
 
+  // Predictions FAQ (visible + schema)
+  const predFaqs = isFr ? [
+    { q: "Comment l'IA genere-t-elle les pronostics ?", a: "Notre IA analyse plus de 500 statistiques par match : forme recente des equipes, confrontations directes, performances domicile et exterieur, buts marques et encaisses, position au classement et dynamique de momentum. Elle genere ensuite des predictions sur 7 marches avec un score de confiance." },
+    { q: "A quelle heure les pronostics sont-ils disponibles ?", a: "Les pronostics sont generes chaque matin a 7h00 (heure de Douala, UTC+1). Les matchs sans prediction affichent 'En attente' jusqu'a ce que l'analyse soit terminee." },
+    { q: "Que signifie le score de confiance ?", a: "Le score de confiance (0-100%) indique la force de la convergence statistique vers un resultat. Un score superieur a 70% signifie que plusieurs indicateurs pointent dans la meme direction. Le niveau de risque (Faible/Moyen/Eleve) reflete la volatilite du match." },
+    { q: "Quels marches de paris sont couverts ?", a: "Nous couvrons 7 marches par match : 1X2 (resultat du match), Over 2.5 buts, Over 1.5 buts, BTTS (les deux equipes marquent), Home to Score, Away to Score et Best Pick (le pronostic avec le meilleur rapport qualite-prix)." },
+  ] : [
+    { q: "How does the AI generate predictions?", a: "Our AI analyzes 500+ statistics per match: recent team form, head-to-head history, home and away performance, goals scored and conceded, league position, and momentum trends. It then generates predictions across 7 markets with a confidence score." },
+    { q: "What time are predictions available?", a: "Predictions are generated every morning at 7:00 AM (Douala time, UTC+1). Matches without predictions show 'Pending' until analysis is complete." },
+    { q: "What does the confidence score mean?", a: "The confidence score (0-100%) indicates how strongly statistics converge toward a result. Above 70% means multiple indicators point the same way. The risk level (Low/Medium/High) reflects match volatility." },
+    { q: "Which betting markets are covered?", a: "We cover 7 markets per match: 1X2 (match result), Over 2.5 goals, Over 1.5 goals, BTTS (both teams to score), Home to Score, Away to Score, and Best Pick (highest value prediction)." },
+  ];
+
+  // Predictions page JSON-LD
+  const predictionsJsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "CollectionPage",
+        name: isFr ? "Pronostics Football du Jour" : "Today's Football Predictions",
+        description: isFr
+          ? `${predictedCount} pronostics IA pour les matchs de football d'aujourd'hui sur ${matches.length} matchs.`
+          : `${predictedCount} AI predictions for today's football matches out of ${matches.length} fixtures.`,
+        url: `${siteConfig.url}/${locale}/predictions`,
+        isPartOf: { "@id": `${siteConfig.url}/#website` },
+        inLanguage: locale === "fr" ? "fr-FR" : "en-US",
+      },
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: isFr ? "Accueil" : "Home", item: `${siteConfig.url}/${locale}` },
+          { "@type": "ListItem", position: 2, name: isFr ? "Pronostics" : "Predictions", item: `${siteConfig.url}/${locale}/predictions` },
+        ],
+      },
+      {
+        "@type": "FAQPage",
+        mainEntity: predFaqs.map(faq => ({
+          "@type": "Question",
+          name: faq.q,
+          acceptedAnswer: { "@type": "Answer", text: faq.a },
+        })),
+      },
+    ],
+  };
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      {/* Structured data */}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(predictionsJsonLd) }} />
+
       {/* Header */}
       <div className="mb-6">
         <div className="flex items-center gap-2 mb-1">
@@ -94,9 +142,9 @@ export default async function PredictionsPage({
             <div key={group.leagueName}>
               {/* League header */}
               <div className="flex items-center justify-between px-4 py-2 bg-gray-50/70 border-b border-gray-100">
-                <span className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
+                <h2 className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
                   {group.leagueName}
-                </span>
+                </h2>
                 <span className="text-xs text-gray-400">{group.matches.length}</span>
               </div>
               {/* Matches */}
@@ -149,17 +197,21 @@ export default async function PredictionsPage({
         </a>
       </div>
 
-      {/* JSON-LD */}
-      <script type="application/ld+json" dangerouslySetInnerHTML={{
-        __html: JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "CollectionPage",
-          name: isFr ? "Pronostics Football du Jour" : "Today's Football Predictions",
-          description: isFr ? "Pronostics IA pour les matchs de football d'aujourd'hui" : "AI predictions for today's football matches",
-          url: `https://parifoot.online/${locale}/predictions`,
-          isPartOf: { "@type": "WebSite", name: "PronoFoot AI", url: "https://parifoot.online" },
-        }),
-      }} />
+      {/* FAQ Section — visible on page for users + indexed by search */}
+      <section className="bg-white rounded-xl border border-gray-200 p-6 mb-6">
+        <h2 className="text-lg font-bold text-gray-900 mb-4">{isFr ? "Questions Frequentes" : "Frequently Asked Questions"}</h2>
+        <div className="space-y-4">
+          {predFaqs.map((faq, i) => (
+            <details key={i} className="group">
+              <summary className="cursor-pointer text-sm font-semibold text-gray-800 hover:text-emerald-600 transition-colors list-none flex items-center gap-2">
+                <span className="text-emerald-500 group-open:rotate-90 transition-transform">&#9654;</span>
+                {faq.q}
+              </summary>
+              <p className="text-sm text-gray-600 mt-2 ml-5 leading-relaxed">{faq.a}</p>
+            </details>
+          ))}
+        </div>
+      </section>
     </div>
   );
 }
