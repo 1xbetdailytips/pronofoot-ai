@@ -1,25 +1,30 @@
 # PronoFoot AI
 
-> AI-powered football predictions platform for French-speaking Africa. Uses machine learning to analyze 500+ statistics per match and generate daily betting predictions.
+> AI-powered football predictions platform for French-speaking Africa. Analyzes 500+ stats per match using Claude AI to generate daily predictions across 7 betting markets. Based in Cameroon.
 
-## About
-
-PronoFoot AI is a football match analysis platform built on artificial intelligence. Based in Cameroon, we serve French-speaking Africa with daily predictions, 1xBet ticket codes, and performance-tracked AI analysis.
+For complete documentation, see [llms-full.txt](https://www.parifoot.online/llms-full.txt).
 
 ## Key Pages
 
-- [Daily Predictions](https://www.parifoot.online/fr/predictions): AI-generated football match predictions updated every morning
-- [AI Performance Stats](https://www.parifoot.online/fr/stats): Complete transparency on our AI's win rate, by confidence tier and market
-- [Daily Report](https://www.parifoot.online/fr/rapport-du-jour): Best value bet, safest bet, underdog pick, and accumulator of the day
-- [1xBet Ticket Codes](https://www.parifoot.online/fr/tickets): Ready-to-use booking codes for 1xBet
-- [VIP Plans](https://www.parifoot.online/fr/vip): Premium subscription with 5 daily codes (Classic & Elite tiers)
-- [Responsible Gambling](https://www.parifoot.online/fr/responsible-gambling): Our commitment to responsible gambling
+- [Daily Predictions](https://www.parifoot.online/fr/predictions): AI predictions for today's matches — 7 markets per match
+- [AI Performance Stats](https://www.parifoot.online/fr/stats): Full win/loss transparency by market, confidence tier, and risk level
+- [AI Lab](https://www.parifoot.online/fr/ai-lab): Pattern analyzer, smart bet generator, suspicious match detector
+- [Combo Builder](https://www.parifoot.online/fr/bet-builder): Auto-generated Safe/Balanced/Risky betting combos
+- [Daily Report](https://www.parifoot.online/fr/rapport-du-jour): Best value, safest bet, underdog pick, accumulator of the day
+- [Blog](https://www.parifoot.online/fr/blog): Match previews, recaps, league analysis, betting guides
+- [VIP Plans](https://www.parifoot.online/fr/vip): Premium predictions from 2,500 FCFA/week
+- [Livescore](https://www.parifoot.online/fr/livescore): Real-time scores, auto-refreshing
 
-## Leagues Covered
+## Prediction Markets
 
-Cameroon MTN Elite One, CAF Champions League, Africa Cup of Nations, Premier League, La Liga, Ligue 1, Serie A, Bundesliga, Champions League, Europa League
+1X2 (Match Result), Over 2.5 Goals, Over 1.5 Goals, BTTS, Home to Score, Away to Score, Best Pick
+
+## Leagues
+
+Cameroon MTN Elite One/Two, CAF Champions League, AFCON, Premier League, La Liga, Ligue 1, Serie A, Bundesliga, UCL, UEL
 
 ## Contact
 
 - Telegram: https://t.me/pronofootai
+- Twitter: https://twitter.com/pronofootai
 - Admin: https://t.me/pronofootadmin

@@ -2,8 +2,8 @@ import { getTranslations } from "next-intl/server";
 import { createClient } from "@supabase/supabase-js";
 import type { Metadata } from "next";
 
-// Force dynamic rendering — daily report must be fresh
-export const dynamic = "force-dynamic";
+// ISR: revalidate every 5 minutes
+export const revalidate = 300;
 import {
   FileText,
   Target,

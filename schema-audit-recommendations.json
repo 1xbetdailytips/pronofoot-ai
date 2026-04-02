@@ -1,0 +1,303 @@
+{
+  "_audit_info": {
+    "site": "https://www.parifoot.online",
+    "date": "2026-04-02",
+    "auditor": "Schema.org Specialist",
+    "note": "Copy these JSON-LD blocks into the appropriate page files. All URLs use siteConfig.url for consistency."
+  },
+
+  "1_LAYOUT_GLOBAL_SCHEMA": {
+    "_file": "src/app/[locale]/layout.tsx",
+    "_action": "REPLACE existing JSON-LD block (lines 105-140)",
+    "schema": {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://www.parifoot.online/#organization",
+          "name": "PronoFoot AI",
+          "url": "https://www.parifoot.online",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://www.parifoot.online/images/logo.png",
+            "width": 512,
+            "height": 512
+          },
+          "description": "AI-powered football predictions and 1xBet ticket codes",
+          "sameAs": [
+            "https://t.me/pronofootai",
+            "https://twitter.com/pronofootai"
+          ],
+          "contactPoint": {
+            "@type": "ContactPoint",
+            "contactType": "customer service",
+            "availableLanguage": ["French", "English"],
+            "url": "https://t.me/pronofootadmin"
+          }
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://www.parifoot.online/#website",
+          "name": "PronoFoot AI",
+          "url": "https://www.parifoot.online",
+          "publisher": { "@id": "https://www.parifoot.online/#organization" },
+          "inLanguage": ["fr", "en"],
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": {
+              "@type": "EntryPoint",
+              "urlTemplate": "https://www.parifoot.online/{locale}/blog?q={search_term_string}"
+            },
+            "query-input": "required name=search_term_string"
+          }
+        }
+      ]
+    }
+  },
+
+  "2_HOMEPAGE_SCHEMA": {
+    "_file": "src/app/[locale]/page.tsx",
+    "_action": "ADD new JSON-LD block before closing </div>",
+    "_note": "Replace {locale} dynamically with params.locale",
+    "schema": {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebPage",
+          "@id": "https://www.parifoot.online/{locale}/#webpage",
+          "name": "PronoFoot AI | AI Football Predictions",
+          "url": "https://www.parifoot.online/{locale}",
+          "isPartOf": { "@id": "https://www.parifoot.online/#website" },
+          "about": { "@id": "https://www.parifoot.online/#organization" },
+          "description": "AI-powered football predictions, daily betting tips, and 1xBet ticket codes.",
+          "inLanguage": "{locale}"
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://www.parifoot.online/{locale}"
+            }
+          ]
+        }
+      ]
+    }
+  },
+
+  "3_PREDICTIONS_LISTING_SCHEMA": {
+    "_file": "src/app/[locale]/predictions/page.tsx",
+    "_action": "REPLACE existing JSON-LD block (lines 153-162)",
+    "schema": {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "CollectionPage",
+          "@id": "https://www.parifoot.online/{locale}/predictions/#webpage",
+          "name": "Today's Football Predictions",
+          "description": "AI predictions for today's football matches",
+          "url": "https://www.parifoot.online/{locale}/predictions",
+          "isPartOf": { "@id": "https://www.parifoot.online/#website" },
+          "inLanguage": "{locale}"
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://www.parifoot.online/{locale}"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Predictions"
+            }
+          ]
+        }
+      ]
+    }
+  },
+
+  "4_MATCH_DETAIL_SCHEMA": {
+    "_file": "src/app/[locale]/predictions/[slug]/page.tsx",
+    "_action": "REPLACE existing JSON-LD block (lines 521-549). Add eventStatus and location.",
+    "schema": {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "SportsEvent",
+          "name": "{home_team} vs {away_team}",
+          "startDate": "{match_date_ISO}",
+          "eventStatus": "https://schema.org/EventScheduled",
+          "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+          "location": {
+            "@type": "Place",
+            "name": "Stadium TBD",
+            "address": {
+              "@type": "PostalAddress",
+              "addressCountry": "TBD"
+            }
+          },
+          "homeTeam": { "@type": "SportsTeam", "name": "{home_team}" },
+          "awayTeam": { "@type": "SportsTeam", "name": "{away_team}" },
+          "organizer": { "@type": "SportsOrganization", "name": "{league_name}" },
+          "description": "{ai_analysis_or_fallback}"
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://www.parifoot.online/{locale}"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Predictions",
+              "item": "https://www.parifoot.online/{locale}/predictions"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "{home_team} vs {away_team}"
+            }
+          ]
+        }
+      ]
+    }
+  },
+
+  "5_BLOG_LISTING_SCHEMA": {
+    "_file": "src/app/[locale]/blog/page.tsx",
+    "_action": "REPLACE both existing JSON-LD blocks (lines 553-596) with a single merged @graph",
+    "schema": {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Blog",
+          "@id": "https://www.parifoot.online/{locale}/blog/#blog",
+          "name": "PronoFoot AI Blog",
+          "description": "Football analysis, predictions, and recaps powered by AI",
+          "url": "https://www.parifoot.online/{locale}/blog",
+          "publisher": { "@id": "https://www.parifoot.online/#organization" },
+          "inLanguage": "{locale}"
+        },
+        {
+          "@type": "CollectionPage",
+          "name": "Football Blog Archive",
+          "url": "https://www.parifoot.online/{locale}/blog",
+          "isPartOf": { "@id": "https://www.parifoot.online/#website" },
+          "mainEntity": { "@id": "https://www.parifoot.online/{locale}/blog/#blog" },
+          "numberOfItems": "{total_count}"
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://www.parifoot.online/{locale}"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Blog"
+            }
+          ]
+        }
+      ]
+    }
+  },
+
+  "6_BLOG_ARTICLE_SCHEMA": {
+    "_file": "src/app/[locale]/blog/[slug]/page.tsx",
+    "_action": "UPDATE existing schema -- add logo to publisher",
+    "_note": "Only change needed: add logo ImageObject to publisher",
+    "publisher_fix": {
+      "@type": "Organization",
+      "name": "PronoFoot AI",
+      "url": "https://www.parifoot.online",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.parifoot.online/images/logo.png",
+        "width": 512,
+        "height": 512
+      }
+    }
+  },
+
+  "7_STATS_PAGE_SCHEMA": {
+    "_file": "src/app/[locale]/stats/page.tsx",
+    "_action": "REPLACE existing JSON-LD block (lines 467-481)",
+    "schema": {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebPage",
+          "name": "PronoFoot AI Performance Stats",
+          "description": "Overall win rate: {rate}% across {total} predictions",
+          "url": "https://www.parifoot.online/{locale}/stats",
+          "isPartOf": { "@id": "https://www.parifoot.online/#website" },
+          "publisher": { "@id": "https://www.parifoot.online/#organization" },
+          "inLanguage": "{locale}"
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://www.parifoot.online/{locale}"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Stats"
+            }
+          ]
+        }
+      ]
+    }
+  },
+
+  "8_VIP_PAGE_SCHEMA": {
+    "_file": "src/app/[locale]/vip/page.tsx",
+    "_action": "UPDATE existing schema -- add image to Product, add url to Offers",
+    "_note_on_faqpage": "FAQPage will NOT produce Google rich results on a commercial site (restricted Aug 2023). However, keeping it benefits AI/LLM citations. No action needed -- keep as-is.",
+    "product_fix": {
+      "@type": "Product",
+      "name": "PronoFoot AI VIP",
+      "description": "Daily AI-generated 1xBet ticket codes, Over 1.5 analysis, Over 0.5 picks, live alerts",
+      "brand": { "@type": "Brand", "name": "PronoFoot AI" },
+      "image": "https://www.parifoot.online/images/og-default.png",
+      "offers": [
+        {
+          "@type": "Offer",
+          "name": "VIP Classique",
+          "price": "8000",
+          "priceCurrency": "XAF",
+          "priceValidUntil": "2026-12-31",
+          "availability": "https://schema.org/InStock",
+          "url": "https://www.parifoot.online/{locale}/vip"
+        },
+        {
+          "@type": "Offer",
+          "name": "VIP Elite",
+          "price": "15000",
+          "priceCurrency": "XAF",
+          "priceValidUntil": "2026-12-31",
+          "availability": "https://schema.org/InStock",
+          "url": "https://www.parifoot.online/{locale}/vip"
+        }
+      ]
+    }
+  }
+}

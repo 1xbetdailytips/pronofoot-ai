@@ -6,7 +6,8 @@ import { siteConfig } from "@/lib/config";
 import PromoBanner from "@/components/ui/PromoBanner";
 import ShareToUnlock from "@/components/viral/ShareToUnlock";
 
-export const dynamic = "force-dynamic";
+// ISR: revalidate every 2 minutes
+export const revalidate = 120;
 
 export function generateMetadata({ params }: { params: { locale: string } }): Metadata {
   const isFr = params.locale === "fr";

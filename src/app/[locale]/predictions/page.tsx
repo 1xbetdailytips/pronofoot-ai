@@ -6,8 +6,8 @@ import PromoBanner from "@/components/ui/PromoBanner";
 import { siteConfig } from "@/lib/config";
 import { getTodaysMatches, matchToCardProps, groupMatchesByLeague } from "@/lib/data";
 
-// Force dynamic rendering — predictions must be fresh on every request
-export const dynamic = "force-dynamic";
+// ISR: revalidate every 2 minutes (predictions don't change every second)
+export const revalidate = 120;
 
 export function generateMetadata({
   params,

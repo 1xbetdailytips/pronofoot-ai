@@ -1,9 +1,12 @@
 import { Suspense } from "react";
+import dynamic from "next/dynamic";
+import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 
-// Force dynamic rendering — homepage shows today's matches
-export const dynamic = "force-dynamic";
+// ISR: revalidate every 2 minutes (was force-dynamic — every request hit DB)
+export const revalidate = 120;
+
 import {
   Zap,
   FileText,
@@ -16,10 +19,33 @@ import AffiliateCTA from "@/components/ui/AffiliateCTA";
 import PromoBanner from "@/components/ui/PromoBanner";
 import MatchCard from "@/components/predictions/MatchCard";
 import { MostPopularBet } from "@/components/social/CrowdBacking";
-import SpinWheel from "@/components/spin/SpinWheel";
 import ReferralTracker from "@/components/spin/ReferralTracker";
 import { siteConfig } from "@/lib/config";
 import { getTodaysMatches, matchToCardProps, getWinRateStats } from "@/lib/data";
+
+// Dynamic imports — below-the-fold heavy components (saves ~20KB initial JS)
+const SpinWheel = dynamic(() => import("@/components/spin/SpinWheel"), { ssr: false });
+
+// Homepage-specific metadata (was inheriting generic layout metadata)
+export function generateMetadata({ params }: { params: { locale: string } }): Metadata {
+  const isFr = params.locale === "fr";
+  return {
+    title: isFr
+      ? "PronoFoot AI — Pronostics Football IA Gratuits Aujourd'hui"
+      : "PronoFoot AI — Free AI Football Predictions Today",
+    description: isFr
+      ? "Pronostics football gratuits par intelligence artificielle. Analyses de plus de 500 stats par match, taux de reussite verifie, 7 marches couverts. Predictions quotidiennes pour tous les grands championnats."
+      : "Free AI football predictions powered by 500+ stats per match. Verified win rate, 7 markets covered. Daily predictions for all major leagues.",
+    alternates: {
+      canonical: `/${params.locale}`,
+      languages: {
+        fr: "/fr",
+        en: "/en",
+        "x-default": "/fr",
+      },
+    },
+  };
+}
 
 export default async function HomePage({
   params,

@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
@@ -10,6 +10,14 @@ import { siteConfig } from "@/lib/config";
 import "../globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
+
+// Viewport config for mobile optimization
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: "#1e293b",
+};
 
 // Only allow our supported locales
 export function generateStaticParams() {
@@ -101,6 +109,11 @@ export default async function LocaleLayout({
   return (
     <html lang={locale}>
       <head>
+        {/* Preconnect hints for external resources */}
+        <link rel="preconnect" href="https://images.unsplash.com" />
+        <link rel="dns-prefetch" href="https://images.unsplash.com" />
+        <link rel="preconnect" href="https://ielmcewhbbmjcopvigpc.supabase.co" />
+        <link rel="dns-prefetch" href="https://ielmcewhbbmjcopvigpc.supabase.co" />
         {/* JSON-LD: Organization + WebSite Schema */}
         <script
           type="application/ld+json"
@@ -113,7 +126,12 @@ export default async function LocaleLayout({
                   "@id": `${siteConfig.url}/#organization`,
                   name: siteConfig.name,
                   url: siteConfig.url,
-                  logo: `${siteConfig.url}/images/logo.png`,
+                  logo: {
+                    "@type": "ImageObject",
+                    url: `${siteConfig.url}/images/logo.png`,
+                    width: 512,
+                    height: 512,
+                  },
                   description: siteConfig.description[locale as "fr" | "en"],
                   sameAs: [
                     siteConfig.telegram,
@@ -133,6 +151,14 @@ export default async function LocaleLayout({
                   url: siteConfig.url,
                   publisher: { "@id": `${siteConfig.url}/#organization` },
                   inLanguage: ["fr", "en"],
+                  potentialAction: {
+                    "@type": "SearchAction",
+                    target: {
+                      "@type": "EntryPoint",
+                      urlTemplate: `${siteConfig.url}/${locale}/blog?q={search_term_string}`,
+                    },
+                    "query-input": "required name=search_term_string",
+                  },
                 },
               ],
             }),

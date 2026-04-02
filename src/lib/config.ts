@@ -8,7 +8,7 @@ export const siteConfig = {
   url: process.env.NEXT_PUBLIC_SITE_URL || "https://www.parifoot.online",
   description: {
     en: "AI-powered football predictions, daily betting tips, and ready-to-use 1xBet ticket codes. Smart analysis for smarter bets.",
-    fr: "Pronostics football par IA, tips quotidiens et codes tickets 1xBet prets a l'emploi. Des analyses intelligentes pour des paris plus intelligents.",
+    fr: "Pronostics football par IA, tips quotidiens et analyses intelligentes. Plus de 500 stats analysées par match pour des paris plus intelligents.",
   },
   affiliateLink: process.env.NEXT_PUBLIC_AFFILIATE_LINK || "https://1xbet.com",
   locales: ["fr", "en"] as const,

@@ -1,6 +1,3 @@
-"use client";
-
-import { useMemo } from "react";
 import { Users, TrendingUp, Flame } from "lucide-react";
 
 type CrowdBackingProps = {
@@ -51,10 +48,7 @@ export default function CrowdBacking({
   compact = false,
 }: CrowdBackingProps) {
   const isFr = locale === "fr";
-  const crowd = useMemo(
-    () => deriveCrowdData(homeProb, drawProb, awayProb),
-    [homeProb, drawProb, awayProb]
-  );
+  const crowd = deriveCrowdData(homeProb, drawProb, awayProb);
 
   const maxBacking = Math.max(crowd.homeBacking, crowd.drawBacking, crowd.awayBacking);
   const popular = crowd.homeBacking === maxBacking ? homeTeam : crowd.awayBacking === maxBacking ? awayTeam : (isFr ? "Nul" : "Draw");
@@ -180,7 +174,7 @@ export function MostPopularBet({
   const isFr = locale === "fr";
 
   // Find the match with the strongest crowd consensus
-  const best = useMemo(() => {
+  const best = (() => {
     if (!matches.length) return null;
     let maxConsensus = 0;
     let bestMatch = matches[0];
@@ -202,7 +196,7 @@ export function MostPopularBet({
         : (isFr ? "Nul" : "Draw");
 
     return { ...bestMatch, crowd, maxBacking, popular };
-  }, [matches, isFr]);
+  })();
 
   if (!best) return null;
 

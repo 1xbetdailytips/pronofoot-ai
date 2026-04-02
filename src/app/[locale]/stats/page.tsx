@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { TrendingUp, Target, CheckCircle, XCircle, Clock, Zap, Shield, Flame } from "lucide-react";
 import { getWinRateStats } from "@/lib/data";
 
-// Force dynamic rendering — stats must be fresh
-export const dynamic = "force-dynamic";
+// ISR: revalidate every 5 minutes (stats change once daily at most)
+export const revalidate = 300;
 import type { WinRateStat } from "@/lib/types";
 
 export function generateMetadata({ params }: { params: { locale: string } }): Metadata {

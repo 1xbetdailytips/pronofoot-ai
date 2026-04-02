@@ -1,5 +1,3 @@
-"use client";
-
 import Link from "next/link";
 import { Send, AlertTriangle } from "lucide-react";
 import { siteConfig } from "@/lib/config";

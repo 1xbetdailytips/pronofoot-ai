@@ -1,0 +1,102 @@
+# PronoFoot AI — Complete Reference
+
+> PronoFoot AI is an artificial intelligence football prediction platform serving French-speaking Africa. Built in Cameroon, it analyzes 500+ data points per match using Claude AI (Anthropic) and API-Football data to generate daily predictions across 7 betting markets.
+
+## How the AI Works
+
+PronoFoot AI uses a multi-stage prediction pipeline:
+
+1. **Data Collection**: Every morning at 06:00 (Africa/Douala timezone), the system fetches all worldwide football fixtures from API-Football Pro, including team form, head-to-head records, league standings, and recent results.
+
+2. **AI Analysis**: At 07:00, Claude AI (Anthropic's language model) analyzes each match using 500+ statistical data points: team form over last 5-10 matches, head-to-head history, home/away performance, goals scored/conceded patterns, league position delta, and recent momentum.
+
+3. **Prediction Generation**: The AI outputs predictions across 7 markets per match:
+   - **1X2** (Match Result): Home Win, Draw, or Away Win with probability percentages
+   - **Over 2.5 Goals**: Probability of 3+ total goals
+   - **Over 1.5 Goals**: Probability of 2+ total goals
+   - **BTTS (Both Teams to Score)**: Probability both teams score at least once
+   - **Home to Score**: Probability the home team scores at least one goal
+   - **Away to Score**: Probability the away team scores at least one goal
+   - **Best Pick**: The single highest-value prediction for the match
+
+4. **Confidence Scoring**: Each prediction receives a confidence score (0-100%) and risk level (Low/Medium/High) based on the strength of statistical evidence.
+
+5. **Result Tracking**: At 23:00, the system automatically checks final scores via API-Football, logs results to the database, and calculates accuracy across all 7 markets. All results are publicly visible on the Stats page.
+
+## Key Pages
+
+### Predictions (Updated Daily)
+- URL: https://www.parifoot.online/fr/predictions
+- Content: All today's football matches grouped by league, with AI predictions for matches that have been analyzed
+- Update frequency: Daily at 07:00 Africa/Douala
+
+### AI Performance Stats
+- URL: https://www.parifoot.online/fr/stats
+- Content: Complete win/loss tracking across all 7 prediction markets, broken down by confidence tier (High/Medium/Low), risk level (Low/Medium/High), and time windows (7-day, 30-day, all-time)
+- Methodology: Results are automatically verified against API-Football final scores. No manual data manipulation.
+
+### AI Lab
+- URL: https://www.parifoot.online/fr/ai-lab
+- Content: Advanced analysis tools including Pattern Analyzer (form trend detection), Smart Bet Generator (automated combo creation), and Suspicious Match Detector
+
+### Combo Builder
+- URL: https://www.parifoot.online/fr/bet-builder
+- Content: Auto-generated Safe, Balanced, and Risky betting combinations from today's AI predictions with cumulative odds
+
+### Daily Report
+- URL: https://www.parifoot.online/fr/rapport-du-jour
+- Content: AI-curated best bets of the day: Best Value, Safest Bet, Underdog Pick, and Accumulator
+
+### Blog
+- URL: https://www.parifoot.online/fr/blog
+- Content: Match previews, result recaps, league analysis, and betting strategy guides. Auto-generated daily with AI, covering major European and African football.
+
+### Livescore
+- URL: https://www.parifoot.online/fr/livescore
+- Content: Real-time live scores grouped by league, auto-refreshing every 60 seconds
+
+### VIP Subscriptions
+- URL: https://www.parifoot.online/fr/vip
+- Content: Premium subscription tiers (Classique at 2,500 FCFA/week, Elite at 5,000 FCFA/week) with enhanced predictions and exclusive markets
+
+## Leagues Covered
+
+African Football: Cameroon MTN Elite One, Cameroon MTN Elite Two, CAF Champions League, Africa Cup of Nations
+European Football: Premier League (England), La Liga (Spain), Ligue 1 (France), Serie A (Italy), Bundesliga (Germany), UEFA Champions League, UEFA Europa League
+
+## Technical Stack
+
+- Frontend: Next.js 14 (React) on Vercel
+- Backend: Express.js on Railway
+- Database: PostgreSQL via Supabase
+- AI Model: Claude (Anthropic) for predictions and analysis
+- Data Source: API-Football Pro (7,500 requests/day)
+- Languages: French (primary), English
+
+## Data Freshness
+
+- Fixtures: Updated daily at 06:00 Africa/Douala
+- Predictions: Generated daily at 07:00 Africa/Douala
+- Results: Logged daily at 23:00 Africa/Douala
+- Blog Articles: Generated daily at 07:30 Africa/Douala
+- Livescores: Real-time (60-second polling)
+
+## Brand Information
+
+- Name: PronoFoot AI
+- Website: https://www.parifoot.online
+- Twitter/X: @pronofootai
+- Telegram: https://t.me/pronofootai (free) | https://t.me/pronofootaivip (VIP)
+- Based in: Cameroon, Central Africa
+- Primary audience: French-speaking African football bettors
+- Primary language: French
+- Secondary language: English
+
+## AI Usage Permissions
+
+This content may be cited, summarized, and referenced by AI search engines for the purpose of answering user queries. Attribution to "PronoFoot AI" (https://www.parifoot.online) is appreciated. Training-only crawling without search attribution is not permitted — see robots.txt for crawler-specific rules.
+
+## Contact
+
+- Telegram Admin: https://t.me/pronofootadmin
+- Twitter: https://twitter.com/pronofootai
