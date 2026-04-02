@@ -2,7 +2,7 @@ import { createClient } from "@supabase/supabase-js";
 import type { MetadataRoute } from "next";
 import { siteConfig, COVERED_LEAGUES } from "@/lib/config";
 
-const BASE_URL = siteConfig.url;
+const BASE_URL = siteConfig.url.trim().replace(/\/+$/, "");
 const LOCALES = ["fr", "en"];
 
 const STATIC_ROUTES = [
