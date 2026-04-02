@@ -287,6 +287,16 @@ export default async function StatsPage({ params }: { params: { locale: string }
             sublabel={`${stats.btts.total} ${isFr ? "matchs" : "matches"}`}
           />
           <StatBar
+            label={isFr ? "Domicile marque (Home to Score)" : "Home to Score"}
+            stat={stats.homeToScore}
+            sublabel={`${stats.homeToScore.total} ${isFr ? "matchs" : "matches"}`}
+          />
+          <StatBar
+            label={isFr ? "Extérieur marque (Away to Score)" : "Away to Score"}
+            stat={stats.awayToScore}
+            sublabel={`${stats.awayToScore.total} ${isFr ? "matchs" : "matches"}`}
+          />
+          <StatBar
             label={isFr ? "Meilleur pick IA (best_pick)" : "AI best pick accuracy"}
             stat={stats.bestPick}
             sublabel={`${stats.bestPick.total} ${isFr ? "matchs" : "matches"}`}
@@ -360,6 +370,8 @@ export default async function StatsPage({ params }: { params: { locale: string }
                   <th className="text-center px-3 py-3">O1.5</th>
                   <th className="text-center px-3 py-3">O2.5</th>
                   <th className="text-center px-3 py-3">BTTS</th>
+                  <th className="text-center px-3 py-3">HTS</th>
+                  <th className="text-center px-3 py-3">ATS</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-50">
@@ -410,6 +422,20 @@ export default async function StatsPage({ params }: { params: { locale: string }
                       <td className="text-center px-3 py-3">
                         {r.btts_correct === null ? <span className="text-gray-300 text-xs">—</span>
                           : r.btts_correct
+                          ? <CheckCircle className="w-4 h-4 text-emerald-500 mx-auto" />
+                          : <XCircle className="w-4 h-4 text-red-400 mx-auto" />}
+                      </td>
+                      {/* Home to Score */}
+                      <td className="text-center px-3 py-3">
+                        {r.home_to_score_correct === null ? <span className="text-gray-300 text-xs">—</span>
+                          : r.home_to_score_correct
+                          ? <CheckCircle className="w-4 h-4 text-emerald-500 mx-auto" />
+                          : <XCircle className="w-4 h-4 text-red-400 mx-auto" />}
+                      </td>
+                      {/* Away to Score */}
+                      <td className="text-center px-3 py-3">
+                        {r.away_to_score_correct === null ? <span className="text-gray-300 text-xs">—</span>
+                          : r.away_to_score_correct
                           ? <CheckCircle className="w-4 h-4 text-emerald-500 mx-auto" />
                           : <XCircle className="w-4 h-4 text-red-400 mx-auto" />}
                       </td>

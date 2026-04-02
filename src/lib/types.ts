@@ -42,7 +42,10 @@ export type Tip = {
   draw_prob: number;
   away_prob: number;
   over25_prob: number | null;
+  over15_prob: number | null;
   btts_prob: number | null;
+  over05_home_prob: number | null;
+  over05_away_prob: number | null;
   best_pick: string | null;
   ai_analysis: string | null;
   is_vip: boolean;
@@ -75,6 +78,8 @@ export type RecentResult = {
   over25_correct: boolean | null;
   over15_correct: boolean | null;
   btts_correct: boolean | null;
+  home_to_score_correct: boolean | null;
+  away_to_score_correct: boolean | null;
   best_pick: string | null;
   best_pick_correct: boolean | null;
   confidence: number | null;
@@ -92,6 +97,8 @@ export type WinRateStats = {
   over25: WinRateStat;
   over15: WinRateStat;
   btts: WinRateStat;
+  homeToScore: WinRateStat;
+  awayToScore: WinRateStat;
   bestPick: WinRateStat;
   highConfidence: WinRateStat;
   medConfidence: WinRateStat;

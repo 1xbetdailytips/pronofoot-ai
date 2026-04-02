@@ -323,6 +323,26 @@ export default async function MatchDetailPage({
                 )}
               </div>
             )}
+
+            {/* Home to Score / Away to Score */}
+            {(tip.over05_home_prob != null || tip.over05_away_prob != null) && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-gray-100 mt-4">
+                {tip.over05_home_prob != null && (
+                  <ProbBar
+                    label={isFr ? `${match.home_team} marque` : `${match.home_team} to Score`}
+                    prob={tip.over05_home_prob}
+                    color="bg-emerald-400"
+                  />
+                )}
+                {tip.over05_away_prob != null && (
+                  <ProbBar
+                    label={isFr ? `${match.away_team} marque` : `${match.away_team} to Score`}
+                    prob={tip.over05_away_prob}
+                    color="bg-blue-400"
+                  />
+                )}
+              </div>
+            )}
           </div>
         </div>
       )}

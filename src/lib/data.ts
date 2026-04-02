@@ -123,6 +123,7 @@ export async function getWinRateStats(): Promise<WinRateStats> {
       id, tip_id, fixture_id, prediction, actual_result, is_correct,
       home_score, away_score, total_goals,
       over25_correct, over15_correct, btts_correct,
+      home_to_score_correct, away_to_score_correct,
       best_pick, best_pick_correct,
       confidence, risk_level, match_date, logged_at,
       fixtures(home_team, away_team, league_name)
@@ -173,6 +174,8 @@ export async function getWinRateStats(): Promise<WinRateStats> {
     over25:         calcRate(all, "over25_correct"),
     over15:         calcRate(all, "over15_correct"),
     btts:           calcRate(all, "btts_correct"),
+    homeToScore:    calcRate(all, "home_to_score_correct"),
+    awayToScore:    calcRate(all, "away_to_score_correct"),
     bestPick:       calcRate(all, "best_pick_correct"),
     highConfidence: calcRate(highConf),
     medConfidence:  calcRate(medConf),
