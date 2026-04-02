@@ -6,6 +6,7 @@ import { useState } from "react";
 import {
   Menu,
   X,
+  Activity,
   TrendingUp,
   FileText,
   Ticket,
@@ -21,6 +22,7 @@ type HeaderProps = {
   locale: string;
   translations: {
     home: string;
+    livescore: string;
     predictions: string;
     dailyReport: string;
     tickets: string;
@@ -37,6 +39,7 @@ export default function Header({ locale, translations: t }: HeaderProps) {
   const pathname = usePathname();
 
   const navigation = [
+    { name: t.livescore, href: `/${locale}/livescore`, icon: Activity },
     { name: t.predictions, href: `/${locale}/predictions`, icon: TrendingUp },
     { name: t.dailyReport, href: `/${locale}/rapport-du-jour`, icon: FileText },
     { name: t.tickets, href: `/${locale}/tickets`, icon: Ticket },

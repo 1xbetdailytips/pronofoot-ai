@@ -52,6 +52,7 @@ interface Article {
   target_keyword: string;
   word_count: number;
   published_at: string;
+  image_url: string | null;
 }
 
 /* ───────────────────────── constants ───────────────────────── */
@@ -141,7 +142,7 @@ export default async function BlogPage({
   const { data: featuredRaw } = await supabase
     .from("seo_articles")
     .select(
-      "id, slug, article_type, title_fr, title_en, meta_description_fr, meta_description_en, target_keyword, word_count, published_at"
+      "id, slug, article_type, title_fr, title_en, meta_description_fr, meta_description_en, target_keyword, word_count, published_at, image_url"
     )
     .eq("published", true)
     .eq("article_type", "guide")
@@ -155,7 +156,7 @@ export default async function BlogPage({
   let query = supabase
     .from("seo_articles")
     .select(
-      "id, slug, article_type, title_fr, title_en, meta_description_fr, meta_description_en, target_keyword, word_count, published_at",
+      "id, slug, article_type, title_fr, title_en, meta_description_fr, meta_description_en, target_keyword, word_count, published_at, image_url",
       { count: "exact" }
     )
     .eq("published", true)
@@ -277,7 +278,7 @@ export default async function BlogPage({
               const desc = isFr
                 ? article.meta_description_fr
                 : article.meta_description_en || article.meta_description_fr;
-              const img = heroImages[article.slug];
+              const img = article.image_url || heroImages[article.slug];
               const mins = readTime(article.word_count);
 
               return (
@@ -385,7 +386,7 @@ export default async function BlogPage({
               { day: "numeric", month: "long", year: "numeric" }
             );
             const mins = readTime(article.word_count);
-            const img = heroImages[article.slug];
+            const img = article.image_url || heroImages[article.slug];
 
             return (
               <Link
@@ -393,9 +394,9 @@ export default async function BlogPage({
                 href={`/${locale}/blog/${article.slug}`}
                 className="group flex flex-col rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:shadow-lg hover:border-emerald-400 dark:hover:border-emerald-600 transition-all duration-200"
               >
-                {/* Optional hero image */}
-                {img && (
-                  <div className="relative h-40 bg-gray-100 dark:bg-gray-700">
+                {/* Hero image or gradient fallback */}
+                <div className="relative h-40 bg-gradient-to-br from-emerald-600 to-blue-600">
+                  {img && (
                     <Image
                       src={img}
                       alt={title}
@@ -403,8 +404,9 @@ export default async function BlogPage({
                       className="object-cover group-hover:scale-105 transition-transform duration-300"
                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     />
-                  </div>
-                )}
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+                </div>
 
                 {/* Body */}
                 <div className="p-4 flex-1 flex flex-col">

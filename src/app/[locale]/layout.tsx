@@ -144,6 +144,7 @@ export default async function LocaleLayout({
             locale={locale}
             translations={{
               home: common.home,
+              livescore: common.livescore,
               predictions: common.predictions,
               dailyReport: common.dailyReport,
               tickets: common.tickets,

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { ArrowLeft, Calendar, Clock, Tag } from "lucide-react";
 import { siteConfig } from "@/lib/config";
@@ -20,6 +21,7 @@ interface ArticleRow {
   secondary_keywords: string[];
   word_count: number;
   published_at: string;
+  image_url: string | null;
 }
 
 async function getArticle(slug: string): Promise<ArticleRow | null> {
@@ -63,6 +65,9 @@ export async function generateMetadata({
       type: "article",
       publishedTime: article.published_at,
       url: `${siteConfig.url}/${params.locale}/blog/${article.slug}`,
+      images: article.image_url
+        ? [{ url: article.image_url, width: 1200, height: 630 }]
+        : undefined,
     },
   };
 }
@@ -115,6 +120,7 @@ export default async function BlogArticlePage({
           url: siteConfig.url,
         },
         mainEntityOfPage: `${siteConfig.url}/${locale}/blog/${article.slug}`,
+        ...(article.image_url ? { image: article.image_url } : {}),
         wordCount: article.word_count,
         keywords: [article.target_keyword, ...(article.secondary_keywords || [])].join(", "),
         inLanguage: isFr ? "fr" : "en",
@@ -175,6 +181,20 @@ export default async function BlogArticlePage({
           {title}
         </h1>
       </header>
+
+      {/* Hero image */}
+      {article.image_url && (
+        <div className="relative w-full h-64 sm:h-80 rounded-xl overflow-hidden mb-8">
+          <Image
+            src={article.image_url}
+            alt={title}
+            fill
+            className="object-cover"
+            sizes="(max-width: 768px) 100vw, 768px"
+            priority
+          />
+        </div>
+      )}
 
       {/* Article body */}
       <div

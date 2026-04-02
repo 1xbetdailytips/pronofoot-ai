@@ -6,6 +6,18 @@ const withNextIntl = createNextIntlPlugin("./src/i18n.ts");
 const nextConfig = {
   // Enable static generation for SEO
   output: "standalone",
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "**.supabase.co",
+      },
+      {
+        protocol: "https",
+        hostname: "image.pollinations.ai",
+      },
+    ],
+  },
   async headers() {
     return [
       {
