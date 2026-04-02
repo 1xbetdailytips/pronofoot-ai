@@ -94,8 +94,8 @@ export default function PromoBanner({
 
             <p className="text-white/50 text-xs mb-4">
               {isFr
-                ? "Code promo: EGLEPREDICT | Bonus 200% jusqu'a 85,000 XAF"
-                : "Promo code: EGLEPREDICT | 200% Bonus up to 85,000 XAF"}
+                ? "Code promo: FLYUP777 | Bonus 200% jusqu'a 85,000 XAF"
+                : "Promo code: FLYUP777 | 200% Bonus up to 85,000 XAF"}
             </p>
 
             <span className="inline-flex items-center gap-2 bg-[#2dc653] hover:bg-[#25a847] text-white font-extrabold text-sm sm:text-base px-6 py-3 rounded-xl transition-all duration-200 group-hover:scale-105 group-hover:shadow-lg group-hover:shadow-emerald-500/25 transform">
@@ -183,7 +183,7 @@ export default function PromoBanner({
               {isFr ? "Code:" : "Code:"}
             </span>
             <span className="text-amber-400 font-black text-lg tracking-wider">
-              EGLEPREDICT
+              FLYUP777
             </span>
           </div>
 

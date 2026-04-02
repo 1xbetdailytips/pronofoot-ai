@@ -122,7 +122,7 @@ export default function AffiliatePopup({ locale }: AffiliatePopupProps) {
                 {isFr ? "Avec le code promo" : "With promo code"}
               </p>
               <p className="text-amber-400 text-xl font-black tracking-widest">
-                EGLEPREDICT
+                FLYUP777
               </p>
             </div>
 
