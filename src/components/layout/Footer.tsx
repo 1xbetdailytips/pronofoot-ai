@@ -57,8 +57,8 @@ export default function Footer({ locale, translations: t }: FooterProps) {
             </div>
             <p className="text-gray-400 text-sm max-w-md">
               {locale === "fr"
-                ? "Pronostics football intelligents alimentes par l'IA. Analyses quotidiennes, codes tickets 1xBet, et bien plus."
-                : "Smart football predictions powered by AI. Daily analysis, 1xBet ticket codes, and more."}
+                ? "Pronostics football intelligents alimentes par l'IA. Analyses quotidiennes, combines et bien plus."
+                : "Smart football predictions powered by AI. Daily analysis, combos, and more."}
             </p>
             {/* Telegram */}
             <a
@@ -97,9 +97,12 @@ export default function Footer({ locale, translations: t }: FooterProps) {
               <li>
                 <Link
                   href={`/${locale}/tickets`}
-                  className="hover:text-white transition-colors"
+                  className="hover:text-white transition-colors inline-flex items-center gap-1.5"
                 >
                   {t.tickets}
+                  <span className="bg-amber-500/20 text-amber-400 text-[9px] font-bold px-1.5 py-0.5 rounded-full">
+                    {locale === "fr" ? "Bientot" : "Soon"}
+                  </span>
                 </Link>
               </li>
               <li>

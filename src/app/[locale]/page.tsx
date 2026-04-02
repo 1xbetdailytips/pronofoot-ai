@@ -19,7 +19,7 @@ import { MostPopularBet } from "@/components/social/CrowdBacking";
 import SpinWheel from "@/components/spin/SpinWheel";
 import ReferralTracker from "@/components/spin/ReferralTracker";
 import { siteConfig } from "@/lib/config";
-import { getTodaysMatches, getTodaysTickets, matchToCardProps, getWinRateStats } from "@/lib/data";
+import { getTodaysMatches, matchToCardProps, getWinRateStats } from "@/lib/data";
 
 export default async function HomePage({
   params,
@@ -31,9 +31,8 @@ export default async function HomePage({
   const locale = params.locale;
   const isFr = locale === "fr";
 
-  const [matches, tickets, winStats] = await Promise.all([
+  const [matches, winStats] = await Promise.all([
     getTodaysMatches(),
-    getTodaysTickets(),
     getWinRateStats(),
   ]);
 
@@ -47,7 +46,6 @@ export default async function HomePage({
   ]);
   const majorMatches = matches.filter(m => majorLeagues.has(m.league_name) && m.tip);
   const topMatches = majorMatches.length > 0 ? majorMatches.slice(0, 6) : matches.filter(m => m.tip).slice(0, 6);
-  const freeTicket = tickets.find((t) => t.is_free) ?? null;
 
   return (
     <div>
@@ -197,64 +195,44 @@ export default async function HomePage({
         )}
       </section>
 
-      {/* ============ FREE TICKET CODE PREVIEW ============ */}
+      {/* ============ TICKET CODES COMING SOON ============ */}
       <section className="bg-white border-y border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="max-w-2xl mx-auto text-center">
-            <div className="inline-flex items-center gap-2 bg-emerald-50 text-emerald-700 rounded-full px-4 py-1.5 mb-4">
+            <div className="inline-flex items-center gap-2 bg-amber-50 text-amber-700 rounded-full px-4 py-1.5 mb-4">
               <Ticket className="w-4 h-4" />
-              <span className="text-sm font-semibold">{tc("free")}</span>
+              <span className="text-sm font-semibold">
+                {isFr ? "Bientot Disponible" : "Coming Soon"}
+              </span>
             </div>
             <h2 className="text-2xl font-bold text-gray-900 mb-2">
               {t("ticketTitle")}
             </h2>
-            <p className="text-gray-500 mb-8">{t("ticketDesc")}</p>
+            <p className="text-gray-500 mb-6">
+              {isFr
+                ? "Des codes de reservation 1xBet generes par IA, prets a copier-coller. Lancez votre coupon en un clic."
+                : "AI-generated 1xBet booking codes, ready to copy-paste. Load your bet slip in one click."}
+            </p>
 
-            <div className="bg-gradient-to-br from-emerald-50 to-gray-50 rounded-2xl border-2 border-emerald-200 p-6 mb-6">
-              {freeTicket ? (
-                <>
-                  <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">
-                    {isFr ? "Code de Reservation" : "Booking Code"}
-                  </p>
-                  <p className="text-4xl font-mono font-bold text-gray-900 tracking-widest mb-4">
-                    {freeTicket.booking_code}
-                  </p>
-                  <div className="flex items-center justify-center gap-4 text-sm text-gray-600 mb-4">
-                    {freeTicket.match_count && (
-                      <>
-                        <span>
-                          {freeTicket.match_count}{" "}
-                          {isFr ? "matchs" : "matches"}
-                        </span>
-                        <span className="w-1 h-1 bg-gray-300 rounded-full" />
-                      </>
-                    )}
-                    <span>
-                      {isFr ? "Cotes" : "Odds"}: {freeTicket.total_odds.toFixed(2)}
-                    </span>
-                  </div>
-                </>
-              ) : (
-                <p className="text-gray-400 py-4">
-                  {isFr
-                    ? "Code disponible bientot..."
-                    : "Code available soon..."}
-                </p>
-              )}
-              <AffiliateCTA
-                text={tc("openSlip")}
-                variant="primary"
-                campaign="free_ticket"
-              />
+            {/* Blurred preview */}
+            <div className="relative max-w-xs mx-auto mb-6">
+              <div className="blur-sm select-none pointer-events-none bg-gradient-to-br from-emerald-50 to-gray-50 rounded-2xl border-2 border-emerald-200 p-6">
+                <p className="text-xs text-gray-400 uppercase">Booking Code</p>
+                <p className="text-3xl font-mono font-bold text-gray-800 tracking-widest">K7X2M9P4</p>
+                <p className="text-sm text-gray-500 mt-2">5 matchs | Odds: 8.74</p>
+              </div>
+              <div className="absolute inset-0 bg-gradient-to-b from-white/20 to-white/80 rounded-2xl flex items-center justify-center">
+                <span className="bg-amber-500 text-white text-xs font-bold px-4 py-2 rounded-full">
+                  {isFr ? "Lancement imminent" : "Launching soon"}
+                </span>
+              </div>
             </div>
 
             <Link
               href={`/${locale}/tickets`}
               className="text-emerald-600 font-medium hover:text-emerald-700"
             >
-              {isFr
-                ? "Voir tous les tickets du jour →"
-                : "View all today's tickets →"}
+              {isFr ? "En savoir plus →" : "Learn more →"}
             </Link>
           </div>
         </div>
@@ -291,15 +269,22 @@ export default async function HomePage({
 
           <Link
             href={`/${locale}/tickets`}
-            className="bg-white rounded-2xl border border-gray-100 p-6 hover:shadow-lg transition-all group"
+            className="bg-white rounded-2xl border border-gray-100 p-6 hover:shadow-lg transition-all group relative overflow-hidden"
           >
+            <div className="absolute top-3 right-3 bg-amber-100 text-amber-700 text-[10px] font-bold px-2 py-0.5 rounded-full">
+              {isFr ? "Bientot" : "Soon"}
+            </div>
             <div className="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
               <Ticket className="w-6 h-6 text-emerald-600" />
             </div>
             <h3 className="text-lg font-bold text-gray-900 mb-2">
               {t("ticketTitle")}
             </h3>
-            <p className="text-gray-500 text-sm">{t("ticketDesc")}</p>
+            <p className="text-gray-500 text-sm">
+              {isFr
+                ? "Codes de reservation 1xBet generes par IA. Copiez, collez, pariez."
+                : "AI-generated 1xBet booking codes. Copy, paste, bet."}
+            </p>
           </Link>
 
           <Link
@@ -350,8 +335,8 @@ export default async function HomePage({
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-left max-w-lg mx-auto mb-8">
               {[
-                isFr ? "5 codes tickets quotidiens" : "5 daily ticket codes",
-                isFr ? "Vrais codes 1xBet" : "Real 1xBet booking codes",
+                isFr ? "Pronostics premium exclusifs" : "Exclusive premium predictions",
+                isFr ? "Combines IA quotidiens" : "Daily AI combos",
                 isFr ? "Analyse IA complete" : "Full AI analysis",
                 isFr ? "Alertes Telegram VIP" : "VIP Telegram alerts",
               ].map((feature) => (

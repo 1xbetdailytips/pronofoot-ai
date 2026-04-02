@@ -215,15 +215,16 @@ export default function Header({ locale, translations: t }: HeaderProps) {
   const toolsDropdown = useDropdown();
   const moreDropdown = useDropdown();
 
+  const isFr = locale === "fr";
+
   // Primary nav items (always visible as buttons)
   const primaryNav = [
-    { name: t.livescore, href: `/${locale}/livescore`, icon: LivescoreIcon, colorKey: "livescore" },
-    { name: t.predictions, href: `/${locale}/predictions`, icon: PredictionsIcon, colorKey: "predictions" },
-    { name: t.tickets, href: `/${locale}/tickets`, icon: TicketsIcon, colorKey: "tickets" },
+    { name: t.livescore, href: `/${locale}/livescore`, icon: LivescoreIcon, colorKey: "livescore", badge: null as string | null },
+    { name: t.predictions, href: `/${locale}/predictions`, icon: PredictionsIcon, colorKey: "predictions", badge: null as string | null },
+    { name: t.tickets, href: `/${locale}/tickets`, icon: TicketsIcon, colorKey: "tickets", badge: isFr ? "Bientot" : "Soon" },
   ];
 
   // Tools dropdown items
-  const isFr = locale === "fr";
   const toolsItems = [
     { name: isFr ? "Labo IA" : "AI Lab", href: `/${locale}/ai-lab`, icon: LabIcon },
     { name: isFr ? "Generateur Combis" : "Combo Builder", href: `/${locale}/bet-builder`, icon: ComboIcon },
@@ -269,6 +270,11 @@ export default function Header({ locale, translations: t }: HeaderProps) {
                 >
                   <item.icon className="w-[18px] h-[18px]" />
                   {item.name}
+                  {item.badge && (
+                    <span className="bg-amber-100 text-amber-700 text-[9px] font-bold px-1.5 py-0.5 rounded-full leading-none">
+                      {item.badge}
+                    </span>
+                  )}
                 </Link>
               );
             })}
