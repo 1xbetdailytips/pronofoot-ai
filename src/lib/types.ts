@@ -74,7 +74,6 @@ export type RecentResult = {
   is_correct: boolean;
   home_score: number;
   away_score: number;
-  total_goals: number | null;
   over25_correct: boolean | null;
   over15_correct: boolean | null;
   btts_correct: boolean | null;

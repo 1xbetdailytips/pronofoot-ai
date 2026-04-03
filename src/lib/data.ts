@@ -121,7 +121,7 @@ export async function getWinRateStats(): Promise<WinRateStats> {
     .from("results_log")
     .select(`
       id, tip_id, fixture_id, prediction, actual_result, is_correct,
-      home_score, away_score, total_goals,
+      home_score, away_score,
       over25_correct, over15_correct, btts_correct,
       home_to_score_correct, away_to_score_correct,
       best_pick, best_pick_correct,
