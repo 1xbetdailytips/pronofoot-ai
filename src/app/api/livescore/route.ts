@@ -4,14 +4,19 @@ import type { Fixture } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
-    const today = new Date().toISOString().slice(0, 10);
+    const { searchParams } = new URL(request.url);
+    const dateParam = searchParams.get("date");
+    // Validate date format (YYYY-MM-DD) or default to today
+    const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+    const date = dateParam && dateRegex.test(dateParam) ? dateParam : new Date().toISOString().slice(0, 10);
+
     const { data, error } = await supabase
       .from("fixtures")
       .select("*")
-      .gte("match_date", `${today}T00:00:00`)
-      .lte("match_date", `${today}T23:59:59`)
+      .gte("match_date", `${date}T00:00:00`)
+      .lte("match_date", `${date}T23:59:59`)
       .order("match_date", { ascending: true });
 
     if (error) {

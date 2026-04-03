@@ -21,6 +21,14 @@ const nextConfig = {
         protocol: "https",
         hostname: "images.unsplash.com",
       },
+      {
+        protocol: "https",
+        hostname: "media.api-sports.io",
+      },
+      {
+        protocol: "https",
+        hostname: "media-*.api-sports.io",
+      },
     ],
   },
   async headers() {
@@ -40,7 +48,7 @@ const nextConfig = {
               "default-src 'self'",
               "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
               "style-src 'self' 'unsafe-inline'",
-              "img-src 'self' data: blob: https://*.supabase.co https://image.pollinations.ai https://images.unsplash.com",
+              "img-src 'self' data: blob: https://*.supabase.co https://image.pollinations.ai https://images.unsplash.com https://media.api-sports.io https://media-*.api-sports.io",
               "font-src 'self'",
               "connect-src 'self' https://*.supabase.co",
               "frame-ancestors 'none'",

@@ -22,6 +22,9 @@ export type Fixture = {
   away_team: string;
   home_team_id: number | null;
   away_team_id: number | null;
+  home_team_logo: string | null;
+  away_team_logo: string | null;
+  league_logo: string | null;
   match_date: string;
   status: string;
   home_score: number | null;

@@ -1,14 +1,16 @@
 "use client";
 
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { RefreshCw, Clock, Activity, ChevronDown, ChevronRight, Search, X } from "lucide-react";
+import { RefreshCw, Clock, Activity, ChevronDown, ChevronRight, Search, X, ChevronLeft, CalendarDays } from "lucide-react";
+import Image from "next/image";
 import LeagueFilterBar from "@/components/filters/LeagueFilterBar";
 import { isPopularLeague, getCountryForLeague, getUniqueCountries, POPULAR_LEAGUES } from "@/lib/league-country-map";
 import type { Fixture } from "@/lib/types";
 
 const LIVE_STATUSES = ["1H", "2H", "HT", "ET", "BT", "P"];
 const FINISHED_STATUSES = ["FT", "AET", "PEN"];
-const POLL_INTERVAL = 60_000;
+const POLL_INTERVAL_DEFAULT = 60_000;
+const POLL_INTERVAL_LIVE = 30_000; // faster refresh when live matches exist
 
 type Props = {
   initialFixtures: Fixture[];
@@ -116,14 +118,34 @@ function ScoreDisplay({ fixture }: { fixture: Fixture }) {
   return <span className="text-sm font-medium text-gray-400">vs</span>;
 }
 
+function TeamLogo({ src, alt }: { src: string | null; alt: string }) {
+  if (!src) return <span className="w-5 h-5 rounded-full bg-gray-200 shrink-0" />;
+  return (
+    <Image
+      src={src}
+      alt={alt}
+      width={20}
+      height={20}
+      className="w-5 h-5 object-contain shrink-0"
+      unoptimized
+    />
+  );
+}
+
 function MatchRow({ fixture }: { fixture: Fixture }) {
   const isLive = LIVE_STATUSES.includes(fixture.status);
   return (
-    <div className={`grid grid-cols-[50px_1fr_60px_1fr_52px] md:grid-cols-[60px_1fr_80px_1fr_60px] items-center gap-2 px-3 py-2.5 border-b border-gray-50 last:border-b-0 transition-colors ${isLive ? "bg-red-50/40" : "hover:bg-gray-50/50"}`}>
+    <div className={`grid grid-cols-[44px_1fr_56px_1fr_48px] md:grid-cols-[56px_1fr_80px_1fr_56px] items-center gap-1.5 md:gap-2 px-2 md:px-3 py-2.5 border-b border-gray-50 last:border-b-0 transition-colors ${isLive ? "bg-red-50/40" : "hover:bg-gray-50/50"}`}>
       <div className="text-xs text-gray-400 font-mono">{formatTime(fixture.match_date)}</div>
-      <div className="text-sm font-medium text-gray-900 text-right truncate">{fixture.home_team}</div>
+      <div className="flex items-center justify-end gap-1.5 min-w-0">
+        <span className="text-sm font-medium text-gray-900 truncate">{fixture.home_team}</span>
+        <TeamLogo src={fixture.home_team_logo} alt={fixture.home_team} />
+      </div>
       <div className="flex justify-center"><ScoreDisplay fixture={fixture} /></div>
-      <div className="text-sm font-medium text-gray-900 truncate">{fixture.away_team}</div>
+      <div className="flex items-center gap-1.5 min-w-0">
+        <TeamLogo src={fixture.away_team_logo} alt={fixture.away_team} />
+        <span className="text-sm font-medium text-gray-900 truncate">{fixture.away_team}</span>
+      </div>
       <div className="flex justify-end"><StatusBadge status={fixture.status} elapsed={fixture.elapsed} /></div>
     </div>
   );
@@ -214,6 +236,38 @@ function LeagueSection({ league, countryFlag }: { league: LeagueBlock; countryFl
 
 // ── Main LivescoreClient ────────────────────────────────────────────────────
 
+// ── Date helpers ────────────────────────────────────────────────────────────
+
+function formatDateParam(d: Date) {
+  return d.toISOString().slice(0, 10);
+}
+
+function addDays(d: Date, n: number) {
+  const next = new Date(d);
+  next.setDate(next.getDate() + n);
+  return next;
+}
+
+function isToday(d: Date) {
+  const now = new Date();
+  return d.toDateString() === now.toDateString();
+}
+
+function formatDateLabel(d: Date, isFr: boolean) {
+  const now = new Date();
+  const diff = Math.round((d.getTime() - now.getTime()) / 86400000);
+  if (d.toDateString() === now.toDateString()) return isFr ? "Aujourd'hui" : "Today";
+  if (diff === -1 || (diff === 0 && d < now)) {
+    const yesterday = addDays(now, -1);
+    if (d.toDateString() === yesterday.toDateString()) return isFr ? "Hier" : "Yesterday";
+  }
+  const tomorrow = addDays(now, 1);
+  if (d.toDateString() === tomorrow.toDateString()) return isFr ? "Demain" : "Tomorrow";
+  return d.toLocaleDateString(isFr ? "fr-FR" : "en-GB", { weekday: "short", day: "numeric", month: "short" });
+}
+
+// ── Main LivescoreClient ────────────────────────────────────────────────────
+
 export default function LivescoreClient({ initialFixtures, locale }: Props) {
   const [fixtures, setFixtures] = useState(initialFixtures);
   const [lastUpdate, setLastUpdate] = useState(new Date());
@@ -221,6 +275,7 @@ export default function LivescoreClient({ initialFixtures, locale }: Props) {
   const [filterMode, setFilterMode] = useState<"popular" | "all" | "custom">("popular");
   const [selectedLeagueNames, setSelectedLeagueNames] = useState<Set<string>>(new Set());
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedDate, setSelectedDate] = useState(new Date());
   const isFr = locale === "fr";
 
   // Filter fixtures based on mode
@@ -268,10 +323,30 @@ export default function LivescoreClient({ initialFixtures, locale }: Props) {
     []
   );
 
+  // Date navigation
+  const navigateDate = useCallback(async (date: Date) => {
+    setSelectedDate(date);
+    setIsRefreshing(true);
+    try {
+      const dateStr = formatDateParam(date);
+      const res = await fetch(`/api/livescore?date=${dateStr}`, { cache: "no-store" });
+      if (res.ok) {
+        const data = await res.json();
+        setFixtures(data.fixtures || []);
+        setLastUpdate(new Date());
+      }
+    } catch (err) {
+      console.error("Date navigation error:", err);
+    } finally {
+      setIsRefreshing(false);
+    }
+  }, []);
+
   const refresh = useCallback(async () => {
     setIsRefreshing(true);
     try {
-      const res = await fetch("/api/livescore", { cache: "no-store" });
+      const dateStr = formatDateParam(selectedDate);
+      const res = await fetch(`/api/livescore?date=${dateStr}`, { cache: "no-store" });
       if (res.ok) {
         const data = await res.json();
         setFixtures(data.fixtures || []);
@@ -282,29 +357,96 @@ export default function LivescoreClient({ initialFixtures, locale }: Props) {
     } finally {
       setIsRefreshing(false);
     }
-  }, []);
+  }, [selectedDate]);
 
+  // Adaptive polling: 30s when live matches, 60s otherwise. Only auto-refresh today.
   useEffect(() => {
-    const interval = setInterval(refresh, POLL_INTERVAL);
+    if (!isToday(selectedDate)) return; // don't auto-refresh past/future dates
+    const interval = setInterval(refresh, allLive.length > 0 ? POLL_INTERVAL_LIVE : POLL_INTERVAL_DEFAULT);
     return () => clearInterval(interval);
-  }, [refresh]);
+  }, [refresh, allLive.length, selectedDate]);
+
+  // Date navigation bar (shared between empty and content views)
+  const dateNav = (
+    <div className="flex items-center justify-center gap-1 mb-4">
+      {/* Previous 3 days + today + next 3 days */}
+      <button
+        onClick={() => navigateDate(addDays(selectedDate, -1))}
+        className="p-2 rounded-lg hover:bg-gray-100 text-gray-500 transition-colors"
+        aria-label="Previous day"
+      >
+        <ChevronLeft className="w-4 h-4" />
+      </button>
+
+      <div className="flex items-center gap-0.5 overflow-x-auto scrollbar-hide">
+        {[-3, -2, -1, 0, 1, 2, 3].map((offset) => {
+          const d = addDays(new Date(), offset);
+          const isSelected = d.toDateString() === selectedDate.toDateString();
+          const dayIsToday = offset === 0;
+          return (
+            <button
+              key={offset}
+              onClick={() => navigateDate(d)}
+              className={`flex flex-col items-center px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all min-w-[52px] ${
+                isSelected
+                  ? "bg-emerald-600 text-white shadow-sm"
+                  : dayIsToday
+                  ? "bg-emerald-50 text-emerald-700 hover:bg-emerald-100"
+                  : "text-gray-500 hover:bg-gray-100"
+              }`}
+            >
+              <span className="text-[10px] uppercase">
+                {d.toLocaleDateString(isFr ? "fr-FR" : "en-GB", { weekday: "short" })}
+              </span>
+              <span className="text-sm font-bold tabular-nums">{d.getDate()}</span>
+            </button>
+          );
+        })}
+      </div>
+
+      <button
+        onClick={() => navigateDate(addDays(selectedDate, 1))}
+        className="p-2 rounded-lg hover:bg-gray-100 text-gray-500 transition-colors"
+        aria-label="Next day"
+      >
+        <ChevronRight className="w-4 h-4" />
+      </button>
+
+      {/* Today quick button */}
+      {!isToday(selectedDate) && (
+        <button
+          onClick={() => navigateDate(new Date())}
+          className="ml-1 px-2.5 py-1.5 rounded-lg text-xs font-bold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 transition-colors"
+        >
+          <CalendarDays className="w-3.5 h-3.5 inline mr-1" />
+          {isFr ? "Auj." : "Today"}
+        </button>
+      )}
+    </div>
+  );
 
   if (fixtures.length === 0) {
     return (
-      <div className="text-center py-16">
-        <Activity className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-        <p className="text-gray-500 text-lg font-medium">
-          {isFr ? "Aucun match aujourd'hui" : "No matches today"}
-        </p>
-        <p className="text-gray-400 text-sm mt-1">
-          {isFr ? "Les matchs apparaitront ici dès qu'ils seront programmés." : "Matches will appear here once scheduled."}
-        </p>
+      <div>
+        {dateNav}
+        <div className="text-center py-16">
+          <Activity className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+          <p className="text-gray-500 text-lg font-medium">
+            {isFr ? "Aucun match ce jour" : "No matches on this day"}
+          </p>
+          <p className="text-gray-400 text-sm mt-1">
+            {isFr ? "Essayez une autre date." : "Try a different date."}
+          </p>
+        </div>
       </div>
     );
   }
 
   return (
     <div>
+      {/* ── Date navigation ── */}
+      {dateNav}
+
       {/* ── Sticky filter bar ── */}
       <LeagueFilterBar
         fixtures={fixtures}
