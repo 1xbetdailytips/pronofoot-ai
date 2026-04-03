@@ -14,6 +14,16 @@ export type H2HData = {
   recent: H2HMatch[];
 };
 
+export type MatchEvent = {
+  time: string;
+  team: string;
+  teamId: number;
+  player: string;
+  assist: string | null;
+  type: string;    // "Goal", "Card", "subst", "Var"
+  detail: string;  // "Normal Goal", "Yellow Card", "Red Card", "Substitution 1", etc.
+};
+
 export type Fixture = {
   id: number;
   league_id: number;
@@ -33,6 +43,23 @@ export type Fixture = {
   home_form: string[] | null;
   away_form: string[] | null;
   h2h_data: H2HData | null;
+  match_events: MatchEvent[] | null;
+};
+
+export type StandingRow = {
+  rank: number;
+  teamId: number;
+  team: string;
+  logo: string;
+  points: number;
+  played: number;
+  won: number;
+  drawn: number;
+  lost: number;
+  goalsFor: number;
+  goalsAgainst: number;
+  goalDiff: number;
+  form: string;
 };
 
 export type Tip = {

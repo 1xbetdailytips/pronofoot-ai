@@ -132,21 +132,60 @@ function TeamLogo({ src, alt }: { src: string | null; alt: string }) {
   );
 }
 
+function EventIcons({ events, teamId }: { events: Fixture["match_events"]; teamId: number | null }) {
+  if (!events || !teamId) return null;
+  const teamEvents = events.filter(e => e.teamId === teamId);
+  const goals = teamEvents.filter(e => e.type === "Goal");
+  const reds = teamEvents.filter(e => e.type === "Card" && e.detail?.includes("Red"));
+  const yellows = teamEvents.filter(e => e.type === "Card" && e.detail === "Yellow Card");
+  if (goals.length === 0 && reds.length === 0 && yellows.length === 0) return null;
+  return (
+    <div className="flex items-center gap-1 flex-wrap">
+      {goals.map((g, i) => (
+        <span key={`g${i}`} className="text-[10px] text-gray-500">
+          <span className="text-gray-900 font-medium">{g.player?.split(" ").pop()}</span>
+          <span className="text-gray-400 ml-0.5">{g.time}&apos;</span>
+        </span>
+      ))}
+      {reds.map((_, i) => (
+        <span key={`r${i}`} className="inline-block w-2.5 h-3 bg-red-600 rounded-[1px]" title="Red card" />
+      ))}
+      {yellows.map((_, i) => (
+        <span key={`y${i}`} className="inline-block w-2.5 h-3 bg-yellow-400 rounded-[1px]" title="Yellow card" />
+      ))}
+    </div>
+  );
+}
+
 function MatchRow({ fixture }: { fixture: Fixture }) {
   const isLive = LIVE_STATUSES.includes(fixture.status);
+  const isFinished = FINISHED_STATUSES.includes(fixture.status);
+  const hasEvents = fixture.match_events && fixture.match_events.length > 0;
   return (
-    <div className={`grid grid-cols-[44px_1fr_56px_1fr_48px] md:grid-cols-[56px_1fr_80px_1fr_56px] items-center gap-1.5 md:gap-2 px-2 md:px-3 py-2.5 border-b border-gray-50 last:border-b-0 transition-colors ${isLive ? "bg-red-50/40" : "hover:bg-gray-50/50"}`}>
-      <div className="text-xs text-gray-400 font-mono">{formatTime(fixture.match_date)}</div>
-      <div className="flex items-center justify-end gap-1.5 min-w-0">
-        <span className="text-sm font-medium text-gray-900 truncate">{fixture.home_team}</span>
-        <TeamLogo src={fixture.home_team_logo} alt={fixture.home_team} />
+    <div className={`border-b border-gray-50 last:border-b-0 transition-colors ${isLive ? "bg-red-50/40" : "hover:bg-gray-50/50"}`}>
+      <div className="grid grid-cols-[44px_1fr_56px_1fr_48px] md:grid-cols-[56px_1fr_80px_1fr_56px] items-center gap-1.5 md:gap-2 px-2 md:px-3 py-2.5">
+        <div className="text-xs text-gray-400 font-mono">{formatTime(fixture.match_date)}</div>
+        <div className="flex items-center justify-end gap-1.5 min-w-0">
+          <span className="text-sm font-medium text-gray-900 truncate">{fixture.home_team}</span>
+          <TeamLogo src={fixture.home_team_logo} alt={fixture.home_team} />
+        </div>
+        <div className="flex justify-center"><ScoreDisplay fixture={fixture} /></div>
+        <div className="flex items-center gap-1.5 min-w-0">
+          <TeamLogo src={fixture.away_team_logo} alt={fixture.away_team} />
+          <span className="text-sm font-medium text-gray-900 truncate">{fixture.away_team}</span>
+        </div>
+        <div className="flex justify-end"><StatusBadge status={fixture.status} elapsed={fixture.elapsed} /></div>
       </div>
-      <div className="flex justify-center"><ScoreDisplay fixture={fixture} /></div>
-      <div className="flex items-center gap-1.5 min-w-0">
-        <TeamLogo src={fixture.away_team_logo} alt={fixture.away_team} />
-        <span className="text-sm font-medium text-gray-900 truncate">{fixture.away_team}</span>
-      </div>
-      <div className="flex justify-end"><StatusBadge status={fixture.status} elapsed={fixture.elapsed} /></div>
+      {/* Goal scorers + cards row */}
+      {hasEvents && (isLive || isFinished) && (
+        <div className="grid grid-cols-[44px_1fr_56px_1fr_48px] md:grid-cols-[56px_1fr_80px_1fr_56px] gap-1.5 md:gap-2 px-2 md:px-3 pb-2 -mt-1">
+          <div />
+          <div className="flex justify-end"><EventIcons events={fixture.match_events} teamId={fixture.home_team_id} /></div>
+          <div />
+          <div><EventIcons events={fixture.match_events} teamId={fixture.away_team_id} /></div>
+          <div />
+        </div>
+      )}
     </div>
   );
 }

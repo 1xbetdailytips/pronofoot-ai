@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import AffiliateCTA from "@/components/ui/AffiliateCTA";
 import CrowdBacking from "@/components/social/CrowdBacking";
+import LeagueStandings from "@/components/predictions/LeagueStandings";
 import { siteConfig } from "@/lib/config";
 import { getMatchBySlug, mapPrediction, mapRiskLevel } from "@/lib/data";
 
@@ -468,6 +469,14 @@ export default async function MatchDetailPage({
           </div>
         )}
       </div>
+
+      {/* League Standings */}
+      <LeagueStandings
+        leagueId={match.league_id}
+        homeTeamId={match.home_team_id}
+        awayTeamId={match.away_team_id}
+        locale={locale}
+      />
 
       {/* Community Backing */}
       {tip && (
