@@ -84,16 +84,33 @@ function formatTime(dateStr: string) {
   } catch { return "--:--"; }
 }
 
+function LiveMinuteTicker({ status, elapsed }: { status: string; elapsed?: number | null }) {
+  const [tick, setTick] = useState(0);
+
+  useEffect(() => {
+    if (status === "HT" || !LIVE_STATUSES.includes(status)) return;
+    const interval = setInterval(() => setTick(t => t + 1), 60_000);
+    return () => clearInterval(interval);
+  }, [status]);
+
+  if (status === "HT") return "HT";
+  if (!elapsed) return status;
+  // Add client-side ticks (each tick = 1 minute) on top of server-reported elapsed
+  const displayMinute = elapsed + tick;
+  // Cap at 90 for regular time, 120 for extra time
+  const maxMinute = ["ET", "BT"].includes(status) ? 120 : 90;
+  return `${Math.min(displayMinute, maxMinute)}'`;
+}
+
 function StatusBadge({ status, elapsed }: { status: string; elapsed?: number | null }) {
   if (LIVE_STATUSES.includes(status)) {
-    const minuteDisplay = status === "HT" ? "HT" : elapsed ? `${elapsed}'` : status;
     return (
       <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-bold bg-red-100 text-red-700">
         <span className="relative flex h-1.5 w-1.5">
           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
           <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-red-500" />
         </span>
-        {minuteDisplay}
+        <LiveMinuteTicker status={status} elapsed={elapsed} />
       </span>
     );
   }

@@ -12,6 +12,12 @@ export async function GET(request: Request) {
     const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
     const date = dateParam && dateRegex.test(dateParam) ? dateParam : new Date().toISOString().slice(0, 10);
 
+    // Only show fixtures that have AI predictions
+    const { data: tips } = await supabase
+      .from("tips")
+      .select("fixture_id");
+    const predictedIds = new Set((tips || []).map((t: { fixture_id: number }) => t.fixture_id));
+
     const { data, error } = await supabase
       .from("fixtures")
       .select("*")
@@ -27,8 +33,10 @@ export async function GET(request: Request) {
       );
     }
 
+    const predicted = ((data as Fixture[]) || []).filter(f => predictedIds.has(f.id));
+
     return NextResponse.json({
-      fixtures: (data as Fixture[]) || [],
+      fixtures: predicted,
       timestamp: new Date().toISOString(),
     });
   } catch (err) {

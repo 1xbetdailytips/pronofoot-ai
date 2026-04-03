@@ -7,7 +7,7 @@ export type LeagueCountry = {
   tier: number; // 1=popular, 2=notable, 3=other
 };
 
-// ── POPULAR LEAGUES (shown as quick-access buttons) ─────────────────────────
+// ── POPULAR LEAGUES (shown as quick-access buttons in the strip) ─────────────
 export const POPULAR_LEAGUES: { name: string; shortName: string; flag: string; keywords: string[] }[] = [
   { name: "UEFA Champions League", shortName: "UCL", flag: "🏆", keywords: ["champions league", "ucl"] },
   { name: "Premier League", shortName: "EPL", flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", keywords: ["premier league"] },
@@ -22,6 +22,66 @@ export const POPULAR_LEAGUES: { name: string; shortName: string; flag: string; k
   { name: "MLS", shortName: "MLS", flag: "🇺🇸", keywords: ["mls", "major league soccer"] },
   { name: "Saudi Pro League", shortName: "Saudi", flag: "🇸🇦", keywords: ["saudi pro", "roshn"] },
 ];
+
+// ── GUARANTEED LEAGUE IDS — always shown in "popular" filter ────────────────
+// All top European divisions + cups + African majors + international
+export const GUARANTEED_LEAGUE_IDS = new Set([
+  // England (all divisions + cups)
+  39,   // Premier League
+  40,   // Championship
+  41,   // League One
+  42,   // League Two
+  45,   // FA Cup
+  48,   // EFL Cup
+  // Spain
+  140,  // La Liga
+  141,  // Segunda División
+  143,  // Copa del Rey
+  // Italy
+  135,  // Serie A
+  136,  // Serie B
+  137,  // Coppa Italia
+  // Germany
+  78,   // Bundesliga
+  79,   // 2. Bundesliga
+  81,   // DFB Pokal
+  // France
+  61,   // Ligue 1
+  62,   // Ligue 2
+  66,   // Coupe de France
+  // Portugal
+  94,   // Primeira Liga
+  // Netherlands
+  88,   // Eredivisie
+  // Belgium
+  144,  // Jupiler Pro League
+  // Scotland
+  179,  // Premiership
+  // Turkey
+  203,  // Süper Lig
+  // UEFA competitions
+  2,    // Champions League
+  3,    // Europa League
+  848,  // Conference League
+  // Cameroon
+  406,  // MTN Elite One
+  407,  // MTN Elite Two
+  // CAF / Africa
+  12,   // CAF Champions League
+  20,   // CAF Confederation Cup
+  6,    // AFCON
+  // FIFA
+  1,    // World Cup
+  15,   // Club World Cup
+  // Other major
+  253,  // MLS
+  307,  // Saudi Pro League
+  13,   // Copa Libertadores
+  233,  // Egyptian Premier League
+  200,  // Botola Pro (Morocco)
+  332,  // NPFL (Nigeria)
+  288,  // DSTV Premiership (South Africa)
+]);
 
 // ── FULL LEAGUE → COUNTRY MAP ───────────────────────────────────────────────
 const MAP: Record<string, LeagueCountry> = {
@@ -404,25 +464,9 @@ export function getCountryForLeague(leagueName: string, leagueId?: number): Leag
   return DEFAULT_COUNTRY;
 }
 
-// API-Football league IDs for popular leagues
-const POPULAR_LEAGUE_IDS = new Set([
-  39,   // Premier League (England)
-  140,  // La Liga
-  135,  // Serie A
-  78,   // Bundesliga
-  61,   // Ligue 1
-  406,  // MTN Elite One
-  6,    // AFCON
-  12,   // CAF Champions League
-  1,    // FIFA World Cup
-  253,  // MLS
-  307,  // Saudi Pro League
-  2,    // UEFA Champions League
-]);
-
 export function isPopularLeague(leagueName: string, leagueId?: number): boolean {
-  // league_id is most reliable — prevents "Premier League" (Uganda) matching EPL
-  if (leagueId) return POPULAR_LEAGUE_IDS.has(leagueId);
+  // league_id is most reliable — use GUARANTEED_LEAGUE_IDS (all top European + African leagues)
+  if (leagueId) return GUARANTEED_LEAGUE_IDS.has(leagueId);
 
   // Fallback to name match only when league_id is unavailable
   const lower = leagueName.toLowerCase().trim();

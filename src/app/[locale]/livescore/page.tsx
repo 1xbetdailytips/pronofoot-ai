@@ -33,6 +33,14 @@ function categorizeFixtures(fixtures: Fixture[]) {
 
 async function getTodayFixtures(): Promise<Fixture[]> {
   const today = new Date().toISOString().slice(0, 10);
+
+  // Only show fixtures that have AI predictions (tips)
+  const { data: tips } = await supabase
+    .from("tips")
+    .select("fixture_id");
+
+  const predictedIds = new Set((tips || []).map((t: { fixture_id: number }) => t.fixture_id));
+
   const { data, error } = await supabase
     .from("fixtures")
     .select("*")
@@ -44,7 +52,9 @@ async function getTodayFixtures(): Promise<Fixture[]> {
     console.error("Livescore fetch error:", error);
     return [];
   }
-  return (data as Fixture[]) || [];
+
+  // Filter to only predicted matches
+  return ((data as Fixture[]) || []).filter(f => predictedIds.has(f.id));
 }
 
 export function generateMetadata({
