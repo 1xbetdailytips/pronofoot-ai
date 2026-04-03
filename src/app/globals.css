@@ -19,10 +19,67 @@ html {
 ::-webkit-scrollbar-track {
   background: #f1f1f1;
 }
+.dark ::-webkit-scrollbar-track {
+  background: #1e293b;
+}
 ::-webkit-scrollbar-thumb {
   background: #10b981;
   border-radius: 3px;
 }
+
+/* Dark mode transitions */
+html {
+  transition: color-scheme 0.2s;
+}
+html.dark {
+  color-scheme: dark;
+}
+
+/* ── Dark mode overrides ── */
+/* These apply globally so we don't need dark: on every component */
+.dark {
+  --background: #0f172a;
+  --foreground: #f1f5f9;
+}
+
+/* Base surfaces */
+.dark .bg-white { background-color: #1e293b !important; }
+.dark .bg-gray-50 { background-color: #0f172a !important; }
+.dark .bg-gray-100 { background-color: #1e293b !important; }
+
+/* Text */
+.dark .text-gray-900 { color: #f1f5f9 !important; }
+.dark .text-gray-800 { color: #e2e8f0 !important; }
+.dark .text-gray-700 { color: #cbd5e1 !important; }
+.dark .text-gray-600 { color: #94a3b8 !important; }
+.dark .text-gray-500 { color: #94a3b8 !important; }
+
+/* Borders */
+.dark .border-gray-200 { border-color: #334155 !important; }
+.dark .border-gray-100 { border-color: #1e293b !important; }
+.dark .border-gray-50 { border-color: #1e293b !important; }
+
+/* Hover states */
+.dark .hover\:bg-gray-50:hover { background-color: #334155 !important; }
+.dark .hover\:bg-gray-100:hover { background-color: #334155 !important; }
+.dark .hover\:bg-gray-200:hover { background-color: #475569 !important; }
+
+/* Inputs */
+.dark input, .dark textarea {
+  color: #f1f5f9 !important;
+}
+.dark input::placeholder, .dark textarea::placeholder {
+  color: #64748b !important;
+}
+
+/* Cards and sections */
+.dark .bg-gray-800 { background-color: #0f172a !important; }
+.dark .divide-gray-100 > :not([hidden]) ~ :not([hidden]) { border-color: #334155 !important; }
+.dark .divide-gray-50 > :not([hidden]) ~ :not([hidden]) { border-color: #1e293b !important; }
+
+/* Filter bar backgrounds */
+.dark .bg-white\/95 { background-color: rgba(15, 23, 42, 0.95) !important; }
+.dark .bg-gray-50\/80 { background-color: rgba(30, 41, 59, 0.8) !important; }
 
 /* Ensure mobile-first responsive */
 @layer utilities {
