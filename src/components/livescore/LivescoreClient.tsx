@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback, useMemo } from "react";
 import { RefreshCw, Clock, Activity, ChevronDown, ChevronRight, Search, X, ChevronLeft, CalendarDays } from "lucide-react";
 import Image from "next/image";
 import LeagueFilterBar from "@/components/filters/LeagueFilterBar";
-import { isPopularLeague, getCountryForLeague, getUniqueCountries, POPULAR_LEAGUES } from "@/lib/league-country-map";
+import { isPopularLeague, getCountryForLeague } from "@/lib/league-country-map";
 import type { Fixture } from "@/lib/types";
 
 const LIVE_STATUSES = ["1H", "2H", "HT", "ET", "BT", "P"];
@@ -197,7 +197,7 @@ function CountrySection({ block, defaultOpen }: { block: CountryBlock; defaultOp
   );
 }
 
-function LeagueSection({ league, countryFlag }: { league: LeagueBlock; countryFlag: string }) {
+function LeagueSection({ league }: { league: LeagueBlock; countryFlag?: string }) {
   const [isOpen, setIsOpen] = useState(true);
   const hasLive = league.fixtures.some(f => LIVE_STATUSES.includes(f.status));
 
@@ -253,19 +253,6 @@ function isToday(d: Date) {
   return d.toDateString() === now.toDateString();
 }
 
-function formatDateLabel(d: Date, isFr: boolean) {
-  const now = new Date();
-  const diff = Math.round((d.getTime() - now.getTime()) / 86400000);
-  if (d.toDateString() === now.toDateString()) return isFr ? "Aujourd'hui" : "Today";
-  if (diff === -1 || (diff === 0 && d < now)) {
-    const yesterday = addDays(now, -1);
-    if (d.toDateString() === yesterday.toDateString()) return isFr ? "Hier" : "Yesterday";
-  }
-  const tomorrow = addDays(now, 1);
-  if (d.toDateString() === tomorrow.toDateString()) return isFr ? "Demain" : "Tomorrow";
-  return d.toLocaleDateString(isFr ? "fr-FR" : "en-GB", { weekday: "short", day: "numeric", month: "short" });
-}
-
 // ── Main LivescoreClient ────────────────────────────────────────────────────
 
 export default function LivescoreClient({ initialFixtures, locale }: Props) {
@@ -309,7 +296,7 @@ export default function LivescoreClient({ initialFixtures, locale }: Props) {
   );
 
   // Group by country for the accordion
-  const { live: filteredLive, upcoming, finished } = useMemo(() => categorize(activeFixtures), [activeFixtures]);
+  const { upcoming, finished } = useMemo(() => categorize(activeFixtures), [activeFixtures]);
   const liveCountryGroups = useMemo(() => groupByCountry(allLive), [allLive]);
   const finishedCountryGroups = useMemo(() => groupByCountry(finished), [finished]);
   const upcomingCountryGroups = useMemo(() => groupByCountry(upcoming), [upcoming]);
