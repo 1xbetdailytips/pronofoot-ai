@@ -1,11 +1,12 @@
 "use client";
 
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { RefreshCw, Clock, Activity, ChevronDown, ChevronRight, Search, X, ChevronLeft, CalendarDays } from "lucide-react";
+import { RefreshCw, Clock, Activity, ChevronDown, ChevronRight, ChevronLeft, CalendarDays } from "lucide-react";
 import Image from "next/image";
 import LeagueFilterBar from "@/components/filters/LeagueFilterBar";
+import GlobalMatchSearch from "@/components/livescore/GlobalMatchSearch";
 import { isPopularLeague, getCountryForLeague } from "@/lib/league-country-map";
-import type { Fixture } from "@/lib/types";
+import type { Fixture, LiveFixture } from "@/lib/types";
 
 const LIVE_STATUSES = ["1H", "2H", "HT", "ET", "BT", "P"];
 const FINISHED_STATUSES = ["FT", "AET", "PEN"];
@@ -84,7 +85,7 @@ function formatTime(dateStr: string) {
   } catch { return "--:--"; }
 }
 
-function LiveMinuteTicker({ status, elapsed }: { status: string; elapsed?: number | null }) {
+function LiveMinuteTicker({ status, elapsed, matchDate }: { status: string; elapsed?: number | null; matchDate?: string }) {
   const [tick, setTick] = useState(0);
 
   useEffect(() => {
@@ -94,15 +95,32 @@ function LiveMinuteTicker({ status, elapsed }: { status: string; elapsed?: numbe
   }, [status]);
 
   if (status === "HT") return "HT";
-  if (!elapsed) return status;
-  // Add client-side ticks (each tick = 1 minute) on top of server-reported elapsed
-  const displayMinute = elapsed + tick;
-  // Cap at 90 for regular time, 120 for extra time
-  const maxMinute = ["ET", "BT"].includes(status) ? 120 : 90;
-  return `${Math.min(displayMinute, maxMinute)}'`;
+
+  // If elapsed is available, use it + client ticks
+  if (elapsed) {
+    const displayMinute = elapsed + tick;
+    const maxMinute = ["ET", "BT"].includes(status) ? 120 : 90;
+    return `${Math.min(displayMinute, maxMinute)}'`;
+  }
+
+  // Estimate minute from match start time if elapsed not available
+  if (matchDate) {
+    const kickoff = new Date(matchDate).getTime();
+    const now = Date.now();
+    const elapsedMs = now - kickoff;
+    if (elapsedMs > 0) {
+      let estimatedMin = Math.floor(elapsedMs / 60000);
+      // 2H starts at ~45 min + 15 min break
+      if (status === "2H") estimatedMin = Math.max(46, estimatedMin - 15);
+      const maxMinute = ["ET", "BT"].includes(status) ? 120 : status === "2H" ? 90 : 45;
+      return `${Math.min(estimatedMin, maxMinute)}'`;
+    }
+  }
+
+  return status;
 }
 
-function StatusBadge({ status, elapsed }: { status: string; elapsed?: number | null }) {
+function StatusBadge({ status, elapsed, matchDate }: { status: string; elapsed?: number | null; matchDate?: string }) {
   if (LIVE_STATUSES.includes(status)) {
     return (
       <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-bold bg-red-100 text-red-700">
@@ -110,7 +128,7 @@ function StatusBadge({ status, elapsed }: { status: string; elapsed?: number | n
           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
           <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-red-500" />
         </span>
-        <LiveMinuteTicker status={status} elapsed={elapsed} />
+        <LiveMinuteTicker status={status} elapsed={elapsed} matchDate={matchDate} />
       </span>
     );
   }
@@ -178,6 +196,8 @@ function MatchRow({ fixture }: { fixture: Fixture }) {
   const isLive = LIVE_STATUSES.includes(fixture.status);
   const isFinished = FINISHED_STATUSES.includes(fixture.status);
   const hasEvents = fixture.match_events && fixture.match_events.length > 0;
+  // Cast to LiveFixture to access tip/result enrichments (may be undefined for legacy data)
+  const lf = fixture as LiveFixture;
   return (
     <div className={`border-b border-gray-50 last:border-b-0 transition-colors ${isLive ? "bg-red-50/40" : "hover:bg-gray-50/50"}`}>
       <div className="grid grid-cols-[44px_1fr_56px_1fr_48px] md:grid-cols-[56px_1fr_80px_1fr_56px] items-center gap-1.5 md:gap-2 px-2 md:px-3 py-2.5">
@@ -191,8 +211,26 @@ function MatchRow({ fixture }: { fixture: Fixture }) {
           <TeamLogo src={fixture.away_team_logo} alt={fixture.away_team} />
           <span className="text-sm font-medium text-gray-900 truncate">{fixture.away_team}</span>
         </div>
-        <div className="flex justify-end"><StatusBadge status={fixture.status} elapsed={fixture.elapsed} /></div>
+        <div className="flex justify-end"><StatusBadge status={fixture.status} elapsed={fixture.elapsed} matchDate={fixture.match_date} /></div>
       </div>
+      {/* Prediction + Result row */}
+      {lf.tip_prediction && (
+        <div className="flex items-center gap-2 px-2 md:px-3 pb-2 -mt-0.5">
+          <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-700">
+            {lf.tip_prediction}
+          </span>
+          <span className="text-[10px] text-gray-400">{lf.tip_confidence}%</span>
+          {lf.tip_best_pick && (
+            <span className="text-[10px] text-emerald-600 font-medium">{lf.tip_best_pick}</span>
+          )}
+          {lf.result_correct === true && (
+            <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded ml-auto">WIN</span>
+          )}
+          {lf.result_correct === false && (
+            <span className="text-[10px] font-bold text-red-500 bg-red-50 px-1.5 py-0.5 rounded ml-auto">LOST</span>
+          )}
+        </div>
+      )}
       {/* Goal scorers + cards row */}
       {hasEvents && (isLive || isFinished) && (
         <div className="grid grid-cols-[44px_1fr_56px_1fr_48px] md:grid-cols-[56px_1fr_80px_1fr_56px] gap-1.5 md:gap-2 px-2 md:px-3 pb-2 -mt-1">
@@ -317,7 +355,6 @@ export default function LivescoreClient({ initialFixtures, locale }: Props) {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [filterMode, setFilterMode] = useState<"popular" | "all" | "custom">("popular");
   const [selectedLeagueNames, setSelectedLeagueNames] = useState<Set<string>>(new Set());
-  const [searchQuery, setSearchQuery] = useState("");
   const [selectedDate, setSelectedDate] = useState(new Date());
   const isFr = locale === "fr";
 
@@ -331,19 +368,8 @@ export default function LivescoreClient({ initialFixtures, locale }: Props) {
       filtered = fixtures.filter((f) => selectedLeagueNames.has(f.league_name));
     }
 
-    // Apply search on top
-    if (searchQuery.trim()) {
-      const q = searchQuery.toLowerCase();
-      filtered = filtered.filter(
-        (f) =>
-          f.home_team.toLowerCase().includes(q) ||
-          f.away_team.toLowerCase().includes(q) ||
-          f.league_name.toLowerCase().includes(q)
-      );
-    }
-
     return filtered;
-  }, [fixtures, filterMode, selectedLeagueNames, searchQuery]);
+  }, [fixtures, filterMode, selectedLeagueNames]);
 
   // Always show live matches regardless of filter
   const allLive = useMemo(
@@ -497,24 +523,8 @@ export default function LivescoreClient({ initialFixtures, locale }: Props) {
         onFilteredFixtures={handleFilterChange}
       />
 
-      {/* ── Quick search ── */}
-      <div className="relative mb-4">
-        <div className="flex items-center gap-2 px-3 py-2.5 rounded-lg bg-gray-100 border border-gray-200 focus-within:border-emerald-400 focus-within:ring-2 focus-within:ring-emerald-100 transition-all">
-          <Search className="w-4 h-4 text-gray-400 shrink-0" />
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder={isFr ? "Rechercher une équipe ou ligue..." : "Search team or league..."}
-            className="flex-1 bg-transparent text-sm text-gray-900 placeholder-gray-400 outline-none"
-          />
-          {searchQuery && (
-            <button onClick={() => setSearchQuery("")} className="text-gray-400 hover:text-gray-600">
-              <X className="w-4 h-4" />
-            </button>
-          )}
-        </div>
-      </div>
+      {/* ── Global search (across all dates) ── */}
+      <GlobalMatchSearch locale={locale} />
 
       {/* ── Refresh bar ── */}
       <div className="flex items-center justify-between mb-4 text-xs text-gray-400">

@@ -89,6 +89,13 @@ export type MatchWithTip = Fixture & {
   slug: string;
 };
 
+export type LiveFixture = Fixture & {
+  tip_prediction: string | null;
+  tip_confidence: number | null;
+  tip_best_pick: string | null;
+  result_correct: boolean | null;
+};
+
 // ── Win Rate Stats ────────────────────────────────────────────────────────────
 
 export type WinRateStat = {

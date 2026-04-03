@@ -34,27 +34,42 @@ function categorizeFixtures(fixtures: Fixture[]) {
 async function getTodayFixtures(): Promise<Fixture[]> {
   const today = new Date().toISOString().slice(0, 10);
 
-  // Only show fixtures that have AI predictions (tips)
-  const { data: tips } = await supabase
-    .from("tips")
-    .select("fixture_id");
+  // Fetch fixtures + tips + results in parallel
+  const [fixturesRes, tipsRes, resultsRes] = await Promise.all([
+    supabase.from("fixtures").select("*")
+      .gte("match_date", `${today}T00:00:00`)
+      .lte("match_date", `${today}T23:59:59`)
+      .order("match_date", { ascending: true }),
+    supabase.from("tips").select("fixture_id, prediction, confidence, best_pick"),
+    supabase.from("results_log").select("fixture_id, is_correct"),
+  ]);
 
-  const predictedIds = new Set((tips || []).map((t: { fixture_id: number }) => t.fixture_id));
-
-  const { data, error } = await supabase
-    .from("fixtures")
-    .select("*")
-    .gte("match_date", `${today}T00:00:00`)
-    .lte("match_date", `${today}T23:59:59`)
-    .order("match_date", { ascending: true });
-
-  if (error) {
-    console.error("Livescore fetch error:", error);
+  if (fixturesRes.error) {
+    console.error("Livescore fetch error:", fixturesRes.error);
     return [];
   }
 
-  // Filter to only predicted matches
-  return ((data as Fixture[]) || []).filter(f => predictedIds.has(f.id));
+  // Build lookup maps
+  type TipSlim = { fixture_id: number; prediction: string; confidence: number; best_pick: string | null };
+  const tipMap = new Map<number, TipSlim>();
+  (tipsRes.data || []).forEach((t: TipSlim) => tipMap.set(t.fixture_id, t));
+
+  const resultMap = new Map<number, boolean>();
+  (resultsRes.data || []).forEach((r: { fixture_id: number; is_correct: boolean }) => resultMap.set(r.fixture_id, r.is_correct));
+
+  // Filter to only predicted matches + enrich with tip/result data
+  return ((fixturesRes.data as Fixture[]) || [])
+    .filter(f => tipMap.has(f.id))
+    .map(f => {
+      const tip = tipMap.get(f.id);
+      return {
+        ...f,
+        tip_prediction: tip?.prediction ?? null,
+        tip_confidence: tip?.confidence ?? null,
+        tip_best_pick: tip?.best_pick ?? null,
+        result_correct: resultMap.get(f.id) ?? null,
+      };
+    });
 }
 
 export function generateMetadata({
