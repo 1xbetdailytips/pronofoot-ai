@@ -13,11 +13,13 @@ import {
 
 type FilterMode = "popular" | "all" | "custom";
 
+type FixtureWithLeague = { league_name: string; league_id?: number };
+
 type Props = {
-  fixtures: Array<{ league_name: string }>;
+  fixtures: Array<FixtureWithLeague>;
   locale: string;
   searchLocked?: boolean;
-  onFilteredFixtures: (filtered: Array<{ league_name: string }>, mode: FilterMode) => void;
+  onFilteredFixtures: (filtered: Array<FixtureWithLeague>, mode: FilterMode) => void;
   children?: React.ReactNode;
 };
 
@@ -47,7 +49,7 @@ export default function LeagueFilterBar({
         filtered = fixtures;
       } else if (mode === "popular" && popKw.size === 0) {
         // Default: show popular leagues only
-        filtered = fixtures.filter((f) => isPopularLeague(f.league_name));
+        filtered = fixtures.filter((f) => isPopularLeague(f.league_name, f.league_id));
       } else if (mode === "custom" && selLeagues.size > 0) {
         // Dropdown selection
         filtered = fixtures.filter((f) => selLeagues.has(f.league_name));
@@ -58,7 +60,7 @@ export default function LeagueFilterBar({
           return Array.from(popKw).some((kw) => lower.includes(kw));
         });
       } else {
-        filtered = fixtures.filter((f) => isPopularLeague(f.league_name));
+        filtered = fixtures.filter((f) => isPopularLeague(f.league_name, f.league_id));
       }
 
       onFilteredFixtures(filtered, mode);
