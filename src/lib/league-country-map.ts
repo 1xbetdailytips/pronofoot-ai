@@ -427,35 +427,58 @@ const ID_MAP: Record<number, LeagueCountry> = {
   11: { country: "CONMEBOL", flag: "🌎", tier: 2 },  // Copa Sudamericana
 };
 
+// ── COUNTRY → FLAG mapping (for when we have the real country from API-Football) ──
+const COUNTRY_FLAGS: Record<string, string> = {
+  "England": "🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Spain": "🇪🇸", "Italy": "🇮🇹", "Germany": "🇩🇪", "France": "🇫🇷",
+  "Portugal": "🇵🇹", "Netherlands": "🇳🇱", "Belgium": "🇧🇪", "Scotland": "🏴󠁧󠁢󠁳󠁣󠁴󠁿", "Turkey": "🇹🇷",
+  "Greece": "🇬🇷", "Russia": "🇷🇺", "Ukraine": "🇺🇦", "Austria": "🇦🇹", "Switzerland": "🇨🇭",
+  "Czech-Republic": "🇨🇿", "Poland": "🇵🇱", "Denmark": "🇩🇰", "Sweden": "🇸🇪", "Norway": "🇳🇴",
+  "Finland": "🇫🇮", "Hungary": "🇭🇺", "Romania": "🇷🇴", "Bulgaria": "🇧🇬", "Croatia": "🇭🇷",
+  "Serbia": "🇷🇸", "Israel": "🇮🇱", "Wales": "🏴󠁧󠁢󠁷󠁬󠁳󠁿", "Ireland": "🇮🇪",
+  "Cameroon": "🇨🇲", "Nigeria": "🇳🇬", "Morocco": "🇲🇦", "Egypt": "🇪🇬", "Tunisia": "🇹🇳",
+  "South-Africa": "🇿🇦", "Ghana": "🇬🇭", "Kenya": "🇰🇪", "Tanzania": "🇹🇿", "Uganda": "🇺🇬",
+  "Ethiopia": "🇪🇹", "Zimbabwe": "🇿🇼", "Algeria": "🇩🇿", "Senegal": "🇸🇳", "Ivory-Coast": "🇨🇮",
+  "USA": "🇺🇸", "Mexico": "🇲🇽", "Brazil": "🇧🇷", "Argentina": "🇦🇷", "Colombia": "🇨🇴",
+  "Chile": "🇨🇱", "Paraguay": "🇵🇾", "Uruguay": "🇺🇾", "Ecuador": "🇪🇨", "Peru": "🇵🇪",
+  "Saudi-Arabia": "🇸🇦", "Japan": "🇯🇵", "South-Korea": "🇰🇷", "China": "🇨🇳", "Australia": "🇦🇺",
+  "India": "🇮🇳", "Qatar": "🇶🇦", "UAE": "🇦🇪", "World": "🌎",
+};
+
+function getFlagForCountry(country: string): string {
+  if (COUNTRY_FLAGS[country]) return COUNTRY_FLAGS[country];
+  // Try without dashes
+  const noDash = country.replace(/-/g, " ");
+  for (const [key, flag] of Object.entries(COUNTRY_FLAGS)) {
+    if (key.replace(/-/g, " ").toLowerCase() === noDash.toLowerCase()) return flag;
+  }
+  return "🌐";
+}
+
 // ── HELPERS ─────────────────────────────────────────────────────────────────
 
 const DEFAULT_COUNTRY: LeagueCountry = { country: "Other", flag: "🌐", tier: 3 };
 
-// Names shared by multiple countries — skip name-based match when league_id is present but unknown
-const AMBIGUOUS_NAMES = new Set([
-  "premier league", "serie a", "ligue 1", "primera división", "super league",
-  "national league", "liga 1", "pro league", "first division a", "premiership",
-  "super liga", "division de honor", "liga nacional",
-]);
-
-export function getCountryForLeague(leagueName: string, leagueId?: number): LeagueCountry {
-  // 1. Try league_id first (most accurate — resolves "Premier League" ambiguity)
-  if (leagueId && ID_MAP[leagueId]) return ID_MAP[leagueId];
-
-  // 2. Exact name match — BUT skip if name is ambiguous AND we have an unknown league_id
-  //    (prevents Zimbabwe's "Premier League" from mapping to England)
-  const isAmbiguous = AMBIGUOUS_NAMES.has(leagueName.toLowerCase());
-  if (MAP[leagueName] && !(isAmbiguous && leagueId)) {
-    return MAP[leagueName];
+export function getCountryForLeague(leagueName: string, leagueId?: number, leagueCountry?: string | null): LeagueCountry {
+  // 0. If we have the REAL country from API-Football, use it directly (most reliable)
+  if (leagueCountry) {
+    const flag = getFlagForCountry(leagueCountry);
+    // Determine tier from ID_MAP if available, otherwise from name MAP, otherwise tier 3
+    const idInfo = leagueId ? ID_MAP[leagueId] : undefined;
+    const nameInfo = MAP[leagueName];
+    const tier = idInfo?.tier ?? nameInfo?.tier ?? (GUARANTEED_LEAGUE_IDS.has(leagueId || 0) ? 1 : 3);
+    return { country: leagueCountry, flag, tier };
   }
 
-  // 3. Careful fuzzy match — only match if the league name CONTAINS a known key
-  //    (not the reverse, which caused "Premier League" to match everything)
+  // 1. Try league_id
+  if (leagueId && ID_MAP[leagueId]) return ID_MAP[leagueId];
+
+  // 2. Exact name match
+  if (MAP[leagueName]) return MAP[leagueName];
+
+  // 3. Fuzzy match (only if league name contains a known key, 5+ chars)
   const lower = leagueName.toLowerCase();
   for (const [key, value] of Object.entries(MAP)) {
     const keyLower = key.toLowerCase();
-    // Only match if the incoming name contains the full key name
-    // AND the key is at least 5 chars (avoid short key false positives like "NB I")
     if (keyLower.length >= 5 && lower.includes(keyLower)) {
       return value;
     }
@@ -491,11 +514,11 @@ export type CountryGroup = {
   leagues: { leagueName: string; count: number }[];
 };
 
-export function getUniqueCountries<T extends { league_name: string; league_id?: number }>(fixtures: T[]): CountryGroup[] {
+export function getUniqueCountries<T extends { league_name: string; league_id?: number; league_country?: string | null }>(fixtures: T[]): CountryGroup[] {
   const countryMap = new Map<string, { flag: string; tier: number; leagues: Map<string, number> }>();
 
   for (const f of fixtures) {
-    const info = getCountryForLeague(f.league_name, f.league_id);
+    const info = getCountryForLeague(f.league_name, f.league_id, f.league_country);
     if (!countryMap.has(info.country)) {
       countryMap.set(info.country, { flag: info.flag, tier: info.tier, leagues: new Map() });
     }

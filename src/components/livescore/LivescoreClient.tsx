@@ -49,7 +49,7 @@ function groupByCountry(fixtures: Fixture[]): CountryBlock[] {
   const map = new Map<string, { flag: string; tier: number; leagues: Map<string, Fixture[]> }>();
 
   for (const f of fixtures) {
-    const info = getCountryForLeague(f.league_name, f.league_id);
+    const info = getCountryForLeague(f.league_name, f.league_id, f.league_country);
     if (!map.has(info.country)) {
       map.set(info.country, { flag: info.flag, tier: info.tier, leagues: new Map() });
     }

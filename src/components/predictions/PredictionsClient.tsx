@@ -26,7 +26,7 @@ type LeagueGroup = {
 function groupByCountryThenLeague(matches: MatchWithTip[]): LeagueGroup[] {
   const groups = new Map<string, LeagueGroup>();
   for (const m of matches) {
-    const info = getCountryForLeague(m.league_name);
+    const info = getCountryForLeague(m.league_name, m.league_id, m.league_country);
     const key = `${info.country}__${m.league_name}`;
     if (!groups.has(key)) {
       groups.set(key, { key, country: info.country, flag: info.flag, leagueName: m.league_name, matches: [] });
@@ -34,8 +34,9 @@ function groupByCountryThenLeague(matches: MatchWithTip[]): LeagueGroup[] {
     groups.get(key)!.matches.push(m);
   }
   return Array.from(groups.values()).sort((a, b) => {
-    const aInfo = getCountryForLeague(a.leagueName);
-    const bInfo = getCountryForLeague(b.leagueName);
+    // Use first match in each group to get accurate tier info
+    const aInfo = getCountryForLeague(a.leagueName, a.matches[0]?.league_id, a.matches[0]?.league_country);
+    const bInfo = getCountryForLeague(b.leagueName, b.matches[0]?.league_id, b.matches[0]?.league_country);
     if (aInfo.tier !== bInfo.tier) return aInfo.tier - bInfo.tier;
     return b.matches.length - a.matches.length;
   });
