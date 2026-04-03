@@ -1,10 +1,10 @@
 import { getTranslations } from "next-intl/server";
 import type { Metadata } from "next";
 import { TrendingUp, Send, Zap } from "lucide-react";
-import MatchCard from "@/components/predictions/MatchCard";
+import PredictionsClient from "@/components/predictions/PredictionsClient";
 import PromoBanner from "@/components/ui/PromoBanner";
 import { siteConfig } from "@/lib/config";
-import { getTodaysMatches, matchToCardProps, groupMatchesByLeague } from "@/lib/data";
+import { getTodaysMatches } from "@/lib/data";
 
 // ISR: revalidate every 2 minutes (predictions don't change every second)
 export const revalidate = 120;
@@ -43,7 +43,6 @@ export default async function PredictionsPage({
   const isFr = locale === "fr";
 
   const matches = await getTodaysMatches();
-  const leagueGroups = groupMatchesByLeague(matches);
   const predictedCount = matches.filter((m) => !!m.tip).length;
 
   // Predictions FAQ (visible + schema)
@@ -130,41 +129,12 @@ export default async function PredictionsPage({
         <PromoBanner locale={locale} variant="slim" campaign="predictions_top" />
       </div>
 
-      {/* Table header (desktop) */}
-      <div className="hidden sm:flex items-center px-4 py-2 bg-gray-50 border-b border-gray-200 rounded-t-lg text-xs font-medium text-gray-500 uppercase tracking-wider gap-2">
-        <div className="w-14 text-center">{isFr ? "Heure" : "Time"}</div>
-        <div className="flex-1 text-right">{isFr ? "Domicile" : "Home"}</div>
-        <div className="w-16 text-center">Score</div>
-        <div className="flex-1 text-left">{isFr ? "Ext\u00e9rieur" : "Away"}</div>
-        <div className="w-10 text-center">Tip</div>
-        <div className="w-20 text-center">Conf.</div>
-        <div className="w-28 text-center">1 / X / 2</div>
-        <div className="w-24 text-right">Best Pick</div>
-      </div>
-
-      {/* League groups */}
-      {leagueGroups.length > 0 ? (
-        <div className="bg-white rounded-b-lg border border-t-0 border-gray-200 divide-y divide-gray-100 mb-8">
-          {leagueGroups.map((group) => (
-            <div key={group.leagueName}>
-              {/* League header */}
-              <div className="flex items-center justify-between px-4 py-2 bg-gray-50/70 border-b border-gray-100">
-                <h2 className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
-                  {group.leagueName}
-                </h2>
-                <span className="text-xs text-gray-400">{group.matches.length}</span>
-              </div>
-              {/* Matches */}
-              {group.matches.map((match) => (
-                <MatchCard
-                  key={match.id}
-                  {...matchToCardProps(match)}
-                  locale={locale}
-                />
-              ))}
-            </div>
-          ))}
-        </div>
+      {/* Predictions with filter + top 20 + VIP lock */}
+      {matches.length > 0 ? (
+        <PredictionsClient
+          matches={matches}
+          locale={locale}
+        />
       ) : (
         <div className="text-center py-20 bg-white rounded-lg border border-gray-200 mb-8">
           <TrendingUp className="w-12 h-12 text-gray-300 mx-auto mb-4" />

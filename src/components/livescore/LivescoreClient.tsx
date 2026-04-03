@@ -1,7 +1,9 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { RefreshCw, Clock, Activity } from "lucide-react";
+import LeagueFilterBar from "@/components/filters/LeagueFilterBar";
+import { isPopularLeague, getCountryForLeague } from "@/lib/league-country-map";
 import type { Fixture } from "@/lib/types";
 
 const LIVE_STATUSES = ["1H", "2H", "HT", "ET", "BT", "P"];
@@ -25,14 +27,36 @@ function categorize(fixtures: Fixture[]) {
   return { live, upcoming, finished };
 }
 
-function groupByLeague(fixtures: Fixture[]): Record<string, Fixture[]> {
-  const groups: Record<string, Fixture[]> = {};
+type CountryLeagueGroup = {
+  key: string;
+  country: string;
+  flag: string;
+  leagueName: string;
+  fixtures: Fixture[];
+};
+
+function groupByCountryAndLeague(fixtures: Fixture[]): CountryLeagueGroup[] {
+  const groups = new Map<string, CountryLeagueGroup>();
   for (const f of fixtures) {
-    const key = f.league_name || "Other";
-    if (!groups[key]) groups[key] = [];
-    groups[key].push(f);
+    const info = getCountryForLeague(f.league_name);
+    const key = `${info.country}__${f.league_name}`;
+    if (!groups.has(key)) {
+      groups.set(key, {
+        key,
+        country: info.country,
+        flag: info.flag,
+        leagueName: f.league_name,
+        fixtures: [],
+      });
+    }
+    groups.get(key)!.fixtures.push(f);
   }
-  return groups;
+  return Array.from(groups.values()).sort((a, b) => {
+    const aInfo = getCountryForLeague(a.leagueName);
+    const bInfo = getCountryForLeague(b.leagueName);
+    if (aInfo.tier !== bInfo.tier) return aInfo.tier - bInfo.tier;
+    return b.fixtures.length - a.fixtures.length;
+  });
 }
 
 function formatTime(dateStr: string) {
@@ -105,27 +129,18 @@ function MatchRow({ fixture }: { fixture: Fixture }) {
         isLive ? "bg-red-50/40" : "hover:bg-gray-50/50"
       }`}
     >
-      {/* Time */}
       <div className="text-xs text-gray-400 font-mono">
         {formatTime(fixture.match_date)}
       </div>
-
-      {/* Home team */}
       <div className="text-sm font-medium text-gray-900 text-right truncate">
         {fixture.home_team}
       </div>
-
-      {/* Score */}
       <div className="flex justify-center">
         <ScoreDisplay fixture={fixture} />
       </div>
-
-      {/* Away team */}
       <div className="text-sm font-medium text-gray-900 truncate">
         {fixture.away_team}
       </div>
-
-      {/* Status */}
       <div className="flex justify-end">
         <StatusBadge status={fixture.status} elapsed={fixture.elapsed} />
       </div>
@@ -133,23 +148,25 @@ function MatchRow({ fixture }: { fixture: Fixture }) {
   );
 }
 
-function LeagueGroup({
-  leagueName,
-  fixtures,
+function CountryLeagueGroupView({
+  group,
 }: {
-  leagueName: string;
-  fixtures: Fixture[];
+  group: CountryLeagueGroup;
 }) {
   return (
     <div className="mb-1">
       <div className="flex items-center gap-2 px-3 py-2 bg-gray-100 rounded-t-lg">
+        <span className="text-sm">{group.flag}</span>
+        {group.country !== group.leagueName && (
+          <span className="text-xs text-gray-400">{group.country} &rsaquo;</span>
+        )}
         <span className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
-          {leagueName}
+          {group.leagueName}
         </span>
-        <span className="text-xs text-gray-400">({fixtures.length})</span>
+        <span className="text-xs text-gray-400 ml-auto">({group.fixtures.length})</span>
       </div>
       <div className="bg-white rounded-b-lg border border-gray-100">
-        {fixtures.map((f) => (
+        {group.fixtures.map((f) => (
           <MatchRow key={f.id} fixture={f} />
         ))}
       </div>
@@ -170,7 +187,7 @@ function Section({
 }) {
   if (fixtures.length === 0) return null;
 
-  const leagues = groupByLeague(fixtures);
+  const groups = groupByCountryAndLeague(fixtures);
 
   return (
     <div className="mb-6">
@@ -183,9 +200,9 @@ function Section({
           </span>
         </h2>
       </div>
-      <div className="space-y-3">
-        {Object.entries(leagues).map(([name, matches]) => (
-          <LeagueGroup key={name} leagueName={name} fixtures={matches} />
+      <div className="space-y-3 transition-all duration-300">
+        {groups.map((group) => (
+          <CountryLeagueGroupView key={group.key} group={group} />
         ))}
       </div>
     </div>
@@ -196,7 +213,36 @@ export default function LivescoreClient({ initialFixtures, locale }: Props) {
   const [fixtures, setFixtures] = useState(initialFixtures);
   const [lastUpdate, setLastUpdate] = useState(new Date());
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [filteredFixtures, setFilteredFixtures] = useState<Fixture[]>([]);
+  const [filterMode, setFilterMode] = useState<"popular" | "all" | "custom">("popular");
   const isFr = locale === "fr";
+
+  // Initial popular filter
+  const popularFiltered = useMemo(
+    () => fixtures.filter((f) => isPopularLeague(f.league_name)),
+    [fixtures]
+  );
+
+  // Active fixtures based on filter
+  const activeFixtures = useMemo(() => {
+    if (filterMode === "all") return fixtures;
+    if (filterMode === "custom" && filteredFixtures.length > 0) return filteredFixtures;
+    // Default: popular
+    return popularFiltered;
+  }, [fixtures, filteredFixtures, filterMode, popularFiltered]);
+
+  const handleFilterChange = useCallback(
+    (filtered: Array<{ league_name: string }>, mode: "popular" | "all" | "custom") => {
+      const leagueNames = new Set(filtered.map((f) => f.league_name));
+      if (mode === "all") {
+        setFilteredFixtures(fixtures);
+      } else {
+        setFilteredFixtures(fixtures.filter((f) => leagueNames.has(f.league_name)));
+      }
+      setFilterMode(mode);
+    },
+    [fixtures]
+  );
 
   const refresh = useCallback(async () => {
     setIsRefreshing(true);
@@ -219,7 +265,13 @@ export default function LivescoreClient({ initialFixtures, locale }: Props) {
     return () => clearInterval(interval);
   }, [refresh]);
 
-  const { live, upcoming, finished } = categorize(fixtures);
+  const { upcoming, finished } = categorize(activeFixtures);
+
+  // Always show live matches even if not in filter
+  const allLive = useMemo(
+    () => fixtures.filter((f) => LIVE_STATUSES.includes(f.status)),
+    [fixtures]
+  );
 
   if (fixtures.length === 0) {
     return (
@@ -230,7 +282,7 @@ export default function LivescoreClient({ initialFixtures, locale }: Props) {
         </p>
         <p className="text-gray-400 text-sm mt-1">
           {isFr
-            ? "Les matchs apparaitront ici des qu'ils seront programmes."
+            ? "Les matchs apparaitront ici dès qu'ils seront programmés."
             : "Matches will appear here once scheduled."}
         </p>
       </div>
@@ -239,17 +291,28 @@ export default function LivescoreClient({ initialFixtures, locale }: Props) {
 
   return (
     <div>
+      {/* Filter bar */}
+      <LeagueFilterBar
+        fixtures={fixtures}
+        locale={locale}
+        onFilteredFixtures={handleFilterChange}
+      />
+
       {/* Refresh bar */}
       <div className="flex items-center justify-between mb-4 text-xs text-gray-400">
         <div className="flex items-center gap-1.5">
           <Clock className="w-3.5 h-3.5" />
           <span>
-            {isFr ? "Derniere maj" : "Last update"}:{" "}
+            {isFr ? "Dernière maj" : "Last update"}:{" "}
             {lastUpdate.toLocaleTimeString([], {
               hour: "2-digit",
               minute: "2-digit",
               second: "2-digit",
             })}
+          </span>
+          <span className="text-gray-300 mx-1">|</span>
+          <span className="text-emerald-600 font-medium">
+            {activeFixtures.length} / {fixtures.length} {isFr ? "matchs" : "matches"}
           </span>
         </div>
         <button
@@ -270,7 +333,7 @@ export default function LivescoreClient({ initialFixtures, locale }: Props) {
         </button>
       </div>
 
-      {/* LIVE — always first */}
+      {/* Always show ALL live matches regardless of filter */}
       <Section
         title={isFr ? "En Direct" : "Live"}
         icon={
@@ -280,10 +343,10 @@ export default function LivescoreClient({ initialFixtures, locale }: Props) {
           </span>
         }
         accentColor="text-red-600"
-        fixtures={live}
+        fixtures={allLive}
       />
 
-      {/* FINISHED — show before upcoming so users see results immediately */}
+      {/* Filtered: Finished */}
       <Section
         title={isFr ? "Terminés" : "Finished"}
         icon={<span className="w-4 h-4 text-center font-bold text-xs">FT</span>}
@@ -291,7 +354,7 @@ export default function LivescoreClient({ initialFixtures, locale }: Props) {
         fixtures={finished}
       />
 
-      {/* UPCOMING — last (can be hundreds of matches) */}
+      {/* Filtered: Upcoming */}
       <Section
         title={isFr ? "À Venir" : "Upcoming"}
         icon={<Clock className="w-4 h-4" />}
@@ -301,4 +364,3 @@ export default function LivescoreClient({ initialFixtures, locale }: Props) {
     </div>
   );
 }
-
