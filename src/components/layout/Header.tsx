@@ -6,6 +6,7 @@ import { useState, useRef, useEffect } from "react";
 import { Menu, X, Globe, ChevronDown } from "lucide-react";
 import AuthButton from "@/components/auth/AuthButton";
 import ThemeToggle from "@/components/ui/ThemeToggle";
+import TimezoneSelector from "@/components/ui/TimezoneSelector";
 import Logo from "@/components/ui/Logo";
 
 type HeaderProps = {
@@ -381,7 +382,8 @@ export default function Header({ locale, translations: t }: HeaderProps) {
               {otherLocale.toUpperCase()}
             </Link>
 
-            {/* Theme toggle */}
+            {/* Timezone + Theme toggle */}
+            <TimezoneSelector />
             <ThemeToggle />
 
             {/* Auth */}

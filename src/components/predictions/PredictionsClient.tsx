@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { Trophy, ChevronDown, ChevronRight, Lock, Sparkles, ChevronLeft, CalendarDays, Filter } from "lucide-react";
 import MatchCard from "./MatchCard";
 import LeagueFilterBar from "@/components/filters/LeagueFilterBar";
@@ -138,12 +138,12 @@ function isToday(d: Date) {
 
 type MarketFilter = "all" | "1x2" | "over_under" | "btts" | "best_pick";
 
-const MARKET_TABS: { key: MarketFilter; labelFr: string; labelEn: string }[] = [
-  { key: "all", labelFr: "Tous", labelEn: "All" },
-  { key: "1x2", labelFr: "1X2", labelEn: "1X2" },
-  { key: "over_under", labelFr: "Over/Under", labelEn: "Over/Under" },
-  { key: "btts", labelFr: "BTTS", labelEn: "BTTS" },
-  { key: "best_pick", labelFr: "Best Pick", labelEn: "Best Pick" },
+const MARKET_TABS: { key: MarketFilter; labelFr: string; labelEn: string; accuracyKey: string }[] = [
+  { key: "all", labelFr: "Tous", labelEn: "All", accuracyKey: "overall" },
+  { key: "1x2", labelFr: "1X2", labelEn: "1X2", accuracyKey: "1x2" },
+  { key: "over_under", labelFr: "Over/Under", labelEn: "Over/Under", accuracyKey: "over25" },
+  { key: "btts", labelFr: "BTTS", labelEn: "BTTS", accuracyKey: "btts" },
+  { key: "best_pick", labelFr: "Best Pick", labelEn: "Best Pick", accuracyKey: "bestPick" },
 ];
 
 function matchesMarketFilter(m: MatchWithTip, filter: MarketFilter): boolean {
@@ -172,6 +172,15 @@ export default function PredictionsClient({ matches: initialMatches, locale }: P
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [isLoadingDate, setIsLoadingDate] = useState(false);
   const [marketFilter, setMarketFilter] = useState<MarketFilter>("all");
+  const [accuracy, setAccuracy] = useState<Record<string, number>>({});
+
+  // Fetch per-market accuracy stats
+  useEffect(() => {
+    fetch("/api/accuracy")
+      .then((r) => r.ok ? r.json() : null)
+      .then((data) => { if (data) setAccuracy(data); })
+      .catch(() => {});
+  }, []);
 
   // Date navigation
   const navigateDate = useCallback(async (date: Date) => {
@@ -299,22 +308,34 @@ export default function PredictionsClient({ matches: initialMatches, locale }: P
         )}
       </div>
 
-      {/* ── Market Filter Tabs ── */}
+      {/* ── Market Filter Tabs with Accuracy ── */}
       <div className="flex items-center gap-1 mb-4 overflow-x-auto scrollbar-hide pb-1">
         <Filter className="w-4 h-4 text-gray-400 shrink-0 mr-1" />
-        {MARKET_TABS.map((tab) => (
+        {MARKET_TABS.map((tab) => {
+          const acc = accuracy[tab.accuracyKey];
+          return (
           <button
             key={tab.key}
             onClick={() => setMarketFilter(tab.key)}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all ${
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all flex items-center gap-1 ${
               marketFilter === tab.key
                 ? "bg-emerald-600 text-white shadow-sm"
                 : "bg-gray-100 text-gray-600 hover:bg-gray-200"
             }`}
           >
             {isFr ? tab.labelFr : tab.labelEn}
+            {acc > 0 && (
+              <span className={`text-[10px] font-bold px-1 py-0.5 rounded ${
+                marketFilter === tab.key
+                  ? "bg-white/20 text-white"
+                  : acc >= 60 ? "bg-emerald-100 text-emerald-700" : acc >= 45 ? "bg-amber-100 text-amber-700" : "bg-red-100 text-red-600"
+              }`}>
+                {acc}%
+              </span>
+            )}
           </button>
-        ))}
+          );
+        })}
       </div>
 
       {/* Loading indicator for date navigation */}
