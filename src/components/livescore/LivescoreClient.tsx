@@ -270,7 +270,7 @@ export default function LivescoreClient({ initialFixtures, locale }: Props) {
         </button>
       </div>
 
-      {/* LIVE */}
+      {/* LIVE — always first */}
       <Section
         title={isFr ? "En Direct" : "Live"}
         icon={
@@ -281,25 +281,22 @@ export default function LivescoreClient({ initialFixtures, locale }: Props) {
         }
         accentColor="text-red-600"
         fixtures={live}
-
       />
 
-      {/* UPCOMING */}
+      {/* FINISHED — show before upcoming so users see results immediately */}
       <Section
-        title={isFr ? "A Venir" : "Upcoming"}
+        title={isFr ? "Terminés" : "Finished"}
+        icon={<span className="w-4 h-4 text-center font-bold text-xs">FT</span>}
+        accentColor="text-gray-500"
+        fixtures={finished}
+      />
+
+      {/* UPCOMING — last (can be hundreds of matches) */}
+      <Section
+        title={isFr ? "À Venir" : "Upcoming"}
         icon={<Clock className="w-4 h-4" />}
         accentColor="text-gray-700"
         fixtures={upcoming}
-
-      />
-
-      {/* FINISHED */}
-      <Section
-        title={isFr ? "Termines" : "Finished"}
-        icon={<span className="w-4 h-4 text-center font-bold text-xs">FT</span>}
-        accentColor="text-gray-400"
-        fixtures={finished}
-
       />
     </div>
   );
