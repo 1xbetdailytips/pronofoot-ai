@@ -1,9 +1,14 @@
 import Link from "next/link";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 type MatchCardProps = {
   homeTeam: string;
   awayTeam: string;
+  homeTeamLogo?: string | null;
+  awayTeamLogo?: string | null;
+  homeForm?: string[] | null;
+  awayForm?: string[] | null;
   league: string;
   leagueId?: number;
   kickoffTime: string;
@@ -21,6 +26,31 @@ type MatchCardProps = {
   locale: string;
   riskLevel?: string | null;
 };
+
+function TeamLogo({ src, alt }: { src?: string | null; alt: string }) {
+  if (!src) return null;
+  return (
+    <Image src={src} alt={alt} width={18} height={18} className="w-[18px] h-[18px] object-contain shrink-0" unoptimized />
+  );
+}
+
+function FormDots({ form }: { form?: string[] | null }) {
+  if (!form || form.length === 0) return null;
+  return (
+    <div className="flex gap-0.5">
+      {form.slice(-5).map((r, i) => (
+        <span
+          key={i}
+          className={cn(
+            "w-1.5 h-1.5 rounded-full",
+            r === "W" ? "bg-emerald-500" : r === "D" ? "bg-gray-400" : "bg-red-500"
+          )}
+          title={r === "W" ? "Win" : r === "D" ? "Draw" : "Loss"}
+        />
+      ))}
+    </div>
+  );
+}
 
 function getPredLabel(prediction: string | null, locale: string) {
   if (!prediction) return locale === "fr" ? "En attente" : "Pending";
@@ -51,6 +81,10 @@ function getStatusDisplay(status: string | undefined, homeScore: number | null |
 export default function MatchCard({
   homeTeam,
   awayTeam,
+  homeTeamLogo,
+  awayTeamLogo,
+  homeForm,
+  awayForm,
   kickoffTime,
   status,
   homeScore,
@@ -109,10 +143,12 @@ export default function MatchCard({
         </div>
 
         {/* Home team */}
-        <div className="flex-1 text-right">
-          <span className={cn("text-sm", (prediction === "home_win" || prediction === "dc_1x" || prediction === "dc_12") && hasTip ? "font-bold text-gray-900" : "text-gray-700")}>
+        <div className="flex-1 flex items-center justify-end gap-1.5">
+          <FormDots form={homeForm} />
+          <span className={cn("text-sm truncate", (prediction === "home_win" || prediction === "dc_1x" || prediction === "dc_12") && hasTip ? "font-bold text-gray-900" : "text-gray-700")}>
             {homeTeam}
           </span>
+          <TeamLogo src={homeTeamLogo} alt={homeTeam} />
         </div>
 
         {/* Score or VS */}
@@ -127,10 +163,12 @@ export default function MatchCard({
         </div>
 
         {/* Away team */}
-        <div className="flex-1 text-left">
-          <span className={cn("text-sm", (prediction === "away_win" || prediction === "dc_x2" || prediction === "dc_12") && hasTip ? "font-bold text-gray-900" : "text-gray-700")}>
+        <div className="flex-1 flex items-center gap-1.5">
+          <TeamLogo src={awayTeamLogo} alt={awayTeam} />
+          <span className={cn("text-sm truncate", (prediction === "away_win" || prediction === "dc_x2" || prediction === "dc_12") && hasTip ? "font-bold text-gray-900" : "text-gray-700")}>
             {awayTeam}
           </span>
+          <FormDots form={awayForm} />
         </div>
 
         {/* Prediction badge */}
@@ -200,9 +238,17 @@ export default function MatchCard({
           )}
         </div>
         <div className="flex items-center justify-between">
-          <div className="flex-1">
-            <p className={cn("text-sm", (prediction === "home_win" || prediction === "dc_1x" || prediction === "dc_12") && hasTip ? "font-bold" : "")}>{homeTeam}</p>
-            <p className={cn("text-sm", (prediction === "away_win" || prediction === "dc_x2" || prediction === "dc_12") && hasTip ? "font-bold" : "")}>{awayTeam}</p>
+          <div className="flex-1 space-y-1">
+            <div className="flex items-center gap-1.5">
+              <TeamLogo src={homeTeamLogo} alt={homeTeam} />
+              <p className={cn("text-sm truncate", (prediction === "home_win" || prediction === "dc_1x" || prediction === "dc_12") && hasTip ? "font-bold" : "")}>{homeTeam}</p>
+              <FormDots form={homeForm} />
+            </div>
+            <div className="flex items-center gap-1.5">
+              <TeamLogo src={awayTeamLogo} alt={awayTeam} />
+              <p className={cn("text-sm truncate", (prediction === "away_win" || prediction === "dc_x2" || prediction === "dc_12") && hasTip ? "font-bold" : "")}>{awayTeam}</p>
+              <FormDots form={awayForm} />
+            </div>
           </div>
           <div className="text-center px-3">
             {statusInfo?.score ? (

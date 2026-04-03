@@ -40,15 +40,15 @@ export function slugToFixtureId(slug: string): number | null {
   return isNaN(id) ? null : id;
 }
 
-// Fetch today's fixtures joined with their tips
-export async function getTodaysMatches(): Promise<MatchWithTip[]> {
-  const today = new Date().toISOString().split("T")[0];
+// Fetch fixtures for a given date (defaults to today) joined with their tips
+export async function getTodaysMatches(date?: string): Promise<MatchWithTip[]> {
+  const targetDate = date || new Date().toISOString().split("T")[0];
 
   const { data: fixtures, error: fError } = await supabase
     .from("fixtures")
     .select("*")
-    .gte("match_date", today + "T00:00:00")
-    .lte("match_date", today + "T23:59:59")
+    .gte("match_date", targetDate + "T00:00:00")
+    .lte("match_date", targetDate + "T23:59:59")
     .order("match_date", { ascending: true });
 
   if (fError || !fixtures) return [];
@@ -214,6 +214,10 @@ export function matchToCardProps(m: MatchWithTip) {
   return {
     homeTeam: m.home_team,
     awayTeam: m.away_team,
+    homeTeamLogo: m.home_team_logo,
+    awayTeamLogo: m.away_team_logo,
+    homeForm: m.home_form,
+    awayForm: m.away_form,
     league: m.league_name,
     leagueId: m.league_id,
     kickoffTime: kickoff,

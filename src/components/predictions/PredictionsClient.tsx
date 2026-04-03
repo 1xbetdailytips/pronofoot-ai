@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo, useCallback } from "react";
-import { Trophy, ChevronDown, ChevronRight, Lock, Sparkles } from "lucide-react";
+import { Trophy, ChevronDown, ChevronRight, Lock, Sparkles, ChevronLeft, CalendarDays, Filter } from "lucide-react";
 import MatchCard from "./MatchCard";
 import LeagueFilterBar from "@/components/filters/LeagueFilterBar";
 import { isPopularLeague, getCountryForLeague } from "@/lib/league-country-map";
@@ -118,25 +118,102 @@ function VipOverlay({ locale, matchCount }: { locale: string; matchCount: number
   );
 }
 
+// ── Date helpers ────────────────────────────────────────────────────────────
+
+function addDays(d: Date, n: number) {
+  const next = new Date(d);
+  next.setDate(next.getDate() + n);
+  return next;
+}
+
+function formatDateParam(d: Date) {
+  return d.toISOString().slice(0, 10);
+}
+
+function isToday(d: Date) {
+  return d.toDateString() === new Date().toDateString();
+}
+
+// ── Market filter types ─────────────────────────────────────────────────────
+
+type MarketFilter = "all" | "1x2" | "over_under" | "btts" | "best_pick";
+
+const MARKET_TABS: { key: MarketFilter; labelFr: string; labelEn: string }[] = [
+  { key: "all", labelFr: "Tous", labelEn: "All" },
+  { key: "1x2", labelFr: "1X2", labelEn: "1X2" },
+  { key: "over_under", labelFr: "Over/Under", labelEn: "Over/Under" },
+  { key: "btts", labelFr: "BTTS", labelEn: "BTTS" },
+  { key: "best_pick", labelFr: "Best Pick", labelEn: "Best Pick" },
+];
+
+function matchesMarketFilter(m: MatchWithTip, filter: MarketFilter): boolean {
+  if (filter === "all") return true;
+  if (!m.tip) return false;
+  const bp = (m.tip.best_pick || "").toLowerCase();
+  switch (filter) {
+    case "1x2":
+      return ["1", "2", "1X", "X2", "12"].includes(m.tip.prediction);
+    case "over_under":
+      return bp.includes("over") || bp.includes("under");
+    case "btts":
+      return bp.includes("btts");
+    case "best_pick":
+      return !!m.tip.best_pick;
+    default:
+      return true;
+  }
+}
+
 // ── Main PredictionsClient ──────────────────────────────────────────────────
 
-export default function PredictionsClient({ matches, locale }: Props) {
+export default function PredictionsClient({ matches: initialMatches, locale }: Props) {
   const isFr = locale === "fr";
+  const [matches, setMatches] = useState(initialMatches);
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [isLoadingDate, setIsLoadingDate] = useState(false);
+  const [marketFilter, setMarketFilter] = useState<MarketFilter>("all");
+
+  // Date navigation
+  const navigateDate = useCallback(async (date: Date) => {
+    setSelectedDate(date);
+    if (isToday(date)) {
+      setMatches(initialMatches);
+      return;
+    }
+    setIsLoadingDate(true);
+    try {
+      const res = await fetch(`/api/predictions?date=${formatDateParam(date)}`, { cache: "no-store" });
+      if (res.ok) {
+        const data = await res.json();
+        setMatches(data.matches || []);
+      }
+    } catch (err) {
+      console.error("Date nav error:", err);
+    } finally {
+      setIsLoadingDate(false);
+    }
+  }, [initialMatches]);
+
+  // Apply market filter
+  const filteredMatches = useMemo(
+    () => matches.filter((m) => matchesMarketFilter(m, marketFilter)),
+    [matches, marketFilter]
+  );
 
   // Top 20 highest confidence picks (free)
   const top20 = useMemo(() => {
-    return [...matches]
+    return [...filteredMatches]
       .filter((m) => m.tip && m.tip.confidence > 0)
       .sort((a, b) => (b.tip?.confidence ?? 0) - (a.tip?.confidence ?? 0))
       .slice(0, 20);
-  }, [matches]);
+  }, [filteredMatches]);
 
   const top20Ids = useMemo(() => new Set(top20.map((m) => m.id)), [top20]);
 
   // Remaining matches (VIP-locked)
   const remainingMatches = useMemo(
-    () => matches.filter((m) => !top20Ids.has(m.id)),
-    [matches, top20Ids]
+    () => filteredMatches.filter((m) => !top20Ids.has(m.id)),
+    [filteredMatches, top20Ids]
   );
 
   // Filter state for remaining matches
@@ -172,6 +249,82 @@ export default function PredictionsClient({ matches, locale }: Props) {
 
   return (
     <>
+      {/* ── Date Navigation ── */}
+      <div className="flex items-center justify-center gap-1 mb-4">
+        <button
+          onClick={() => navigateDate(addDays(selectedDate, -1))}
+          className="p-2 rounded-lg hover:bg-gray-100 text-gray-500 transition-colors"
+        >
+          <ChevronLeft className="w-4 h-4" />
+        </button>
+        <div className="flex items-center gap-0.5 overflow-x-auto scrollbar-hide">
+          {[-2, -1, 0, 1, 2].map((offset) => {
+            const d = addDays(new Date(), offset);
+            const isSelected = d.toDateString() === selectedDate.toDateString();
+            const dayIsToday = offset === 0;
+            return (
+              <button
+                key={offset}
+                onClick={() => navigateDate(d)}
+                className={`flex flex-col items-center px-3 py-1.5 rounded-lg text-xs font-medium transition-all min-w-[52px] ${
+                  isSelected
+                    ? "bg-emerald-600 text-white shadow-sm"
+                    : dayIsToday
+                    ? "bg-emerald-50 text-emerald-700 hover:bg-emerald-100"
+                    : "text-gray-500 hover:bg-gray-100"
+                }`}
+              >
+                <span className="text-[10px] uppercase">
+                  {d.toLocaleDateString(isFr ? "fr-FR" : "en-GB", { weekday: "short" })}
+                </span>
+                <span className="text-sm font-bold tabular-nums">{d.getDate()}</span>
+              </button>
+            );
+          })}
+        </div>
+        <button
+          onClick={() => navigateDate(addDays(selectedDate, 1))}
+          className="p-2 rounded-lg hover:bg-gray-100 text-gray-500 transition-colors"
+        >
+          <ChevronRight className="w-4 h-4" />
+        </button>
+        {!isToday(selectedDate) && (
+          <button
+            onClick={() => navigateDate(new Date())}
+            className="ml-1 px-2.5 py-1.5 rounded-lg text-xs font-bold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 transition-colors"
+          >
+            <CalendarDays className="w-3.5 h-3.5 inline mr-1" />
+            {isFr ? "Auj." : "Today"}
+          </button>
+        )}
+      </div>
+
+      {/* ── Market Filter Tabs ── */}
+      <div className="flex items-center gap-1 mb-4 overflow-x-auto scrollbar-hide pb-1">
+        <Filter className="w-4 h-4 text-gray-400 shrink-0 mr-1" />
+        {MARKET_TABS.map((tab) => (
+          <button
+            key={tab.key}
+            onClick={() => setMarketFilter(tab.key)}
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all ${
+              marketFilter === tab.key
+                ? "bg-emerald-600 text-white shadow-sm"
+                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+            }`}
+          >
+            {isFr ? tab.labelFr : tab.labelEn}
+          </button>
+        ))}
+      </div>
+
+      {/* Loading indicator for date navigation */}
+      {isLoadingDate && (
+        <div className="text-center py-8">
+          <div className="w-6 h-6 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto mb-2" />
+          <p className="text-sm text-gray-400">{isFr ? "Chargement..." : "Loading..."}</p>
+        </div>
+      )}
+
       {/* ── TOP 20 PICKS (FREE) ── */}
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-4">
