@@ -9,6 +9,7 @@ type MatchCardProps = {
   awayTeamLogo?: string | null;
   homeForm?: string[] | null;
   awayForm?: string[] | null;
+  h2hSummary?: string | null;
   league: string;
   leagueId?: number;
   kickoffTime: string;
@@ -85,6 +86,7 @@ export default function MatchCard({
   awayTeamLogo,
   homeForm,
   awayForm,
+  h2hSummary,
   kickoffTime,
   status,
   homeScore,
@@ -151,14 +153,19 @@ export default function MatchCard({
           <TeamLogo src={homeTeamLogo} alt={homeTeam} />
         </div>
 
-        {/* Score or VS */}
+        {/* Score or VS + H2H */}
         <div className="w-16 text-center shrink-0">
           {statusInfo?.score ? (
             <span className={cn("text-sm font-bold", statusInfo.isLive ? "text-red-600" : "text-gray-900")}>
               {statusInfo.score}
             </span>
           ) : (
-            <span className="text-xs text-gray-300">vs</span>
+            <div className="flex flex-col items-center">
+              <span className="text-xs text-gray-300">vs</span>
+              {h2hSummary && (
+                <span className="text-[9px] text-gray-400 leading-tight" title="H2H record">{h2hSummary}</span>
+              )}
+            </div>
           )}
         </div>
 

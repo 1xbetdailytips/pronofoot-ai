@@ -218,6 +218,7 @@ export function matchToCardProps(m: MatchWithTip) {
     awayTeamLogo: m.away_team_logo,
     homeForm: m.home_form,
     awayForm: m.away_form,
+    h2hSummary: m.h2h_data ? `${m.h2h_data.homeWins}W ${m.h2h_data.draws}D ${m.h2h_data.awayWins}L` : null,
     league: m.league_name,
     leagueId: m.league_id,
     kickoffTime: kickoff,

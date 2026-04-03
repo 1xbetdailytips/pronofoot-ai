@@ -13,6 +13,7 @@ import {
 import AffiliateCTA from "@/components/ui/AffiliateCTA";
 import CrowdBacking from "@/components/social/CrowdBacking";
 import LeagueStandings from "@/components/predictions/LeagueStandings";
+import MatchTimeline from "@/components/predictions/MatchTimeline";
 import { siteConfig } from "@/lib/config";
 import { getMatchBySlug, mapPrediction, mapRiskLevel } from "@/lib/data";
 
@@ -373,6 +374,15 @@ export default async function MatchDetailPage({
           )}
         </div>
       </div>
+
+      {/* Match Timeline (goals, cards) */}
+      <MatchTimeline
+        fixtureId={match.id}
+        homeTeam={match.home_team}
+        awayTeam={match.away_team}
+        homeTeamId={match.home_team_id}
+        locale={locale}
+      />
 
       {/* Recent Form */}
       {(homeForm.length > 0 || awayForm.length > 0) && (
