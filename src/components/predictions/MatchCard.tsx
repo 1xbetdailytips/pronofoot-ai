@@ -28,6 +28,9 @@ function getPredLabel(prediction: string | null, locale: string) {
     home_win: { en: "1", fr: "1" },
     draw: { en: "X", fr: "X" },
     away_win: { en: "2", fr: "2" },
+    dc_1x: { en: "1X", fr: "1X" },
+    dc_x2: { en: "X2", fr: "X2" },
+    dc_12: { en: "12", fr: "12" },
   };
   return labels[prediction]?.[locale] || prediction;
 }
@@ -73,13 +76,16 @@ export default function MatchCard({
     ? confidence >= 70 ? "bg-emerald-500" : confidence >= 50 ? "bg-amber-500" : "bg-orange-500"
     : "bg-gray-300";
 
+  const isDoubleChance = prediction === "dc_1x" || prediction === "dc_x2" || prediction === "dc_12";
   const predBg = !hasTip
     ? "bg-gray-100 text-gray-400"
-    : prediction === "home_win"
-      ? "bg-emerald-100 text-emerald-700"
-      : prediction === "away_win"
-        ? "bg-blue-100 text-blue-700"
-        : "bg-amber-100 text-amber-700";
+    : isDoubleChance
+      ? "bg-purple-100 text-purple-700"
+      : prediction === "home_win"
+        ? "bg-emerald-100 text-emerald-700"
+        : prediction === "away_win"
+          ? "bg-blue-100 text-blue-700"
+          : "bg-amber-100 text-amber-700";
 
   return (
     <Link
@@ -104,7 +110,7 @@ export default function MatchCard({
 
         {/* Home team */}
         <div className="flex-1 text-right">
-          <span className={cn("text-sm", prediction === "home_win" && hasTip ? "font-bold text-gray-900" : "text-gray-700")}>
+          <span className={cn("text-sm", (prediction === "home_win" || prediction === "dc_1x" || prediction === "dc_12") && hasTip ? "font-bold text-gray-900" : "text-gray-700")}>
             {homeTeam}
           </span>
         </div>
@@ -122,7 +128,7 @@ export default function MatchCard({
 
         {/* Away team */}
         <div className="flex-1 text-left">
-          <span className={cn("text-sm", prediction === "away_win" && hasTip ? "font-bold text-gray-900" : "text-gray-700")}>
+          <span className={cn("text-sm", (prediction === "away_win" || prediction === "dc_x2" || prediction === "dc_12") && hasTip ? "font-bold text-gray-900" : "text-gray-700")}>
             {awayTeam}
           </span>
         </div>
@@ -152,13 +158,13 @@ export default function MatchCard({
         <div className="w-28 shrink-0 flex gap-1 text-center">
           {homeOdds && drawOdds && awayOdds ? (
             <>
-              <span className={cn("flex-1 text-xs py-0.5 rounded", prediction === "home_win" ? "bg-emerald-100 text-emerald-700 font-bold" : "text-gray-500")}>
+              <span className={cn("flex-1 text-xs py-0.5 rounded", (prediction === "home_win" || prediction === "dc_1x" || prediction === "dc_12") ? "bg-emerald-100 text-emerald-700 font-bold" : "text-gray-500")}>
                 {homeOdds.toFixed(2)}
               </span>
-              <span className={cn("flex-1 text-xs py-0.5 rounded", prediction === "draw" ? "bg-amber-100 text-amber-700 font-bold" : "text-gray-500")}>
+              <span className={cn("flex-1 text-xs py-0.5 rounded", (prediction === "draw" || prediction === "dc_1x" || prediction === "dc_x2") ? "bg-amber-100 text-amber-700 font-bold" : "text-gray-500")}>
                 {drawOdds.toFixed(2)}
               </span>
-              <span className={cn("flex-1 text-xs py-0.5 rounded", prediction === "away_win" ? "bg-blue-100 text-blue-700 font-bold" : "text-gray-500")}>
+              <span className={cn("flex-1 text-xs py-0.5 rounded", (prediction === "away_win" || prediction === "dc_x2" || prediction === "dc_12") ? "bg-blue-100 text-blue-700 font-bold" : "text-gray-500")}>
                 {awayOdds.toFixed(2)}
               </span>
             </>
@@ -195,8 +201,8 @@ export default function MatchCard({
         </div>
         <div className="flex items-center justify-between">
           <div className="flex-1">
-            <p className={cn("text-sm", prediction === "home_win" && hasTip ? "font-bold" : "")}>{homeTeam}</p>
-            <p className={cn("text-sm", prediction === "away_win" && hasTip ? "font-bold" : "")}>{awayTeam}</p>
+            <p className={cn("text-sm", (prediction === "home_win" || prediction === "dc_1x" || prediction === "dc_12") && hasTip ? "font-bold" : "")}>{homeTeam}</p>
+            <p className={cn("text-sm", (prediction === "away_win" || prediction === "dc_x2" || prediction === "dc_12") && hasTip ? "font-bold" : "")}>{awayTeam}</p>
           </div>
           <div className="text-center px-3">
             {statusInfo?.score ? (

@@ -46,15 +46,16 @@ function formatTime(dateStr: string) {
   }
 }
 
-function StatusBadge({ status }: { status: string }) {
+function StatusBadge({ status, elapsed }: { status: string; elapsed?: number | null }) {
   if (LIVE_STATUSES.includes(status)) {
+    const minuteDisplay = status === "HT" ? "HT" : elapsed ? `${elapsed}'` : status;
     return (
       <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-bold bg-red-100 text-red-700">
         <span className="relative flex h-1.5 w-1.5">
           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
           <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-red-500" />
         </span>
-        {status}
+        {minuteDisplay}
       </span>
     );
   }
@@ -126,7 +127,7 @@ function MatchRow({ fixture }: { fixture: Fixture }) {
 
       {/* Status */}
       <div className="flex justify-end">
-        <StatusBadge status={fixture.status} />
+        <StatusBadge status={fixture.status} elapsed={fixture.elapsed} />
       </div>
     </div>
   );

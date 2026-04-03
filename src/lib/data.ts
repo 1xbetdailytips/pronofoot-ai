@@ -5,6 +5,9 @@ import type { Fixture, Tip, MatchWithTip, DbTicket, WinRateStats, WinRateStat, R
 export function mapPrediction(p: string): string {
   if (p === "1") return "home_win";
   if (p === "2") return "away_win";
+  if (p === "1X") return "dc_1x";
+  if (p === "X2") return "dc_x2";
+  if (p === "12") return "dc_12";
   return "draw";
 }
 

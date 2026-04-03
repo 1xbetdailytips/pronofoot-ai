@@ -26,6 +26,7 @@ export type Fixture = {
   status: string;
   home_score: number | null;
   away_score: number | null;
+  elapsed: number | null;
   home_form: string[] | null;
   away_form: string[] | null;
   h2h_data: H2HData | null;
@@ -34,7 +35,7 @@ export type Fixture = {
 export type Tip = {
   id: number;
   fixture_id: number;
-  prediction: "1" | "X" | "2";
+  prediction: "1" | "X" | "2" | "1X" | "X2" | "12";
   odds: number;
   confidence: number;
   risk_level: string;
