@@ -236,7 +236,7 @@ export default function PredictionsClient({ matches: initialMatches, locale }: P
   const [filterMode, setFilterMode] = useState<"popular" | "all" | "custom">("popular");
 
   const initialFiltered = useMemo(
-    () => remainingMatches.filter((m) => isPopularLeague(m.league_name)),
+    () => remainingMatches.filter((m) => isPopularLeague(m.league_name, m.league_id) || TOP_LEAGUE_IDS.has(m.league_id)),
     [remainingMatches]
   );
 
@@ -380,6 +380,7 @@ export default function PredictionsClient({ matches: initialMatches, locale }: P
           <div className="w-20 text-center">Conf.</div>
           <div className="w-28 text-center">1 / X / 2</div>
           <div className="w-24 text-right">Best Pick</div>
+          <div className="w-16 text-right">{isFr ? "Résultat" : "Result"}</div>
         </div>
 
         {/* Collapsible league sections for top 20 */}

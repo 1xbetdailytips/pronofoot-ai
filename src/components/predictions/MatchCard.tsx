@@ -71,12 +71,32 @@ function getStatusDisplay(status: string | undefined, homeScore: number | null |
   const liveStatuses = ["1H", "2H", "HT", "ET", "BT", "P"];
   const finishedStatuses = ["FT", "AET", "PEN"];
   if (liveStatuses.includes(status)) {
-    return { label: status === "HT" ? "HT" : "LIVE", isLive: true, score: `${homeScore ?? 0} - ${awayScore ?? 0}` };
+    return { label: status === "HT" ? "HT" : "LIVE", isLive: true, isFinished: false, score: `${homeScore ?? 0} - ${awayScore ?? 0}` };
   }
   if (finishedStatuses.includes(status)) {
-    return { label: "FT", isLive: false, score: `${homeScore ?? 0} - ${awayScore ?? 0}` };
+    return { label: "FT", isLive: false, isFinished: true, score: `${homeScore ?? 0} - ${awayScore ?? 0}` };
   }
   return null;
+}
+
+// Instant WIN/LOST calculation (same logic as livescore)
+function computeResult(prediction: string | null, homeScore: number | null | undefined, awayScore: number | null | undefined): boolean | null {
+  if (!prediction || homeScore == null || awayScore == null) return null;
+  const h = homeScore;
+  const a = awayScore;
+  const actualResult = h > a ? "1" : h < a ? "2" : "X";
+  // Map prediction keys to simple format
+  const predMap: Record<string, string> = {
+    home_win: "1", away_win: "2", draw: "X",
+    dc_1x: "1X", dc_x2: "X2", dc_12: "12",
+    "1": "1", "2": "2", "X": "X",
+    "1X": "1X", "X2": "X2", "12": "12",
+  };
+  const pred = predMap[prediction] || prediction.toUpperCase();
+  if (pred === "1X") return actualResult === "1" || actualResult === "X";
+  if (pred === "X2") return actualResult === "X" || actualResult === "2";
+  if (pred === "12") return actualResult === "1" || actualResult === "2";
+  return actualResult === pred;
 }
 
 export default function MatchCard({
@@ -103,6 +123,7 @@ export default function MatchCard({
 }: MatchCardProps) {
   const statusInfo = getStatusDisplay(status, homeScore, awayScore);
   const predLabel = getPredLabel(prediction, locale);
+  const resultStatus = statusInfo?.isFinished ? computeResult(prediction, homeScore, awayScore) : null;
 
   const confColor = confidence !== null
     ? confidence >= 70 ? "text-emerald-600" : confidence >= 50 ? "text-amber-600" : "text-orange-600"
@@ -226,6 +247,19 @@ export default function MatchCard({
             <span className="text-xs text-gray-300">--</span>
           )}
         </div>
+
+        {/* WIN/LOST badge */}
+        <div className="w-16 text-right shrink-0">
+          {resultStatus === true && (
+            <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">WIN ✓</span>
+          )}
+          {resultStatus === false && (
+            <span className="text-[10px] font-bold text-red-500 bg-red-50 px-2 py-0.5 rounded">LOST ✗</span>
+          )}
+          {statusInfo?.isLive && hasTip && (
+            <span className="text-[10px] font-bold text-amber-500 bg-amber-50 px-2 py-0.5 rounded animate-pulse">LIVE</span>
+          )}
+        </div>
       </div>
 
       {/* Mobile card */}
@@ -259,7 +293,15 @@ export default function MatchCard({
           </div>
           <div className="text-center px-3">
             {statusInfo?.score ? (
-              <span className={cn("text-sm font-bold", statusInfo.isLive ? "text-red-600" : "")}>{statusInfo.score}</span>
+              <div className="flex flex-col items-center gap-1">
+                <span className={cn("text-sm font-bold", statusInfo.isLive ? "text-red-600" : "")}>{statusInfo.score}</span>
+                {resultStatus === true && (
+                  <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">WIN ✓</span>
+                )}
+                {resultStatus === false && (
+                  <span className="text-[10px] font-bold text-red-500 bg-red-50 px-1.5 py-0.5 rounded">LOST ✗</span>
+                )}
+              </div>
             ) : (
               <span className={cn("text-xs font-bold px-2 py-1 rounded", predBg)}>{predLabel}</span>
             )}
