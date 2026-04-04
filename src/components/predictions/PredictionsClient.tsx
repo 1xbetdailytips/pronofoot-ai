@@ -231,16 +231,18 @@ export default function PredictionsClient({ matches: initialMatches, locale }: P
     [filteredMatches, top20Ids]
   );
 
-  // Filter state for remaining matches
+  // Filter state for remaining matches — default to ALL so users see everything
   const [filteredRemaining, setFilteredRemaining] = useState<MatchWithTip[]>([]);
-  const [filterMode, setFilterMode] = useState<"popular" | "all" | "custom">("popular");
+  const [filterMode, setFilterMode] = useState<"popular" | "all" | "custom">("all");
 
   const initialFiltered = useMemo(
     () => remainingMatches.filter((m) => isPopularLeague(m.league_name, m.league_id) || TOP_LEAGUE_IDS.has(m.league_id)),
     [remainingMatches]
   );
 
-  const displayedRemaining = filteredRemaining.length > 0 || filterMode !== "popular"
+  const displayedRemaining = filterMode === "all"
+    ? remainingMatches
+    : filteredRemaining.length > 0
     ? filteredRemaining
     : initialFiltered;
 

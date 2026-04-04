@@ -389,7 +389,7 @@ export default function LivescoreClient({ initialFixtures, locale }: Props) {
   const [fixtures, setFixtures] = useState(initialFixtures);
   const [lastUpdate, setLastUpdate] = useState(new Date());
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const [filterMode, setFilterMode] = useState<"popular" | "all" | "custom">("popular");
+  const [filterMode, setFilterMode] = useState<"popular" | "all" | "custom">("all");
   const [selectedLeagueNames, setSelectedLeagueNames] = useState<Set<string>>(new Set());
   const [selectedDate, setSelectedDate] = useState(new Date());
   const isFr = locale === "fr";
