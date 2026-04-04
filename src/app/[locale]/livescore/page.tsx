@@ -34,20 +34,34 @@ function categorizeFixtures(fixtures: Fixture[]) {
 async function getTodayFixtures(): Promise<Fixture[]> {
   const today = new Date().toISOString().slice(0, 10);
 
-  // Fetch fixtures + tips + results in parallel
-  const [fixturesRes, tipsRes, resultsRes] = await Promise.all([
-    supabase.from("fixtures").select("*")
-      .gte("match_date", `${today}T00:00:00`)
-      .lte("match_date", `${today}T23:59:59`)
-      .order("match_date", { ascending: true }),
-    supabase.from("tips").select("fixture_id, prediction, confidence, best_pick"),
-    supabase.from("results_log").select("fixture_id, is_correct"),
-  ]);
+  // Step 1: Fetch ALL fixtures for today (increase limit to catch everything)
+  const { data: fixtures, error: fError } = await supabase
+    .from("fixtures")
+    .select("*")
+    .gte("match_date", `${today}T00:00:00`)
+    .lte("match_date", `${today}T23:59:59`)
+    .order("match_date", { ascending: true })
+    .limit(2000);
 
-  if (fixturesRes.error) {
-    console.error("Livescore fetch error:", fixturesRes.error);
+  if (fError || !fixtures) {
+    console.error("Livescore fetch error:", fError);
     return [];
   }
+
+  // Step 2: Get fixture IDs, then fetch tips + results ONLY for these fixtures
+  const fixtureIds = fixtures.map((f: Fixture) => f.id);
+  if (fixtureIds.length === 0) return [];
+
+  const [tipsRes, resultsRes] = await Promise.all([
+    supabase
+      .from("tips")
+      .select("fixture_id, prediction, confidence, best_pick")
+      .in("fixture_id", fixtureIds),
+    supabase
+      .from("results_log")
+      .select("fixture_id, is_correct")
+      .in("fixture_id", fixtureIds),
+  ]);
 
   // Build lookup maps
   type TipSlim = { fixture_id: number; prediction: string; confidence: number; best_pick: string | null };
@@ -58,7 +72,7 @@ async function getTodayFixtures(): Promise<Fixture[]> {
   (resultsRes.data || []).forEach((r: { fixture_id: number; is_correct: boolean }) => resultMap.set(r.fixture_id, r.is_correct));
 
   // Filter to only predicted matches + enrich with tip/result data
-  return ((fixturesRes.data as Fixture[]) || [])
+  return ((fixtures as Fixture[]) || [])
     .filter(f => tipMap.has(f.id))
     .map(f => {
       const tip = tipMap.get(f.id);

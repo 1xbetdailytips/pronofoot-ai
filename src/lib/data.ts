@@ -49,7 +49,8 @@ export async function getTodaysMatches(date?: string): Promise<MatchWithTip[]> {
     .select("*")
     .gte("match_date", targetDate + "T00:00:00")
     .lte("match_date", targetDate + "T23:59:59")
-    .order("match_date", { ascending: true });
+    .order("match_date", { ascending: true })
+    .limit(2000);
 
   if (fError || !fixtures) return [];
 

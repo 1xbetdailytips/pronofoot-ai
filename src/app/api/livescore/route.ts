@@ -8,38 +8,65 @@ export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const dateParam = searchParams.get("date");
-    // Validate date format (YYYY-MM-DD) or default to today
     const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
-    const date = dateParam && dateRegex.test(dateParam) ? dateParam : new Date().toISOString().slice(0, 10);
+    const date =
+      dateParam && dateRegex.test(dateParam)
+        ? dateParam
+        : new Date().toISOString().slice(0, 10);
 
-    // Fetch fixtures + tips + results in parallel
-    const [fixturesRes, tipsRes, resultsRes] = await Promise.all([
-      supabase.from("fixtures").select("*")
-        .gte("match_date", `${date}T00:00:00`)
-        .lte("match_date", `${date}T23:59:59`)
-        .order("match_date", { ascending: true }),
-      supabase.from("tips").select("fixture_id, prediction, confidence, best_pick"),
-      supabase.from("results_log").select("fixture_id, is_correct"),
-    ]);
+    // Fetch ALL fixtures for the date (increase limit to get all matches)
+    const { data: fixtures, error: fError } = await supabase
+      .from("fixtures")
+      .select("*")
+      .gte("match_date", `${date}T00:00:00`)
+      .lte("match_date", `${date}T23:59:59`)
+      .order("match_date", { ascending: true })
+      .limit(2000);
 
-    if (fixturesRes.error) {
-      console.error("Livescore API error:", fixturesRes.error);
-      return NextResponse.json({ error: "Failed to fetch fixtures" }, { status: 500 });
+    if (fError || !fixtures) {
+      console.error("Livescore API error:", fError);
+      return NextResponse.json(
+        { error: "Failed to fetch fixtures" },
+        { status: 500 }
+      );
     }
 
-    const tipMap = new Map<number, { prediction: string; confidence: number; best_pick: string | null }>();
-    (tipsRes.data || []).forEach((t: { fixture_id: number; prediction: string; confidence: number; best_pick: string | null }) =>
+    // Get fixture IDs for targeted tip query
+    const fixtureIds = fixtures.map((f: Fixture) => f.id);
+
+    // Fetch tips + results only for today's fixtures (not ALL tips)
+    const [tipsRes, resultsRes] = await Promise.all([
+      fixtureIds.length > 0
+        ? supabase
+            .from("tips")
+            .select("fixture_id, prediction, confidence, best_pick")
+            .in("fixture_id", fixtureIds)
+        : Promise.resolve({ data: [] }),
+      fixtureIds.length > 0
+        ? supabase
+            .from("results_log")
+            .select("fixture_id, is_correct")
+            .in("fixture_id", fixtureIds)
+        : Promise.resolve({ data: [] }),
+    ]);
+
+    const tipMap = new Map<
+      number,
+      { prediction: string; confidence: number; best_pick: string | null }
+    >();
+    ((tipsRes as { data: { fixture_id: number; prediction: string; confidence: number; best_pick: string | null }[] | null }).data || []).forEach((t) =>
       tipMap.set(t.fixture_id, t)
     );
 
     const resultMap = new Map<number, boolean>();
-    (resultsRes.data || []).forEach((r: { fixture_id: number; is_correct: boolean }) =>
+    ((resultsRes as { data: { fixture_id: number; is_correct: boolean }[] | null }).data || []).forEach((r) =>
       resultMap.set(r.fixture_id, r.is_correct)
     );
 
-    const predicted = ((fixturesRes.data as Fixture[]) || [])
-      .filter(f => tipMap.has(f.id))
-      .map(f => {
+    // Return ALL fixtures that have predictions (tips)
+    const predicted = (fixtures as Fixture[])
+      .filter((f) => tipMap.has(f.id))
+      .map((f) => {
         const tip = tipMap.get(f.id);
         return {
           ...f,
