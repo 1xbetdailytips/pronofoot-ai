@@ -30,6 +30,20 @@ function categorize(fixtures: Fixture[]) {
   return { live, upcoming, finished };
 }
 
+// Top league IDs for priority sorting
+const TOP_LEAGUE_IDS = new Set([
+  2, 3, 848, // Champions League, Europa League, Conference League
+  39, 40, 41, 42, 45, 48, // England: PL, Championship, League One, League Two, FA Cup, EFL Cup
+  140, 141, 143, // Spain: La Liga, Segunda, Copa del Rey
+  135, 136, 137, // Italy: Serie A, Serie B, Coppa Italia
+  78, 79, 81, // Germany: Bundesliga, 2.Bundesliga, DFB Pokal
+  61, 62, 66, // France: Ligue 1, Ligue 2, Coupe de France
+  94, 88, 144, 179, 203, // Portugal, Netherlands, Belgium, Scotland, Turkey
+  406, 407, // Cameroon
+  6, 12, 20, // AFCON, CAF CL, CAF CC
+  1, 15, // World Cup, Club WC
+]);
+
 // ── 1xBet-style Country → League grouping ───────────────────────────────────
 
 type LeagueBlock = {
@@ -192,12 +206,31 @@ function EventIcons({ events, teamId }: { events: Fixture["match_events"]; teamI
   );
 }
 
+// ── Instant WIN/LOST calculation (client-side, no waiting for 23:00 cron) ──
+function computeResultInstantly(prediction: string, homeScore: number | null, awayScore: number | null): boolean | null {
+  if (homeScore === null || awayScore === null) return null;
+  const h = homeScore;
+  const a = awayScore;
+  const actualResult = h > a ? "1" : h < a ? "2" : "X";
+  const pred = prediction.toUpperCase();
+  if (pred === "1X") return actualResult === "1" || actualResult === "X";
+  if (pred === "X2") return actualResult === "X" || actualResult === "2";
+  if (pred === "12") return actualResult === "1" || actualResult === "2";
+  return actualResult === pred;
+}
+
 function MatchRow({ fixture }: { fixture: Fixture }) {
   const isLive = LIVE_STATUSES.includes(fixture.status);
   const isFinished = FINISHED_STATUSES.includes(fixture.status);
   const hasEvents = fixture.match_events && fixture.match_events.length > 0;
-  // Cast to LiveFixture to access tip/result enrichments (may be undefined for legacy data)
   const lf = fixture as LiveFixture;
+
+  // Instant WIN/LOST: if match is finished and has a prediction, calculate NOW
+  let resultStatus: boolean | null = lf.result_correct ?? null;
+  if (resultStatus === null && isFinished && lf.tip_prediction) {
+    resultStatus = computeResultInstantly(lf.tip_prediction, fixture.home_score, fixture.away_score);
+  }
+
   return (
     <div className={`border-b border-gray-50 last:border-b-0 transition-colors ${isLive ? "bg-red-50/40" : "hover:bg-gray-50/50"}`}>
       <div className="grid grid-cols-[44px_1fr_56px_1fr_48px] md:grid-cols-[56px_1fr_80px_1fr_56px] items-center gap-1.5 md:gap-2 px-2 md:px-3 py-2.5">
@@ -213,7 +246,7 @@ function MatchRow({ fixture }: { fixture: Fixture }) {
         </div>
         <div className="flex justify-end"><StatusBadge status={fixture.status} elapsed={fixture.elapsed} matchDate={fixture.match_date} /></div>
       </div>
-      {/* Prediction + Result row */}
+      {/* Prediction + Instant Result row */}
       {lf.tip_prediction && (
         <div className="flex items-center gap-2 px-2 md:px-3 pb-2 -mt-0.5">
           <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-700">
@@ -223,11 +256,14 @@ function MatchRow({ fixture }: { fixture: Fixture }) {
           {lf.tip_best_pick && (
             <span className="text-[10px] text-emerald-600 font-medium">{lf.tip_best_pick}</span>
           )}
-          {lf.result_correct === true && (
-            <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded ml-auto">WIN</span>
+          {resultStatus === true && (
+            <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded ml-auto">WIN ✓</span>
           )}
-          {lf.result_correct === false && (
-            <span className="text-[10px] font-bold text-red-500 bg-red-50 px-1.5 py-0.5 rounded ml-auto">LOST</span>
+          {resultStatus === false && (
+            <span className="text-[10px] font-bold text-red-500 bg-red-50 px-1.5 py-0.5 rounded ml-auto">LOST ✗</span>
+          )}
+          {isLive && lf.tip_prediction && (
+            <span className="text-[10px] font-medium text-amber-500 bg-amber-50 px-1.5 py-0.5 rounded ml-auto animate-pulse">LIVE</span>
           )}
         </div>
       )}
@@ -358,17 +394,21 @@ export default function LivescoreClient({ initialFixtures, locale }: Props) {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const isFr = locale === "fr";
 
-  // Filter fixtures based on mode
+  // Filter fixtures based on mode — always include top leagues + league_id check
   const activeFixtures = useMemo(() => {
-    let filtered = fixtures;
+    if (filterMode === "all") return fixtures;
 
     if (filterMode === "popular") {
-      filtered = fixtures.filter((f) => isPopularLeague(f.league_name, f.league_id));
-    } else if (filterMode === "custom" && selectedLeagueNames.size > 0) {
-      filtered = fixtures.filter((f) => selectedLeagueNames.has(f.league_name));
+      return fixtures.filter((f) =>
+        isPopularLeague(f.league_name, f.league_id) || TOP_LEAGUE_IDS.has(f.league_id)
+      );
     }
 
-    return filtered;
+    if (filterMode === "custom" && selectedLeagueNames.size > 0) {
+      return fixtures.filter((f) => selectedLeagueNames.has(f.league_name));
+    }
+
+    return fixtures;
   }, [fixtures, filterMode, selectedLeagueNames]);
 
   // Always show live matches regardless of filter
