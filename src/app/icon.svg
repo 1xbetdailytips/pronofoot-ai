@@ -19,14 +19,14 @@
   <!-- Crosshair ring -->
   <circle cx="16" cy="16" r="11" fill="none" stroke="#1eaae8" stroke-width="0.8" opacity="0.2"/>
   <!-- Center pillar -->
-  <rect x="13" y="14" width="6" height="10" rx="3" fill="url(#p)"/>
+  <rect x="13" y="14" width="6" height="10" rx="3" fill="url(#p)" stroke="#1eaae8" stroke-width="0.6"/>
   <!-- Soccer ball -->
-  <circle cx="16" cy="12" r="5" fill="url(#b)"/>
+  <circle cx="16" cy="12" r="5" fill="url(#b)" stroke="#1eaae8" stroke-width="0.6"/>
   <polygon points="16,8.5 18,10 17.2,12.2 14.8,12.2 14,10" fill="none" stroke="#b8dff0" stroke-width="0.6" opacity="0.5"/>
   <!-- Left mini pillar -->
-  <rect x="6" y="16" width="4.5" height="8" rx="2.25" fill="url(#p)" opacity="0.8"/>
-  <circle cx="8.25" cy="14.5" r="3.2" fill="url(#b)" opacity="0.85"/>
+  <rect x="6" y="16" width="4.5" height="8" rx="2.25" fill="url(#p)" stroke="#1eaae8" stroke-width="0.5" opacity="0.9"/>
+  <circle cx="8.25" cy="14.5" r="3.2" fill="url(#b)" stroke="#1eaae8" stroke-width="0.5" opacity="0.9"/>
   <!-- Right mini pillar -->
-  <rect x="21.5" y="16" width="4.5" height="8" rx="2.25" fill="url(#p)" opacity="0.8"/>
-  <circle cx="23.75" cy="14.5" r="3.2" fill="url(#b)" opacity="0.85"/>
+  <rect x="21.5" y="16" width="4.5" height="8" rx="2.25" fill="url(#p)" stroke="#1eaae8" stroke-width="0.5" opacity="0.9"/>
+  <circle cx="23.75" cy="14.5" r="3.2" fill="url(#b)" stroke="#1eaae8" stroke-width="0.5" opacity="0.9"/>
 </svg>

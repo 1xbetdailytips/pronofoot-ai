@@ -24,8 +24,8 @@
     <line x1="156" y1="216" x2="156" y2="236" stroke="#1eaae8" stroke-width="1.8" opacity="0.14" stroke-linecap="round"/>
     <line x1="98" y1="178" x2="118" y2="178" stroke="#1eaae8" stroke-width="1.8" opacity="0.14" stroke-linecap="round"/>
     <line x1="194" y1="178" x2="214" y2="178" stroke="#1eaae8" stroke-width="1.8" opacity="0.14" stroke-linecap="round"/>
-    <rect x="130" y="206" width="52" height="140" rx="26" ry="26" fill="url(#pillar)"/>
-    <circle cx="156" cy="178" r="36" fill="url(#ball)"/>
+    <rect x="130" y="206" width="52" height="140" rx="26" ry="26" fill="url(#pillar)" stroke="#1eaae8" stroke-width="1.5" opacity="1"/>
+    <circle cx="156" cy="178" r="36" fill="url(#ball)" stroke="#1eaae8" stroke-width="1.5"/>
     <polygon points="156,155 168,164 164,178 148,178 144,164" fill="none" stroke="#b8dff0" stroke-width="1.8" opacity="0.45"/>
     <polygon points="172,170 180,180 175,192 165,191 163,180" fill="none" stroke="#b8dff0" stroke-width="1.5" opacity="0.35"/>
     <polygon points="140,170 132,180 137,192 147,191 149,180" fill="none" stroke="#b8dff0" stroke-width="1.5" opacity="0.35"/>
@@ -45,8 +45,8 @@
     <path d="M300,104 L300,116 M300,104 L288,104" fill="none" stroke="#1eaae8" stroke-width="2" opacity="0.14" stroke-linecap="round"/>
     <path d="M212,192 L212,180 M212,192 L224,192" fill="none" stroke="#1eaae8" stroke-width="2" opacity="0.14" stroke-linecap="round"/>
     <path d="M300,192 L300,180 M300,192 L288,192" fill="none" stroke="#1eaae8" stroke-width="2" opacity="0.14" stroke-linecap="round"/>
-    <rect x="230" y="186" width="52" height="160" rx="26" ry="26" fill="url(#pillar)"/>
-    <circle cx="256" cy="148" r="42" fill="url(#ball)"/>
+    <rect x="230" y="186" width="52" height="160" rx="26" ry="26" fill="url(#pillar)" stroke="#1eaae8" stroke-width="1.8" opacity="1"/>
+    <circle cx="256" cy="148" r="42" fill="url(#ball)" stroke="#1eaae8" stroke-width="1.8"/>
     <polygon points="256,120 270,130 266,146 246,146 242,130" fill="none" stroke="#b8dff0" stroke-width="2" opacity="0.45"/>
     <polygon points="274,138 284,150 278,163 268,162 265,150" fill="none" stroke="#b8dff0" stroke-width="1.6" opacity="0.35"/>
     <polygon points="238,138 228,150 234,163 244,162 247,150" fill="none" stroke="#b8dff0" stroke-width="1.6" opacity="0.35"/>
@@ -62,8 +62,8 @@
     <line x1="356" y1="216" x2="356" y2="236" stroke="#1eaae8" stroke-width="1.8" opacity="0.14" stroke-linecap="round"/>
     <line x1="298" y1="178" x2="318" y2="178" stroke="#1eaae8" stroke-width="1.8" opacity="0.14" stroke-linecap="round"/>
     <line x1="394" y1="178" x2="414" y2="178" stroke="#1eaae8" stroke-width="1.8" opacity="0.14" stroke-linecap="round"/>
-    <rect x="330" y="206" width="52" height="140" rx="26" ry="26" fill="url(#pillar)"/>
-    <circle cx="356" cy="178" r="36" fill="url(#ball)"/>
+    <rect x="330" y="206" width="52" height="140" rx="26" ry="26" fill="url(#pillar)" stroke="#1eaae8" stroke-width="1.5" opacity="1"/>
+    <circle cx="356" cy="178" r="36" fill="url(#ball)" stroke="#1eaae8" stroke-width="1.5"/>
     <polygon points="356,155 368,164 364,178 348,178 344,164" fill="none" stroke="#b8dff0" stroke-width="1.8" opacity="0.45"/>
     <polygon points="372,170 380,180 375,192 365,191 363,180" fill="none" stroke="#b8dff0" stroke-width="1.5" opacity="0.35"/>
     <polygon points="340,170 332,180 337,192 347,191 349,180" fill="none" stroke="#b8dff0" stroke-width="1.5" opacity="0.35"/>
