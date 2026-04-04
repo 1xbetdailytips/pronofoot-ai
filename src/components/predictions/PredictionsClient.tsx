@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo, useCallback } from "react";
-import { Trophy, ChevronDown, ChevronRight, Lock, Sparkles, ChevronLeft, CalendarDays, Filter } from "lucide-react";
+import { Trophy, ChevronDown, ChevronRight, ChevronLeft, CalendarDays, Filter } from "lucide-react";
 import MatchCard from "./MatchCard";
 import LeagueFilterBar from "@/components/filters/LeagueFilterBar";
 import { isPopularLeague, getCountryForLeague } from "@/lib/league-country-map";
@@ -89,35 +89,7 @@ function CollapsibleLeagueGroup({
   );
 }
 
-// ── VIP Lock Overlay ────────────────────────────────────────────────────────
-
-function VipOverlay({ locale, matchCount }: { locale: string; matchCount: number }) {
-  const isFr = locale === "fr";
-  return (
-    <div className="absolute inset-0 z-10 flex items-start justify-center pt-16">
-      <div className="bg-white/95 backdrop-blur-sm border-2 border-amber-400 rounded-2xl px-8 py-6 shadow-2xl text-center max-w-sm mx-4">
-        <div className="w-14 h-14 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center mx-auto mb-4 shadow-lg">
-          <Lock className="w-7 h-7 text-white" />
-        </div>
-        <h3 className="text-lg font-bold text-gray-900 mb-2">
-          {isFr ? "Contenu VIP" : "VIP Content"}
-        </h3>
-        <p className="text-sm text-gray-500 mb-4">
-          {isFr
-            ? `${matchCount}+ pronostics supplémentaires avec recherche avancée par ligue`
-            : `${matchCount}+ additional predictions with advanced league search`}
-        </p>
-        <a
-          href={`/${locale}/vip`}
-          className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 text-white font-bold text-sm hover:from-amber-600 hover:to-orange-600 transition-all shadow-md hover:shadow-lg transform hover:scale-[1.02]"
-        >
-          <Sparkles className="w-4 h-4" />
-          {isFr ? "Débloquer VIP" : "Unlock VIP"}
-        </a>
-      </div>
-    </div>
-  );
-}
+// VIP overlay removed — all predictions now free
 
 // ── Date helpers ────────────────────────────────────────────────────────────
 
@@ -165,6 +137,24 @@ function matchesMarketFilter(m: MatchWithTip, filter: MarketFilter): boolean {
   }
 }
 
+// Top league IDs that should ALWAYS appear in free picks
+const TOP_LEAGUE_IDS = new Set([
+  2, 3, // Champions League, Europa League
+  39, // Premier League
+  140, // La Liga
+  135, // Serie A
+  78, // Bundesliga
+  61, // Ligue 1
+  848, // Conference League
+  45, // FA Cup
+  143, // Copa del Rey
+  137, // Coppa Italia
+  81, // DFB Pokal
+  66, // Coupe de France
+  6, 12, 20, // AFCON, CAF CL, CAF CC
+  1, // World Cup
+]);
+
 // ── Main PredictionsClient ──────────────────────────────────────────────────
 
 export default function PredictionsClient({ matches: initialMatches, locale }: Props) {
@@ -210,12 +200,27 @@ export default function PredictionsClient({ matches: initialMatches, locale }: P
     [matches, marketFilter]
   );
 
-  // Top 20 highest confidence picks (free)
+  // Top 20 picks: guarantee top leagues + fill with highest confidence
   const top20 = useMemo(() => {
-    return [...filteredMatches]
-      .filter((m) => m.tip && m.tip.confidence > 0)
-      .sort((a, b) => (b.tip?.confidence ?? 0) - (a.tip?.confidence ?? 0))
-      .slice(0, 20);
+    const withTips = filteredMatches.filter((m) => m.tip && m.tip.confidence > 0);
+
+    // Separate: top league matches vs rest
+    const topLeagueMatches = withTips
+      .filter((m) => TOP_LEAGUE_IDS.has(m.league_id))
+      .sort((a, b) => (b.tip?.confidence ?? 0) - (a.tip?.confidence ?? 0));
+    const otherMatches = withTips
+      .filter((m) => !TOP_LEAGUE_IDS.has(m.league_id))
+      .sort((a, b) => (b.tip?.confidence ?? 0) - (a.tip?.confidence ?? 0));
+
+    // Always include ALL top league matches (up to 20), fill rest by confidence
+    const selected: MatchWithTip[] = [...topLeagueMatches];
+    const selectedIds = new Set(selected.map((m) => m.id));
+    for (const m of otherMatches) {
+      if (selected.length >= 20) break;
+      if (!selectedIds.has(m.id)) selected.push(m);
+    }
+
+    return selected.slice(0, 20);
   }, [filteredMatches]);
 
   const top20Ids = useMemo(() => new Set(top20.map((m) => m.id)), [top20]);
@@ -390,12 +395,12 @@ export default function PredictionsClient({ matches: initialMatches, locale }: P
         </div>
       </div>
 
-      {/* ── REMAINING MATCHES (VIP-LOCKED SEARCH) ── */}
+      {/* ── ALL REMAINING PREDICTIONS ── */}
       {remainingMatches.length > 0 && (
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-md">
-              <Lock className="w-5 h-5 text-white" />
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-gray-600 to-gray-700 flex items-center justify-center shadow-md">
+              <Trophy className="w-5 h-5 text-white" />
             </div>
             <div>
               <h2 className="text-lg font-bold text-gray-900">
@@ -403,8 +408,8 @@ export default function PredictionsClient({ matches: initialMatches, locale }: P
               </h2>
               <p className="text-xs text-gray-500">
                 {isFr
-                  ? `${remainingMatches.length} pronostics supplémentaires — recherche VIP`
-                  : `${remainingMatches.length} more predictions — VIP search`}
+                  ? `${remainingMatches.length} pronostics supplémentaires`
+                  : `${remainingMatches.length} more predictions`}
               </p>
             </div>
           </div>
@@ -412,25 +417,19 @@ export default function PredictionsClient({ matches: initialMatches, locale }: P
           <LeagueFilterBar
             fixtures={remainingMatches}
             locale={locale}
-            searchLocked={true}
+            searchLocked={false}
             onFilteredFixtures={handleFilterChange}
           />
 
-          <div className="relative min-h-[300px]">
-            <VipOverlay locale={locale} matchCount={remainingMatches.length} />
-
-            {/* Blurred preview — only show first few groups */}
-            <div className="pointer-events-none select-none blur-[2px] opacity-50 space-y-0">
-              {remainingGroups.slice(0, 5).map((group) => (
-                <CollapsibleLeagueGroup
-                  key={group.key}
-                  group={{ ...group, matches: group.matches.slice(0, 3) }}
-                  locale={locale}
-                  defaultOpen={false}
-                  blurred={true}
-                />
-              ))}
-            </div>
+          <div className="space-y-0">
+            {remainingGroups.map((group) => (
+              <CollapsibleLeagueGroup
+                key={group.key}
+                group={group}
+                locale={locale}
+                defaultOpen={false}
+              />
+            ))}
           </div>
         </div>
       )}
