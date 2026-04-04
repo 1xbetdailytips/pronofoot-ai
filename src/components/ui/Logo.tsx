@@ -32,14 +32,14 @@ export default function Logo({
           Prono
           <span
             className={
-              variant === "dark" ? "text-emerald-600" : "text-emerald-400"
+              variant === "dark" ? "text-sky-700" : "text-sky-400"
             }
           >
             Foot
           </span>{" "}
           <span
             className={`text-sm font-semibold ${
-              variant === "dark" ? "text-emerald-500" : "text-emerald-300"
+              variant === "dark" ? "text-sky-600" : "text-sky-300"
             }`}
           >
             AI

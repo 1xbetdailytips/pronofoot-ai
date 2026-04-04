@@ -21,7 +21,7 @@ export default async function Image() {
     (
       <div
         style={{
-          background: "linear-gradient(145deg, #064e3b 0%, #022c22 50%, #0f172a 100%)",
+          background: "linear-gradient(145deg, #0a2d4d 0%, #071e38 50%, #0c3050 100%)",
           width: "100%",
           height: "100%",
           display: "flex",
@@ -41,7 +41,7 @@ export default async function Image() {
             width: "400px",
             height: "400px",
             borderRadius: "50%",
-            border: "2px solid rgba(16,185,129,0.15)",
+            border: "2px solid rgba(30,170,232,0.15)",
             display: "flex",
           }}
         />
@@ -53,7 +53,7 @@ export default async function Image() {
             width: "300px",
             height: "300px",
             borderRadius: "50%",
-            border: "2px solid rgba(16,185,129,0.1)",
+            border: "2px solid rgba(30,170,232,0.1)",
             display: "flex",
           }}
         />
@@ -91,7 +91,7 @@ export default async function Image() {
             style={{
               fontSize: "56px",
               fontWeight: "800",
-              color: "#34D399",
+              color: "#1eaae8",
               letterSpacing: "-1px",
             }}
           >
@@ -101,7 +101,7 @@ export default async function Image() {
             style={{
               fontSize: "32px",
               fontWeight: "700",
-              color: "#6EE7B7",
+              color: "#7dd3fc",
               marginLeft: "4px",
             }}
           >
@@ -139,8 +139,8 @@ export default async function Image() {
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
-                background: "rgba(16,185,129,0.12)",
-                border: "1px solid rgba(16,185,129,0.2)",
+                background: "rgba(30,170,232,0.12)",
+                border: "1px solid rgba(30,170,232,0.2)",
                 borderRadius: "16px",
                 padding: "14px 28px",
               }}
