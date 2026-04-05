@@ -5,7 +5,8 @@ import { RefreshCw, Clock, Activity, ChevronDown, ChevronRight, ChevronLeft, Cal
 import Image from "next/image";
 import LeagueFilterBar from "@/components/filters/LeagueFilterBar";
 import GlobalMatchSearch from "@/components/livescore/GlobalMatchSearch";
-import { isPopularLeague, getCountryForLeague } from "@/lib/league-country-map";
+import { isPopularLeague, getCountryForLeague, isBettableOn1xBet } from "@/lib/league-country-map";
+import { siteConfig } from "@/lib/config";
 import type { Fixture, LiveFixture } from "@/lib/types";
 
 const LIVE_STATUSES = ["1H", "2H", "HT", "ET", "BT", "P"];
@@ -264,6 +265,17 @@ function MatchRow({ fixture }: { fixture: Fixture }) {
           )}
           {isLive && lf.tip_prediction && (
             <span className="text-[10px] font-medium text-amber-500 bg-amber-50 px-1.5 py-0.5 rounded ml-auto animate-pulse">LIVE</span>
+          )}
+          {isBettableOn1xBet(fixture.league_id) && !isLive && resultStatus === null && (
+            <a
+              href={`${siteConfig.affiliateLink}?utm_campaign=livescore_match`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[9px] font-bold text-white bg-[#1a5276] hover:bg-[#1a3a5c] px-2 py-0.5 rounded ml-auto transition-colors"
+              onClick={(e) => e.stopPropagation()}
+            >
+              1xBet
+            </a>
           )}
         </div>
       )}

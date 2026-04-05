@@ -83,6 +83,95 @@ export const GUARANTEED_LEAGUE_IDS = new Set([
   288,  // DSTV Premiership (South Africa)
 ]);
 
+// ── BETTABLE ON 1XBET — leagues with active betting markets ────────────────
+// Matches in these leagues show a "Bet on 1xBet" badge with affiliate link
+export const BETTABLE_LEAGUE_IDS = new Set([
+  // England
+  39, 40, 41, 42, 45, 48,
+  // Spain
+  140, 141, 143,
+  // Italy
+  135, 136, 137,
+  // Germany
+  78, 79, 81,
+  // France
+  61, 62, 66,
+  // Portugal
+  94, 95, // Primeira Liga + Liga Portugal 2
+  // Netherlands
+  88, 89, // Eredivisie + Eerste Divisie
+  // Belgium
+  144,
+  // Scotland
+  179,
+  // Turkey
+  203, 204, // Süper Lig + 1. Lig
+  // Greece
+  197,
+  // Switzerland
+  207,
+  // Austria
+  218,
+  // Denmark
+  120,
+  // Sweden
+  113,
+  // Norway
+  103,
+  // Poland
+  106,
+  // Czech Republic
+  345,
+  // Croatia
+  210,
+  // Serbia
+  286,
+  // Romania
+  283,
+  // Ukraine
+  333,
+  // Russia
+  235, 236,
+  // UEFA
+  2, 3, 848,
+  // Cameroon
+  406, 407,
+  // Africa
+  12, 20, 6, // CAF CL, CAF CC, AFCON
+  233, // Egypt
+  200, // Morocco
+  332, // Nigeria (NPFL)
+  288, // South Africa
+  271, // Ghana Premier
+  305, // Tunisia
+  292, // Kenya Premier
+  276, // Ivory Coast
+  // FIFA
+  1, 15, // World Cup, Club WC
+  4, 5, // Euro, Euro Qualifiers
+  29, 30, 31, 32, 33, 34, // WC Qualifiers (all zones)
+  // Americas
+  253, // MLS
+  71, // Brazilian Serie A
+  72, // Brazilian Serie B
+  128, // Argentine Liga Profesional
+  13, // Copa Libertadores
+  11, // Copa Sudamericana
+  262, // Liga MX
+  // Asia
+  307, // Saudi Pro League
+  169, // Chinese Super League
+  98, // J-League
+  292, // K-League
+  // Australia
+  188, // A-League
+]);
+
+/** Check if a match is available on 1xBet betting markets */
+export function isBettableOn1xBet(leagueId: number): boolean {
+  return BETTABLE_LEAGUE_IDS.has(leagueId);
+}
+
 // ── FULL LEAGUE → COUNTRY MAP ───────────────────────────────────────────────
 const MAP: Record<string, LeagueCountry> = {
   // 🇨🇲 Cameroon

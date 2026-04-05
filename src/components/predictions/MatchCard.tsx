@@ -1,6 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
+import { isBettableOn1xBet } from "@/lib/league-country-map";
+import { siteConfig } from "@/lib/config";
 
 type MatchCardProps = {
   homeTeam: string;
@@ -120,7 +122,9 @@ export default function MatchCard({
   awayOdds,
   slug,
   locale,
+  leagueId,
 }: MatchCardProps) {
+  const bettable = leagueId ? isBettableOn1xBet(leagueId) : false;
   const statusInfo = getStatusDisplay(status, homeScore, awayScore);
   const predLabel = getPredLabel(prediction, locale);
   const resultStatus = statusInfo?.isFinished ? computeResult(prediction, homeScore, awayScore) : null;
@@ -248,7 +252,7 @@ export default function MatchCard({
           )}
         </div>
 
-        {/* WIN/LOST badge */}
+        {/* WIN/LOST badge + 1xBet */}
         <div className="w-16 text-right shrink-0">
           {resultStatus === true && (
             <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">WIN ✓</span>
@@ -258,6 +262,17 @@ export default function MatchCard({
           )}
           {statusInfo?.isLive && hasTip && (
             <span className="text-[10px] font-bold text-amber-500 bg-amber-50 px-2 py-0.5 rounded animate-pulse">LIVE</span>
+          )}
+          {bettable && !statusInfo?.isFinished && !statusInfo?.isLive && (
+            <a
+              href={`${siteConfig.affiliateLink}?utm_campaign=predictions_match`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block text-[9px] font-bold text-white bg-[#1a5276] hover:bg-[#1a3a5c] px-2 py-0.5 rounded transition-colors"
+              onClick={(e) => e.stopPropagation()}
+            >
+              1xBet
+            </a>
           )}
         </div>
       </div>
