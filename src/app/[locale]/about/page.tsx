@@ -11,8 +11,8 @@ export function generateMetadata({ params }: { params: { locale: string } }): Me
   const isFr = params.locale === "fr";
   return {
     title: isFr
-      ? "Comment Fonctionne Notre IA — PronoFoot AI"
-      : "How Our AI Works — PronoFoot AI",
+      ? "Comment Fonctionne Notre IA de Pronostics"
+      : "How Our AI Predictions Work — Methodology",
     description: isFr
       ? "Découvrez comment PronoFoot AI analyse plus de 500 statistiques par match pour générer des pronostics football fiables. Méthodologie, transparence et résultats vérifiés."
       : "Discover how PronoFoot AI analyzes 500+ statistics per match to generate reliable football predictions. Methodology, transparency, and verified results.",

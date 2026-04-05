@@ -11,8 +11,8 @@ export function generateMetadata({ params }: { params: { locale: string } }): Me
   const isFr = params.locale === "fr";
   return {
     title: isFr
-      ? "Performance IA — Taux de Réussite PronoFoot AI"
-      : "AI Performance — PronoFoot AI Win Rate Stats",
+      ? "Performance IA — Taux de Réussite des Pronostics"
+      : "AI Performance — Win Rate Stats & Accuracy",
     description: isFr
       ? "Statistiques complètes de performance de notre IA : taux de réussite global, par confiance, par marché. Transparence totale."
       : "Complete AI performance statistics: overall win rate, by confidence tier, by market. Full transparency.",

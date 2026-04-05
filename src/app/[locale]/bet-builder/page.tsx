@@ -12,7 +12,7 @@ export const revalidate = 120;
 export function generateMetadata({ params }: { params: { locale: string } }): Metadata {
   const isFr = params.locale === "fr";
   return {
-    title: isFr ? "Générateur de Combos IA - PronoFoot AI" : "AI Combo Builder - PronoFoot AI",
+    title: isFr ? "Générateur de Combos IA — Combinés du Jour" : "AI Combo Builder — Today's Best Combos",
     description: isFr
       ? "Générez des combos intelligents : sûr, équilibré ou risqué. Combinés de paris générés par intelligence artificielle."
       : "Generate smart combos: safe, balanced, or risky. AI-generated bet combinations for today's matches.",
