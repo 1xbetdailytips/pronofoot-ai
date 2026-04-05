@@ -5,6 +5,7 @@ import { getTodaysMatches, matchToCardProps } from "@/lib/data";
 import { siteConfig } from "@/lib/config";
 import PromoBanner from "@/components/ui/PromoBanner";
 import ShareToUnlock from "@/components/viral/ShareToUnlock";
+import ShareGate from "@/components/viral/ShareGate";
 
 // ISR: revalidate every 2 minutes
 export const revalidate = 120;
@@ -227,6 +228,14 @@ export default async function BetBuilderPage({ params }: { params: { locale: str
             </Link>
           </div>
         ) : (
+          <ShareGate
+            featureId="bet-builder"
+            locale={locale}
+            title={isFr ? "Combos IA Premium" : "Premium AI Combos"}
+            description={isFr
+              ? "Partagez sur WhatsApp pour accéder aux combos du jour gratuitement pendant 24h"
+              : "Share on WhatsApp to access today's combos free for 24 hours"}
+          >
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {combos.map((combo) => {
               const config = comboConfig[combo.type];
@@ -324,6 +333,7 @@ export default async function BetBuilderPage({ params }: { params: { locale: str
               return card;
             })}
           </div>
+          </ShareGate>
         )}
 
         {/* How it works */}

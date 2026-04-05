@@ -3,6 +3,7 @@ import { Brain, Shield, Zap, AlertTriangle, BarChart3, Target, Activity } from "
 import Link from "next/link";
 import { getTodaysMatches } from "@/lib/data";
 import ShareToUnlock from "@/components/viral/ShareToUnlock";
+import ShareGate from "@/components/viral/ShareGate";
 import CrowdBacking from "@/components/social/CrowdBacking";
 import PromoBanner from "@/components/ui/PromoBanner";
 
@@ -229,6 +230,16 @@ export default async function AILabPage({ params }: { params: { locale: string }
           </div>
         </section>
 
+        {/* ─── SHARE-GATED AI TOOLS ──────────────────────────── */}
+        <ShareGate
+          featureId="ai-lab"
+          locale={locale}
+          title={isFr ? "Outils IA Premium" : "Premium AI Tools"}
+          description={isFr
+            ? "Partagez sur WhatsApp pour accéder au Labo IA gratuitement pendant 24h"
+            : "Share on WhatsApp to access AI Lab free for 24 hours"}
+        >
+
         {/* ─── PATTERN ANALYZER ──────────────────────────────── */}
         <section>
           <div className="flex items-center gap-2 mb-4">
@@ -434,6 +445,8 @@ export default async function AILabPage({ params }: { params: { locale: string }
             </div>
           </section>
         )}
+
+        </ShareGate>
 
         {/* Promo banner */}
         <PromoBanner locale={locale} variant="welcome-bonus" campaign="ai_lab" />
