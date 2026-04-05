@@ -194,6 +194,24 @@ export default function PredictionsClient({ matches: initialMatches, locale }: P
     }
   }, [initialMatches]);
 
+  // Auto-retry when no matches on today (cron may not have run yet)
+  useEffect(() => {
+    if (matches.length === 0 && isToday(selectedDate)) {
+      const retryInterval = setInterval(async () => {
+        try {
+          const res = await fetch(`/api/predictions?date=${formatDateParam(selectedDate)}`, { cache: "no-store" });
+          if (res.ok) {
+            const data = await res.json();
+            if (data.matches && data.matches.length > 0) {
+              setMatches(data.matches);
+            }
+          }
+        } catch {}
+      }, 60_000);
+      return () => clearInterval(retryInterval);
+    }
+  }, [matches.length, selectedDate]);
+
   // Apply market filter
   const filteredMatches = useMemo(
     () => matches.filter((m) => matchesMarketFilter(m, marketFilter)),
@@ -351,6 +369,33 @@ export default function PredictionsClient({ matches: initialMatches, locale }: P
         <div className="text-center py-8">
           <div className="w-6 h-6 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto mb-2" />
           <p className="text-sm text-gray-400">{isFr ? "Chargement..." : "Loading..."}</p>
+        </div>
+      )}
+
+      {/* Preparing state — today but no matches yet (cron hasn't run) */}
+      {!isLoadingDate && matches.length === 0 && isToday(selectedDate) && (
+        <div className="text-center py-12 mb-8">
+          <div className="w-16 h-16 mx-auto mb-5 relative">
+            <div className="absolute inset-0 rounded-full border-2 border-emerald-500/20" />
+            <div className="absolute inset-0 rounded-full border-2 border-transparent border-t-emerald-500 animate-spin" />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <Trophy className="w-7 h-7 text-emerald-500" />
+            </div>
+          </div>
+          <h3 className="text-lg font-bold text-gray-800 mb-2">
+            {isFr ? "Préparation des pronostics..." : "Preparing today's predictions..."}
+          </h3>
+          <p className="text-sm text-gray-500 max-w-md mx-auto mb-4">
+            {isFr
+              ? "Notre IA analyse les matchs du jour. Les pronostics seront disponibles sous peu."
+              : "Our AI is analyzing today's matches. Predictions will be available shortly."}
+          </p>
+          <div className="flex items-center justify-center gap-4 text-xs text-gray-400">
+            <div className="flex items-center gap-1.5">
+              <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span>{isFr ? "Analyse en cours" : "Analysis in progress"}</span>
+            </div>
+          </div>
         </div>
       )}
 

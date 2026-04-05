@@ -534,19 +534,79 @@ export default function LivescoreClient({ initialFixtures, locale }: Props) {
     </div>
   );
 
+  // Auto-retry when no fixtures (today's cron may not have run yet)
+  useEffect(() => {
+    if (fixtures.length === 0 && isToday(selectedDate)) {
+      const retryInterval = setInterval(async () => {
+        try {
+          const res = await fetch(`/api/livescore?date=${formatDateParam(selectedDate)}`, { cache: "no-store" });
+          if (res.ok) {
+            const data = await res.json();
+            if (data.fixtures && data.fixtures.length > 0) {
+              setFixtures(data.fixtures);
+              setLastUpdate(new Date());
+            }
+          }
+        } catch {}
+      }, 60_000); // retry every 60 seconds
+      return () => clearInterval(retryInterval);
+    }
+  }, [fixtures.length, selectedDate]);
+
   if (fixtures.length === 0) {
+    const isPastDate = selectedDate < new Date(new Date().setHours(0, 0, 0, 0));
     return (
       <div>
         {dateNav}
-        <div className="text-center py-16">
-          <Activity className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-          <p className="text-gray-500 text-lg font-medium">
-            {isFr ? "Aucun match ce jour" : "No matches on this day"}
-          </p>
-          <p className="text-gray-400 text-sm mt-1">
-            {isFr ? "Essayez une autre date." : "Try a different date."}
-          </p>
-        </div>
+        {isToday(selectedDate) ? (
+          // Today but cron hasn't run — show premium preparing state
+          <div className="text-center py-12">
+            <div className="w-16 h-16 mx-auto mb-5 relative">
+              <div className="absolute inset-0 rounded-full border-2 border-emerald-500/20" />
+              <div className="absolute inset-0 rounded-full border-2 border-transparent border-t-emerald-500 animate-spin" />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <Activity className="w-7 h-7 text-emerald-500" />
+              </div>
+            </div>
+            <h3 className="text-lg font-bold text-gray-200 mb-2">
+              {isFr ? "Préparation des matchs du jour..." : "Preparing today's matches..."}
+            </h3>
+            <p className="text-sm text-gray-400 max-w-md mx-auto mb-4">
+              {isFr
+                ? "Notre IA analyse les matchs et génère les pronostics. Les prédictions seront disponibles sous peu."
+                : "Our AI is analyzing today's matches and generating predictions. They'll be available shortly."}
+            </p>
+            <div className="flex items-center justify-center gap-6 text-xs text-gray-500">
+              <div className="flex items-center gap-1.5">
+                <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                <span>{isFr ? "Analyse en cours" : "Analysis in progress"}</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <Clock className="w-3.5 h-3.5" />
+                <span>{isFr ? "Mise à jour auto chaque minute" : "Auto-refreshing every minute"}</span>
+              </div>
+            </div>
+          </div>
+        ) : isPastDate ? (
+          // Past date with no data
+          <div className="text-center py-16">
+            <Activity className="w-12 h-12 text-gray-600 mx-auto mb-4" />
+            <p className="text-gray-400 text-lg font-medium">
+              {isFr ? "Aucune donnée pour cette date" : "No data for this date"}
+            </p>
+          </div>
+        ) : (
+          // Future date
+          <div className="text-center py-16">
+            <CalendarDays className="w-12 h-12 text-gray-600 mx-auto mb-4" />
+            <p className="text-gray-400 text-lg font-medium">
+              {isFr ? "Les matchs seront disponibles bientôt" : "Matches will be available soon"}
+            </p>
+            <p className="text-sm text-gray-500 mt-1">
+              {isFr ? "Les pronostics sont générés chaque matin." : "Predictions are generated every morning."}
+            </p>
+          </div>
+        )}
       </div>
     );
   }
