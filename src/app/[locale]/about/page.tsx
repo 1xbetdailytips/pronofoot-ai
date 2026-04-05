@@ -144,16 +144,16 @@ export default async function AboutPage({
               time: "06:00",
               title: isFr ? "Collecte des Données" : "Data Collection",
               desc: isFr
-                ? "Chaque matin à 6h, notre système récupère automatiquement toutes les rencontres du jour via API-Football Pro : forme des équipes sur les 5-10 derniers matchs, historique des confrontations directes, performances domicile/extérieur, buts marqués et encaissés, classements et dynamique de momentum."
-                : "Every morning at 6am, our system automatically fetches all fixtures via API-Football Pro: team form over the last 5-10 matches, head-to-head history, home/away performance, goals scored and conceded, standings, and momentum trends.",
+                ? "Chaque matin à 6h, notre système récupère automatiquement toutes les rencontres du jour depuis des sources professionnelles : forme des équipes sur les 5-10 derniers matchs, historique des confrontations directes, performances domicile/extérieur, buts marqués et encaissés, classements et dynamique de momentum."
+                : "Every morning at 6am, our system automatically collects all fixtures from professional data sources: team form over the last 5-10 matches, head-to-head history, home/away performance, goals scored and conceded, standings, and momentum trends.",
             },
             {
               icon: <Brain className="w-6 h-6 text-purple-600" />,
               time: "07:00",
               title: isFr ? "Analyse par l'IA" : "AI Analysis",
               desc: isFr
-                ? "À 7h, Claude (le modèle d'IA d'Anthropic) analyse chaque match en croisant plus de 500 points de données. L'IA évalue les probabilités pour chaque résultat possible, calcule un score de confiance (0-100%) et détermine un niveau de risque (Faible/Moyen/Élevé). Aucune intervention humaine dans les prédictions."
-                : "At 7am, Claude (Anthropic's AI model) analyzes each match by cross-referencing 500+ data points. The AI evaluates probabilities for each possible outcome, calculates a confidence score (0-100%), and determines a risk level (Low/Medium/High). No human intervention in predictions.",
+                ? "À 7h, notre intelligence artificielle analyse chaque match en croisant plus de 500 points de données. L'IA évalue les probabilités pour chaque résultat possible, calcule un score de confiance (0-100%) et détermine un niveau de risque (Faible/Moyen/Élevé). Aucune intervention humaine dans les prédictions."
+                : "At 7am, our artificial intelligence analyzes each match by cross-referencing 500+ data points. The AI evaluates probabilities for each possible outcome, calculates a confidence score (0-100%), and determines a risk level (Low/Medium/High). No human intervention in predictions.",
             },
             {
               icon: <Target className="w-6 h-6 text-emerald-600" />,
@@ -168,8 +168,8 @@ export default async function AboutPage({
               time: "23:00",
               title: isFr ? "Vérification Automatique" : "Automatic Verification",
               desc: isFr
-                ? "A 23h, le systeme verifie automatiquement les scores finaux via API-Football. Chaque pronostic est marque WIN ou LOSS, et les resultats sont enregistres dans la base de donnees pour les 7 marches. Rien n'est cache, rien n'est modifie apres coup. La page Stats affiche tout en temps reel."
-                : "At 11pm, the system automatically checks final scores via API-Football. Every prediction is marked WIN or LOSS, and results are logged to the database across all 7 markets. Nothing is hidden, nothing is modified after the fact. The Stats page shows everything in real-time.",
+                ? "A 23h, le systeme verifie automatiquement les scores finaux. Chaque pronostic est marque WIN ou LOSS, et les resultats sont enregistres pour les 7 marches. Rien n'est cache, rien n'est modifie apres coup. La page Stats affiche tout en temps reel."
+                : "At 11pm, the system automatically verifies final scores. Every prediction is marked WIN or LOSS, and results are permanently recorded across all 7 markets. Nothing is hidden, nothing is modified after the fact. The Stats page shows everything in real-time.",
             },
           ].map((step, i) => (
             <div key={i} className="flex gap-4 bg-white rounded-xl border border-gray-100 p-5">
@@ -219,17 +219,17 @@ export default async function AboutPage({
         </div>
       </section>
 
-      {/* Tech Stack — For E-E-A-T */}
+      {/* What Powers Our Predictions */}
       <section className="mb-12">
         <h2 className="text-2xl font-bold text-gray-900 mb-4">
-          {isFr ? "Notre Stack Technique" : "Our Tech Stack"}
+          {isFr ? "Ce Qui Alimente Nos Pronostics" : "What Powers Our Predictions"}
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {[
-            { label: isFr ? "Modèle IA" : "AI Model", value: "Claude (Anthropic)", desc: isFr ? "Analyse des matchs et génération des pronostics" : "Match analysis and prediction generation" },
-            { label: isFr ? "Source de Données" : "Data Source", value: "API-Football Pro", desc: isFr ? "7 500 requêtes/jour, données en temps réel" : "7,500 requests/day, real-time data" },
-            { label: isFr ? "Base de Données" : "Database", value: "PostgreSQL (Supabase)", desc: isFr ? "Stockage sécurisé de tous les pronostics et résultats" : "Secure storage of all predictions and results" },
-            { label: isFr ? "Hébergement" : "Hosting", value: "Vercel + Railway", desc: isFr ? "Infrastructure fiable, déploiement automatique" : "Reliable infrastructure, automatic deployment" },
+            { label: isFr ? "Intelligence Artificielle" : "Artificial Intelligence", value: isFr ? "IA de pointe" : "State-of-the-art AI", desc: isFr ? "Analyse des matchs et génération des pronostics avec les modèles les plus avancés" : "Match analysis and prediction generation using the most advanced AI models" },
+            { label: isFr ? "Données Professionnelles" : "Professional Data", value: isFr ? "Données en temps réel" : "Real-time data feeds", desc: isFr ? "Sources professionnelles couvrant 900+ ligues dans le monde entier" : "Professional sources covering 900+ leagues worldwide" },
+            { label: isFr ? "Fiabilité" : "Reliability", value: isFr ? "99.9% disponibilité" : "99.9% uptime", desc: isFr ? "Infrastructure cloud sécurisée avec mises à jour automatiques" : "Secure cloud infrastructure with automatic updates" },
+            { label: isFr ? "Transparence" : "Transparency", value: isFr ? "100% vérifiable" : "100% verifiable", desc: isFr ? "Chaque pronostic est archivé et vérifiable sur la page Statistiques" : "Every prediction is archived and verifiable on the Stats page" },
           ].map((item, i) => (
             <div key={i} className="bg-gray-50 rounded-xl p-4 border border-gray-100">
               <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">{item.label}</p>
