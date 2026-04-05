@@ -132,7 +132,8 @@ export async function getWinRateStats(): Promise<WinRateStats> {
       confidence, risk_level, match_date, logged_at,
       fixtures(home_team, away_team, league_name)
     `)
-    .order("logged_at", { ascending: false });
+    .order("logged_at", { ascending: false })
+    .limit(2000);
 
   // Supabase FK joins return related row(s) as array — flatten to single object
   const all: RecentResult[] = (results || []).map((r: Record<string, unknown>) => ({
