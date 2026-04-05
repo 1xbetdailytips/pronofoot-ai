@@ -129,23 +129,11 @@ export default async function PredictionsPage({
         <PromoBanner locale={locale} variant="slim" campaign="predictions_top" />
       </div>
 
-      {/* Predictions with filter + top 20 + VIP lock */}
-      {matches.length > 0 ? (
-        <PredictionsClient
-          matches={matches}
-          locale={locale}
-        />
-      ) : (
-        <div className="text-center py-20 bg-white rounded-lg border border-gray-200 mb-8">
-          <TrendingUp className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-          <p className="text-gray-500 text-lg font-medium">
-            {isFr ? "Aucun match disponible pour aujourd'hui" : "No matches available for today"}
-          </p>
-          <p className="text-gray-400 text-sm mt-2">
-            {isFr ? "Les pronostics sont mis \u00e0 jour chaque matin" : "Predictions are updated every morning"}
-          </p>
-        </div>
-      )}
+      {/* Predictions — always render client component (handles auto-retry when empty) */}
+      <PredictionsClient
+        matches={matches}
+        locale={locale}
+      />
 
       {/* 1xBet Promotional Banner */}
       <div className="mb-6">
