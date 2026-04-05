@@ -299,7 +299,7 @@ function CountrySection({ block, defaultOpen }: { block: CountryBlock; defaultOp
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
   return (
-    <div className="rounded-lg overflow-hidden mb-2 shadow-sm border border-gray-200/80">
+    <div className="rounded-lg overflow-hidden mb-2 shadow-sm border border-gray-200/80 card-hover">
       {/* Country header — clickable to expand/collapse */}
       <button
         onClick={() => setIsOpen(!isOpen)}

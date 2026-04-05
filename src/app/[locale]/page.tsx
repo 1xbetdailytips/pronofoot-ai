@@ -135,7 +135,7 @@ export default async function HomePage({
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 relative">
-          <div className="max-w-3xl">
+          <div className="max-w-3xl stagger-children">
             <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-1.5 mb-6">
               <Zap className="w-4 h-4 text-amber-400" />
               <span className="text-white/90 text-sm font-medium">
@@ -156,7 +156,7 @@ export default async function HomePage({
             <div className="flex flex-col sm:flex-row gap-4">
               <Link
                 href={`/${locale}/predictions`}
-                className="inline-flex items-center justify-center gap-2 bg-white text-emerald-700 font-bold px-8 py-4 rounded-xl hover:bg-gray-100 transition-colors text-lg"
+                className="inline-flex items-center justify-center gap-2 bg-white text-emerald-700 font-bold px-8 py-4 rounded-xl hover:bg-gray-100 transition-colors text-lg btn-press"
               >
                 {t("heroCta")}
                 <ArrowRight className="w-5 h-5" />
@@ -170,7 +170,7 @@ export default async function HomePage({
             </div>
           </div>
 
-          <div className="grid grid-cols-3 gap-4 mt-12 max-w-md">
+          <div className="grid grid-cols-3 gap-4 mt-12 max-w-md stagger-children">
             <div className="text-center">
               <p className="text-3xl font-bold text-white">
                 {winStats.overall.total > 0 ? `${winStats.overall.rate}%` : "—"}

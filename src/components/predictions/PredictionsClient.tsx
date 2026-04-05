@@ -79,7 +79,7 @@ function CollapsibleLeagueGroup({
       </button>
 
       {isOpen && (
-        <div className="bg-white divide-y divide-gray-50">
+        <div className="bg-white divide-y divide-gray-50 stagger-children">
           {group.matches.map((match) => (
             <MatchCard key={match.id} {...matchToCardProps(match)} locale={locale} />
           ))}

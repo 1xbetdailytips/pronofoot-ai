@@ -152,7 +152,7 @@ export default function MatchCard({
     <Link
       href={`/${locale}/predictions/${slug}`}
       className={cn(
-        "block border-b border-gray-100 hover:bg-gray-50 transition-colors",
+        "block border-b border-gray-100 hover:bg-gray-50 transition-all duration-200",
         !hasTip && "opacity-70"
       )}
     >
