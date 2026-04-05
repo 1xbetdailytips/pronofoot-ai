@@ -24,27 +24,6 @@ type FooterProps = {
 export default function Footer({ locale, translations: t }: FooterProps) {
   return (
     <footer className="bg-gray-900 text-gray-300">
-      {/* Affiliate CTA Banner */}
-      <div className="bg-gradient-to-r from-emerald-600 to-emerald-700">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
-            <p className="text-white font-medium text-center sm:text-left">
-              {locale === "fr"
-                ? "Prets a parier ? Ouvrez votre compte 1xBet et commencez a gagner !"
-                : "Ready to bet? Open your 1xBet account and start winning!"}
-            </p>
-            <a
-              href={siteConfig.affiliateLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-white text-emerald-700 font-bold px-6 py-2 rounded-lg hover:bg-gray-100 transition-colors whitespace-nowrap"
-            >
-              {t.betNow} →
-            </a>
-          </div>
-        </div>
-      </div>
-
       {/* Main Footer */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
