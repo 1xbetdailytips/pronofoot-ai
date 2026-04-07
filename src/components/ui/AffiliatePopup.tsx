@@ -112,7 +112,10 @@ export default function AffiliatePopup({ locale }: AffiliatePopupProps) {
             <div className="mb-2">
               <span className="text-white/70 text-sm">{isFr ? "jusqu'à" : "up to"}</span>
               <p className="text-amber-400 text-4xl font-black tracking-tight leading-none">
-                XAF 85,000
+                $200
+              </p>
+              <p className="text-white/60 text-sm font-medium">
+                (125,000 XAF)
               </p>
             </div>
 

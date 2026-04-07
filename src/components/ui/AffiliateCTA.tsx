@@ -15,7 +15,9 @@ export default function AffiliateCTA({
   campaign = "general",
   className = "",
 }: AffiliateCTAProps) {
-  const link = `${siteConfig.affiliateLink}&utm_campaign=${campaign}`;
+  const base = siteConfig.affiliateLink;
+  const sep = base.includes("?") ? "&" : "?";
+  const link = `${base}${sep}utm_campaign=${campaign}`;
 
   const baseStyles = "inline-flex items-center gap-2 font-bold transition-all duration-200";
 

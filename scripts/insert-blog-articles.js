@@ -11,7 +11,7 @@ const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-const AFFILIATE = "https://1xbet.com";
+const AFFILIATE = "https://reffpa.com/L?tag=d_2524729m_1599c_&site=2524729&ad=1599";
 
 function countWords(html) {
   return html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim().split(" ").length;

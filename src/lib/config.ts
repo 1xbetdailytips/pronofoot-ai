@@ -10,7 +10,7 @@ export const siteConfig = {
     en: "AI-powered football predictions, daily betting tips, and ready-to-use 1xBet ticket codes. Smart analysis for smarter bets.",
     fr: "Pronostics football par IA, tips quotidiens et analyses intelligentes. Plus de 500 stats analysées par match pour des paris plus intelligents.",
   },
-  affiliateLink: process.env.NEXT_PUBLIC_AFFILIATE_LINK || "https://1xbet.com",
+  affiliateLink: process.env.NEXT_PUBLIC_AFFILIATE_LINK || "https://reffpa.com/L?tag=d_2524729m_1599c_&site=2524729&ad=1599",
   locales: ["fr", "en"] as const,
   defaultLocale: "fr" as const, // French first for Cameroon
   // SEO

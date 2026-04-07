@@ -96,8 +96,11 @@ export default function PromoBanner({
                   200<span className="text-amber-400">%</span>
                 </p>
                 <p className="text-white/70 text-xs sm:text-sm mt-1 drop-shadow-lg">
-                  {isFr ? "jusqu'a" : "up to"}{" "}
-                  <span className="text-white font-bold">85,000 XAF</span>
+                  {isFr ? "jusqu'à" : "up to"}{" "}
+                  <span className="text-white font-bold">$200 (125,000 XAF)</span>
+                </p>
+                <p className="text-amber-300 text-[10px] sm:text-xs mt-0.5 font-bold drop-shadow-lg">
+                  {isFr ? "Code promo:" : "Promo code:"} FLYUP777
                 </p>
               </div>
             )}

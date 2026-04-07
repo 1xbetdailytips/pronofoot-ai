@@ -68,7 +68,7 @@ export function getConfidenceLabel(
 // Affiliate link helper
 export function getAffiliateLink(campaign?: string): string {
   const base =
-    process.env.NEXT_PUBLIC_AFFILIATE_LINK || "https://1xbet.com";
+    process.env.NEXT_PUBLIC_AFFILIATE_LINK || "https://reffpa.com/L?tag=d_2524729m_1599c_&site=2524729&ad=1599";
   if (campaign) {
     return `${base}&utm_campaign=${campaign}`;
   }
