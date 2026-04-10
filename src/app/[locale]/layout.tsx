@@ -165,7 +165,7 @@ export default async function LocaleLayout({
           }}
         />
       </head>
-      <body className={`${inter.className} bg-gray-50 dark:bg-gray-950 min-h-screen flex flex-col text-gray-900 dark:text-gray-100 transition-colors`}>
+      <body className={`${inter.className} bg-gray-50 dark:bg-[#0c1222] min-h-screen flex flex-col text-gray-900 dark:text-gray-100 antialiased`}>
         <NextIntlClientProvider messages={messages}>
           <Header
             locale={locale}

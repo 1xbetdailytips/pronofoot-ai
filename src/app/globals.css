@@ -2,32 +2,73 @@
 @tailwind components;
 @tailwind utilities;
 
-/* PronoFoot AI Global Styles */
-body {
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+/* ══════════════════════════════════════════════════
+   PARIFOOT DESIGN SYSTEM
+   ══════════════════════════════════════════════════ */
+
+/* ── CSS Custom Properties (Semantic Tokens) ── */
+:root {
+  --color-primary: #10b981;
+  --color-primary-hover: #059669;
+  --color-primary-light: #d1fae5;
+  --color-surface: #ffffff;
+  --color-surface-alt: #f8fafc;
+  --color-surface-elevated: #ffffff;
+  --color-border: #e2e8f0;
+  --color-border-light: #f1f5f9;
+  --color-text-primary: #0f172a;
+  --color-text-secondary: #475569;
+  --color-text-muted: #94a3b8;
+  --color-live: #ef4444;
+  --color-vip: #f59e0b;
+  --color-info: #3b82f6;
+  --background: #f8fafc;
+  --foreground: #0f172a;
 }
 
-/* Smooth scrolling */
+.dark {
+  --color-primary: #34d399;
+  --color-primary-hover: #6ee7b7;
+  --color-primary-light: #064e3b;
+  --color-surface: #1e293b;
+  --color-surface-alt: #0f172a;
+  --color-surface-elevated: #334155;
+  --color-border: #334155;
+  --color-border-light: #1e293b;
+  --color-text-primary: #f1f5f9;
+  --color-text-secondary: #cbd5e1;
+  --color-text-muted: #64748b;
+  --background: #0f172a;
+  --foreground: #f1f5f9;
+}
+
+/* ── Base Styles ── */
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 html {
   scroll-behavior: smooth;
 }
 
-/* Custom scrollbar */
+/* ── Custom Scrollbar ── */
 ::-webkit-scrollbar {
   width: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: transparent;
 }
 .dark ::-webkit-scrollbar-track {
-  background: #1e293b;
+  background: #0f172a;
 }
 ::-webkit-scrollbar-thumb {
   background: #10b981;
   border-radius: 3px;
 }
 
-/* Dark mode transitions */
+/* ── Dark Mode Theme Transition ── */
 html {
   transition: color-scheme 0.2s;
 }
@@ -35,35 +76,29 @@ html.dark {
   color-scheme: dark;
 }
 
-/* ── Dark mode overrides ── */
-.dark {
-  --background: #0f172a;
-  --foreground: #f1f5f9;
-}
-
-/* Base surfaces */
+/* ── Dark mode surface overrides ── */
 .dark .bg-white { background-color: #1e293b !important; }
 .dark .bg-gray-50 { background-color: #0f172a !important; }
 .dark .bg-gray-100 { background-color: #1e293b !important; }
 
-/* Text */
+/* Dark mode text */
 .dark .text-gray-900 { color: #f1f5f9 !important; }
 .dark .text-gray-800 { color: #e2e8f0 !important; }
 .dark .text-gray-700 { color: #cbd5e1 !important; }
 .dark .text-gray-600 { color: #94a3b8 !important; }
 .dark .text-gray-500 { color: #94a3b8 !important; }
 
-/* Borders */
+/* Dark mode borders */
 .dark .border-gray-200 { border-color: #334155 !important; }
 .dark .border-gray-100 { border-color: #1e293b !important; }
 .dark .border-gray-50 { border-color: #1e293b !important; }
 
-/* Hover states */
+/* Dark mode hover */
 .dark .hover\:bg-gray-50:hover { background-color: #334155 !important; }
 .dark .hover\:bg-gray-100:hover { background-color: #334155 !important; }
 .dark .hover\:bg-gray-200:hover { background-color: #475569 !important; }
 
-/* Inputs */
+/* Dark mode inputs */
 .dark input, .dark textarea {
   color: #f1f5f9 !important;
 }
@@ -71,20 +106,68 @@ html.dark {
   color: #64748b !important;
 }
 
-/* Cards and sections */
+/* Dark mode sections */
 .dark .bg-gray-800 { background-color: #0f172a !important; }
 .dark .divide-gray-100 > :not([hidden]) ~ :not([hidden]) { border-color: #334155 !important; }
 .dark .divide-gray-50 > :not([hidden]) ~ :not([hidden]) { border-color: #1e293b !important; }
 
-/* Filter bar backgrounds */
+/* Dark mode filter bar */
 .dark .bg-white\/95 { background-color: rgba(15, 23, 42, 0.95) !important; }
 .dark .bg-gray-50\/80 { background-color: rgba(30, 41, 59, 0.8) !important; }
 
 /* ══════════════════════════════════════════════════
-   TRYSORO-STYLE ANIMATIONS & LAYOUT SYSTEM
+   SCROLL REVEAL ANIMATIONS
+   Elements are VISIBLE by default — animation is additive polish only
    ══════════════════════════════════════════════════ */
 
-/* ── Section spacing (generous trysoro-style gaps) ── */
+@keyframes revealUp {
+  from { opacity: 0.3; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes revealDown {
+  from { opacity: 0.3; transform: translateY(-16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes revealLeft {
+  from { opacity: 0.3; transform: translateX(-24px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes revealRight {
+  from { opacity: 0.3; transform: translateX(24px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes revealScale {
+  from { opacity: 0.3; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes revealBlur {
+  from { opacity: 0.3; filter: blur(4px); transform: translateY(12px); }
+  to { opacity: 1; filter: blur(0); transform: translateY(0); }
+}
+
+.animate-reveal-up { animation: revealUp ease-out forwards; }
+.animate-reveal-down { animation: revealDown ease-out forwards; }
+.animate-reveal-left { animation: revealLeft ease-out forwards; }
+.animate-reveal-right { animation: revealRight ease-out forwards; }
+.animate-reveal-scale { animation: revealScale ease-out forwards; }
+.animate-reveal-blur { animation: revealBlur ease-out forwards; }
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .animate-reveal-up,
+  .animate-reveal-down,
+  .animate-reveal-left,
+  .animate-reveal-right,
+  .animate-reveal-scale,
+  .animate-reveal-blur {
+    animation: none !important;
+  }
+}
+
+/* ══════════════════════════════════════════════════
+   LAYOUT & SPACING UTILITIES
+   ══════════════════════════════════════════════════ */
+
 .section-gap {
   padding-top: 4rem;
   padding-bottom: 4rem;
@@ -102,12 +185,15 @@ html.dark {
   }
 }
 
-/* ── Glassmorphism utility ── */
+/* ══════════════════════════════════════════════════
+   GLASSMORPHISM & SURFACE UTILITIES
+   ══════════════════════════════════════════════════ */
+
 .glass {
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 .dark .glass {
   background: rgba(15, 23, 42, 0.6);
@@ -122,20 +208,22 @@ html.dark {
   background-clip: text;
 }
 
-/* ── Subtle section background gradients ── */
+/* ── Section background gradients ── */
 .section-gradient-1 {
-  background: linear-gradient(180deg, transparent 0%, rgba(16, 185, 129, 0.02) 50%, transparent 100%);
+  background: linear-gradient(180deg, transparent 0%, rgba(16, 185, 129, 0.03) 50%, transparent 100%);
 }
 .section-gradient-2 {
-  background: linear-gradient(180deg, transparent 0%, rgba(59, 130, 246, 0.02) 50%, transparent 100%);
+  background: linear-gradient(180deg, transparent 0%, rgba(59, 130, 246, 0.03) 50%, transparent 100%);
 }
 .section-gradient-3 {
-  background: linear-gradient(180deg, transparent 0%, rgba(245, 158, 11, 0.02) 50%, transparent 100%);
+  background: linear-gradient(180deg, transparent 0%, rgba(245, 158, 11, 0.03) 50%, transparent 100%);
 }
 
-/* ── Apple/Stripe-style micro-animations ── */
+/* ══════════════════════════════════════════════════
+   MICRO-ANIMATIONS
+   ══════════════════════════════════════════════════ */
 
-/* Staggered children animation delays */
+/* Stagger children entrance */
 .stagger-children > * {
   opacity: 0;
   animation: fadeInUp 0.5s ease-out forwards;
@@ -155,20 +243,20 @@ html.dark {
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* Enhanced card hover (trysoro-style lift + scale) */
+/* Card hover — subtle lift + shadow */
 .card-hover {
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-              box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .card-hover:hover {
-  transform: translateY(-4px) scale(1.01);
-  box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.15), 0 8px 16px -8px rgba(0, 0, 0, 0.1);
+  transform: translateY(-3px) scale(1.005);
+  box-shadow: 0 16px 32px -8px rgba(0, 0, 0, 0.12), 0 4px 12px -4px rgba(0, 0, 0, 0.08);
 }
 .dark .card-hover:hover {
-  box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.5), 0 8px 16px -8px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 16px 32px -8px rgba(0, 0, 0, 0.5), 0 4px 12px -4px rgba(0, 0, 0, 0.4);
 }
 
-/* Button press effect */
+/* Button press */
 .btn-press {
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
@@ -180,7 +268,7 @@ html.dark {
   box-shadow: none;
 }
 
-/* ── CTA button glow animation ── */
+/* CTA button glow */
 .btn-glow {
   position: relative;
   overflow: hidden;
@@ -200,7 +288,7 @@ html.dark {
   opacity: 1;
 }
 
-/* ── Gradient shift animation for CTAs ── */
+/* Gradient shift for CTAs */
 .gradient-shift {
   background-size: 200% 200%;
   animation: gradientShift 6s ease infinite;
@@ -209,16 +297,6 @@ html.dark {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
-}
-
-/* Smooth section reveal on scroll (CSS-only) */
-.reveal-section {
-  opacity: 0;
-  transform: translateY(20px);
-  animation: revealSection 0.6s ease-out forwards;
-}
-@keyframes revealSection {
-  to { opacity: 1; transform: translateY(0); }
 }
 
 /* Skeleton loading shimmer */
@@ -242,16 +320,15 @@ a, button {
   transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
 }
 
-/* Smooth page transition feel */
+/* Smooth page entrance */
 main {
-  animation: pageEnter 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: pageEnter 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 @keyframes pageEnter {
-  from { opacity: 0; transform: translateY(12px); }
+  from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* Ensure mobile-first responsive */
 @layer utilities {
   .text-balance {
     text-wrap: balance;
