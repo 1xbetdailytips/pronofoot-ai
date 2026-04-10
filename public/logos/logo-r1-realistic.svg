@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" fill="none">
+  <defs>
+    <!-- 3D sphere gradient — dark to light for realism -->
+    <radialGradient id="ball" cx="38%" cy="32%" r="60%">
+      <stop offset="0%" stop-color="#f8fafc"/>
+      <stop offset="25%" stop-color="#e2e8f0"/>
+      <stop offset="60%" stop-color="#94a3b8"/>
+      <stop offset="90%" stop-color="#475569"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </radialGradient>
+    <!-- Panel gradient — dark panels -->
+    <radialGradient id="panel" cx="40%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#334155"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </radialGradient>
+    <!-- AI glow on stitches -->
+    <linearGradient id="stitch" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10b981"/>
+      <stop offset="50%" stop-color="#34d399"/>
+      <stop offset="100%" stop-color="#f59e0b"/>
+    </linearGradient>
+    <!-- Drop shadow -->
+    <filter id="shadow" x="-20%" y="-10%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="12" stdDeviation="18" flood-color="#0f172a" flood-opacity="0.25"/>
+    </filter>
+    <!-- Glow filter -->
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2.5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Ground shadow -->
+  <ellipse cx="200" cy="340" rx="90" ry="14" fill="#1e293b" opacity="0.12"/>
+
+  <!-- Main ball body -->
+  <circle cx="200" cy="190" r="130" fill="url(#ball)" filter="url(#shadow)"/>
+
+  <!-- Dark pentagon panels (classic football pattern, 3D-positioned) -->
+  <!-- Top pentagon -->
+  <path d="M200 75 L230 100 L222 135 L178 135 L170 100 Z" fill="url(#panel)" opacity="0.85"/>
+  <!-- Upper right -->
+  <path d="M280 130 L305 165 L290 200 L255 195 L250 155 Z" fill="url(#panel)" opacity="0.75"/>
+  <!-- Upper left -->
+  <path d="M120 130 L150 155 L145 195 L110 200 L95 165 Z" fill="url(#panel)" opacity="0.8"/>
+  <!-- Lower right -->
+  <path d="M270 230 L295 240 L290 275 L260 285 L245 260 Z" fill="url(#panel)" opacity="0.65"/>
+  <!-- Lower left -->
+  <path d="M130 230 L155 260 L140 285 L110 275 L105 240 Z" fill="url(#panel)" opacity="0.7"/>
+  <!-- Bottom -->
+  <path d="M175 280 L225 280 L235 305 L200 318 L165 305 Z" fill="url(#panel)" opacity="0.55"/>
+
+  <!-- Seam lines connecting panels (the white hexagon edges) -->
+  <!-- These glow with emerald+gold = the AI energy flowing through -->
+  <g filter="url(#glow)">
+    <!-- Top to upper-right -->
+    <line x1="230" y1="100" x2="250" y2="155" stroke="url(#stitch)" stroke-width="1.8" opacity="0.7"/>
+    <!-- Top to upper-left -->
+    <line x1="170" y1="100" x2="150" y2="155" stroke="url(#stitch)" stroke-width="1.8" opacity="0.7"/>
+    <!-- Top right edge -->
+    <line x1="222" y1="135" x2="255" y2="195" stroke="url(#stitch)" stroke-width="1.5" opacity="0.6"/>
+    <!-- Top left edge -->
+    <line x1="178" y1="135" x2="145" y2="195" stroke="url(#stitch)" stroke-width="1.5" opacity="0.6"/>
+    <!-- Upper right down -->
+    <line x1="290" y1="200" x2="270" y2="230" stroke="url(#stitch)" stroke-width="1.5" opacity="0.55"/>
+    <!-- Upper left down -->
+    <line x1="110" y1="200" x2="130" y2="230" stroke="url(#stitch)" stroke-width="1.5" opacity="0.55"/>
+    <!-- Mid connections -->
+    <line x1="255" y1="195" x2="245" y2="260" stroke="url(#stitch)" stroke-width="1.3" opacity="0.5"/>
+    <line x1="145" y1="195" x2="155" y2="260" stroke="url(#stitch)" stroke-width="1.3" opacity="0.5"/>
+    <!-- Bottom connections -->
+    <line x1="260" y1="285" x2="225" y2="280" stroke="url(#stitch)" stroke-width="1.3" opacity="0.45"/>
+    <line x1="140" y1="285" x2="175" y2="280" stroke="url(#stitch)" stroke-width="1.3" opacity="0.45"/>
+    <line x1="235" y1="305" x2="200" y2="318" stroke="url(#stitch)" stroke-width="1.2" opacity="0.4"/>
+    <line x1="165" y1="305" x2="200" y2="318" stroke="url(#stitch)" stroke-width="1.2" opacity="0.4"/>
+    <!-- Pentagon edges -->
+    <path d="M200 75 L230 100 L222 135 L178 135 L170 100 Z" fill="none" stroke="url(#stitch)" stroke-width="1.5" opacity="0.6"/>
+    <path d="M280 130 L305 165 L290 200 L255 195 L250 155 Z" fill="none" stroke="url(#stitch)" stroke-width="1.3" opacity="0.5"/>
+    <path d="M120 130 L150 155 L145 195 L110 200 L95 165 Z" fill="none" stroke="url(#stitch)" stroke-width="1.3" opacity="0.5"/>
+  </g>
+
+  <!-- Specular highlight (shiny spot — makes it look 3D and real) -->
+  <ellipse cx="165" cy="130" rx="35" ry="22" transform="rotate(-30 165 130)" fill="white" opacity="0.25"/>
+  <ellipse cx="158" cy="120" rx="15" ry="10" transform="rotate(-30 158 120)" fill="white" opacity="0.15"/>
+
+  <!-- Tiny AI data particles floating near the seams -->
+  <circle cx="240" cy="120" r="2" fill="#10b981" opacity="0.6"/>
+  <circle cx="160" cy="160" r="1.5" fill="#f59e0b" opacity="0.5"/>
+  <circle cx="270" cy="210" r="1.8" fill="#10b981" opacity="0.5"/>
+  <circle cx="130" cy="210" r="1.5" fill="#f59e0b" opacity="0.4"/>
+  <circle cx="210" cy="290" r="1.5" fill="#10b981" opacity="0.4"/>
+  <circle cx="310" cy="170" r="2" fill="#34d399" opacity="0.35"/>
+
+  <!-- Wordmark — clean, modern -->
+  <text x="200" y="378" text-anchor="middle" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" font-weight="800" font-size="30" letter-spacing="2.5">
+    <tspan fill="#1e293b">PRONO</tspan><tspan fill="#059669">FOOT</tspan>
+  </text>
+  <text x="200" y="398" text-anchor="middle" font-family="Inter, sans-serif" font-weight="600" font-size="12" fill="#94a3b8" letter-spacing="6">POWERED BY AI</text>
+</svg>

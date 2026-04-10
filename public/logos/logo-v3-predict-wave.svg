@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <!-- V3: Predict Wave — Football with ascending prediction wave/chart, representing accuracy trends -->
+  <defs>
+    <linearGradient id="g3" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#059669"/>
+      <stop offset="50%" stop-color="#10b981"/>
+      <stop offset="100%" stop-color="#34d399"/>
+    </linearGradient>
+    <linearGradient id="g3dark" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#064e3b"/>
+      <stop offset="100%" stop-color="#065f46"/>
+    </linearGradient>
+  </defs>
+  <!-- Rounded square background -->
+  <rect x="36" y="36" width="440" height="380" rx="40" fill="url(#g3dark)"/>
+  <!-- Subtle grid lines (data visualization feel) -->
+  <line x1="80" y1="120" x2="432" y2="120" stroke="white" stroke-width="0.5" opacity="0.06"/>
+  <line x1="80" y1="180" x2="432" y2="180" stroke="white" stroke-width="0.5" opacity="0.06"/>
+  <line x1="80" y1="240" x2="432" y2="240" stroke="white" stroke-width="0.5" opacity="0.06"/>
+  <line x1="80" y1="300" x2="432" y2="300" stroke="white" stroke-width="0.5" opacity="0.06"/>
+  <!-- Prediction success wave / upward trend chart -->
+  <path d="M80 340 C120 340 140 310 160 280 C180 250 200 320 220 290 C240 260 250 220 270 200 C290 180 300 230 320 190 C340 150 360 130 390 100 L432 80"
+        fill="none" stroke="url(#g3)" stroke-width="4" stroke-linecap="round"/>
+  <!-- Glow under the wave -->
+  <path d="M80 340 C120 340 140 310 160 280 C180 250 200 320 220 290 C240 260 250 220 270 200 C290 180 300 230 320 190 C340 150 360 130 390 100 L432 80 L432 360 L80 360 Z"
+        fill="url(#g3)" opacity="0.1"/>
+  <!-- Data points on the wave -->
+  <circle cx="160" cy="280" r="5" fill="#10b981" stroke="white" stroke-width="2"/>
+  <circle cx="220" cy="290" r="5" fill="#10b981" stroke="white" stroke-width="2"/>
+  <circle cx="270" cy="200" r="5" fill="#10b981" stroke="white" stroke-width="2"/>
+  <circle cx="320" cy="190" r="5" fill="#10b981" stroke="white" stroke-width="2"/>
+  <circle cx="390" cy="100" r="7" fill="#34d399" stroke="white" stroke-width="2.5"/>
+  <!-- Football at the peak (latest/best prediction) -->
+  <circle cx="390" cy="100" r="22" fill="white" opacity="0.15"/>
+  <!-- Small football pattern at peak -->
+  <path d="M390 86 L398 93 L395 103 L385 103 L382 93 Z" fill="white" opacity="0.3" stroke="white" stroke-width="0.8"/>
+  <!-- Arrow up at peak -->
+  <path d="M420 90 L432 70 L444 90" fill="none" stroke="#34d399" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Percentage badge -->
+  <rect x="350" y="50" width="80" height="30" rx="15" fill="#10b981"/>
+  <text x="390" y="70" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-weight="800" font-size="16" fill="white">85%</text>
+  <!-- Text -->
+  <text x="256" y="460" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-weight="800" font-size="48" fill="#065f46" letter-spacing="2">PRONOFOOT</text>
+  <text x="353" y="460" font-family="Inter, Arial, sans-serif" font-weight="700" font-size="20" fill="#10b981" letter-spacing="1"> AI</text>
+  <text x="256" y="498" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-weight="500" font-size="16" fill="#6b7280" letter-spacing="4">PREDICTIONS</text>
+</svg>

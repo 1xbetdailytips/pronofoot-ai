@@ -25,6 +25,8 @@ const config: Config = {
         "slide-in-right": "slideInRight 0.4s ease-out forwards",
         "scale-in": "scaleIn 0.3s ease-out forwards",
         "blur-in": "blurIn 0.6s ease-out forwards",
+        "slide-up-lg": "slideUpLg 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards",
+        "glow": "glow 2s ease-in-out infinite alternate",
       },
       keyframes: {
         shimmer: {
@@ -62,6 +64,14 @@ const config: Config = {
         blurIn: {
           "0%": { opacity: "0", filter: "blur(8px)" },
           "100%": { opacity: "1", filter: "blur(0)" },
+        },
+        slideUpLg: {
+          "0%": { opacity: "0", transform: "translateY(60px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        glow: {
+          "0%": { boxShadow: "0 0 5px rgba(16, 185, 129, 0.2), 0 0 20px rgba(16, 185, 129, 0.1)" },
+          "100%": { boxShadow: "0 0 10px rgba(16, 185, 129, 0.4), 0 0 40px rgba(16, 185, 129, 0.2)" },
         },
       },
     },

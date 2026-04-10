@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <!-- V2: Target Lens — AI crosshair targeting a football, representing precision predictions -->
+  <defs>
+    <linearGradient id="g2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#065f46"/>
+      <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+    <linearGradient id="g2b" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10b981"/>
+      <stop offset="100%" stop-color="#34d399"/>
+    </linearGradient>
+  </defs>
+  <!-- Dark circle background -->
+  <circle cx="256" cy="230" r="190" fill="url(#g2)"/>
+  <!-- Outer ring -->
+  <circle cx="256" cy="230" r="185" fill="none" stroke="#10b981" stroke-width="3" opacity="0.5"/>
+  <!-- Football pentagon pattern (simplified) -->
+  <path d="M256 130 L300 165 L285 215 L227 215 L212 165 Z" fill="white" opacity="0.12"/>
+  <path d="M300 165 L340 200 L330 250 L285 215 Z" fill="white" opacity="0.08"/>
+  <path d="M212 165 L172 200 L182 250 L227 215 Z" fill="white" opacity="0.08"/>
+  <path d="M227 215 L182 250 L200 300 L256 310 L312 300 L330 250 L285 215 Z" fill="white" opacity="0.06"/>
+  <!-- Crosshair / target reticle -->
+  <!-- Horizontal line -->
+  <line x1="100" y1="230" x2="200" y2="230" stroke="#10b981" stroke-width="2.5" opacity="0.8"/>
+  <line x1="312" y1="230" x2="412" y2="230" stroke="#10b981" stroke-width="2.5" opacity="0.8"/>
+  <!-- Vertical line -->
+  <line x1="256" y1="74" x2="256" y2="174" stroke="#10b981" stroke-width="2.5" opacity="0.8"/>
+  <line x1="256" y1="286" x2="256" y2="386" stroke="#10b981" stroke-width="2.5" opacity="0.8"/>
+  <!-- Target circles -->
+  <circle cx="256" cy="230" r="56" fill="none" stroke="#10b981" stroke-width="2" opacity="0.6"/>
+  <circle cx="256" cy="230" r="90" fill="none" stroke="#10b981" stroke-width="1.5" opacity="0.3"/>
+  <circle cx="256" cy="230" r="130" fill="none" stroke="#10b981" stroke-width="1" opacity="0.2" stroke-dasharray="8 6"/>
+  <!-- Center dot -->
+  <circle cx="256" cy="230" r="10" fill="#10b981"/>
+  <circle cx="256" cy="230" r="5" fill="white"/>
+  <!-- Corner brackets (tech feel) -->
+  <path d="M90 90 L90 130 M90 90 L130 90" stroke="#34d399" stroke-width="3" stroke-linecap="round" opacity="0.6"/>
+  <path d="M422 90 L422 130 M422 90 L382 90" stroke="#34d399" stroke-width="3" stroke-linecap="round" opacity="0.6"/>
+  <path d="M90 370 L90 330 M90 370 L130 370" stroke="#34d399" stroke-width="3" stroke-linecap="round" opacity="0.6"/>
+  <path d="M422 370 L422 330 M422 370 L382 370" stroke="#34d399" stroke-width="3" stroke-linecap="round" opacity="0.6"/>
+  <!-- Small data points -->
+  <circle cx="170" cy="150" r="3" fill="#34d399" opacity="0.5"/>
+  <circle cx="342" cy="150" r="3" fill="#34d399" opacity="0.5"/>
+  <circle cx="150" cy="300" r="3" fill="#34d399" opacity="0.5"/>
+  <circle cx="362" cy="300" r="3" fill="#34d399" opacity="0.5"/>
+  <!-- Text -->
+  <text x="256" y="460" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-weight="800" font-size="46" fill="#065f46" letter-spacing="2">PRONOFOOT</text>
+  <text x="256" y="495" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-weight="700" font-size="28" fill="#10b981" letter-spacing="10">AI</text>
+</svg>

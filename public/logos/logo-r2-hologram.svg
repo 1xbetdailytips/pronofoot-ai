@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" fill="none">
+  <defs>
+    <radialGradient id="hball" cx="38%" cy="30%" r="58%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="20%" stop-color="#f1f5f9"/>
+      <stop offset="50%" stop-color="#cbd5e1"/>
+      <stop offset="80%" stop-color="#64748b"/>
+      <stop offset="100%" stop-color="#334155"/>
+    </radialGradient>
+    <linearGradient id="holo" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10b981"/>
+      <stop offset="30%" stop-color="#f59e0b"/>
+      <stop offset="60%" stop-color="#10b981"/>
+      <stop offset="100%" stop-color="#3b82f6"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fbbf24"/>
+      <stop offset="100%" stop-color="#d97706"/>
+    </linearGradient>
+    <filter id="sh2" x="-15%" y="-5%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="8" stdDeviation="14" flood-color="#0f172a" flood-opacity="0.2"/>
+    </filter>
+    <filter id="gl2">
+      <feGaussianBlur stdDeviation="3" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Subtle dark background plate -->
+  <rect x="40" y="30" width="320" height="290" rx="30" fill="#0f172a" opacity="0.04"/>
+
+  <!-- Ground reflection -->
+  <ellipse cx="200" cy="330" rx="80" ry="10" fill="#1e293b" opacity="0.08"/>
+
+  <!-- Main ball -->
+  <circle cx="200" cy="180" r="125" fill="url(#hball)" filter="url(#sh2)"/>
+
+  <!-- Classic dark panels -->
+  <path d="M200 68 L228 92 L220 125 L180 125 L172 92 Z" fill="#1e293b" opacity="0.8"/>
+  <path d="M278 120 L300 152 L288 185 L256 180 L252 145 Z" fill="#1e293b" opacity="0.7"/>
+  <path d="M122 120 L148 145 L144 180 L112 185 L100 152 Z" fill="#1e293b" opacity="0.72"/>
+  <path d="M265 220 L288 228 L283 260 L255 270 L242 248 Z" fill="#1e293b" opacity="0.6"/>
+  <path d="M135 220 L158 248 L145 270 L117 260 L112 228 Z" fill="#1e293b" opacity="0.62"/>
+  <path d="M175 268 L225 268 L232 290 L200 302 L168 290 Z" fill="#1e293b" opacity="0.5"/>
+
+  <!-- Holographic/iridescent seam lines — the AI energy -->
+  <g filter="url(#gl2)">
+    <!-- Pentagon outlines with holographic gradient -->
+    <path d="M200 68 L228 92 L220 125 L180 125 L172 92 Z" fill="none" stroke="url(#holo)" stroke-width="2" opacity="0.8"/>
+    <path d="M278 120 L300 152 L288 185 L256 180 L252 145 Z" fill="none" stroke="url(#holo)" stroke-width="1.8" opacity="0.7"/>
+    <path d="M122 120 L148 145 L144 180 L112 185 L100 152 Z" fill="none" stroke="url(#holo)" stroke-width="1.8" opacity="0.7"/>
+    <!-- Connecting seams -->
+    <line x1="228" y1="92" x2="252" y2="145" stroke="url(#holo)" stroke-width="1.5" opacity="0.6"/>
+    <line x1="172" y1="92" x2="148" y2="145" stroke="url(#holo)" stroke-width="1.5" opacity="0.6"/>
+    <line x1="220" y1="125" x2="256" y2="180" stroke="url(#holo)" stroke-width="1.3" opacity="0.5"/>
+    <line x1="180" y1="125" x2="144" y2="180" stroke="url(#holo)" stroke-width="1.3" opacity="0.5"/>
+    <line x1="288" y1="185" x2="265" y2="220" stroke="url(#holo)" stroke-width="1.2" opacity="0.45"/>
+    <line x1="112" y1="185" x2="135" y2="220" stroke="url(#holo)" stroke-width="1.2" opacity="0.45"/>
+    <line x1="256" y1="180" x2="242" y2="248" stroke="url(#holo)" stroke-width="1.2" opacity="0.4"/>
+    <line x1="144" y1="180" x2="158" y2="248" stroke="url(#holo)" stroke-width="1.2" opacity="0.4"/>
+    <line x1="255" y1="270" x2="225" y2="268" stroke="url(#holo)" stroke-width="1.1" opacity="0.35"/>
+    <line x1="145" y1="270" x2="175" y2="268" stroke="url(#holo)" stroke-width="1.1" opacity="0.35"/>
+  </g>
+
+  <!-- Specular highlight -->
+  <ellipse cx="168" cy="122" rx="32" ry="20" transform="rotate(-25 168 122)" fill="white" opacity="0.3"/>
+  <ellipse cx="160" cy="112" rx="14" ry="9" transform="rotate(-25 160 112)" fill="white" opacity="0.18"/>
+
+  <!-- Small golden "AI" badge — like a stamp on the ball -->
+  <circle cx="260" cy="130" r="18" fill="url(#gold)" opacity="0.85"/>
+  <text x="260" y="136" text-anchor="middle" font-family="Inter, sans-serif" font-weight="900" font-size="13" fill="white">AI</text>
+
+  <!-- Floating data particles -->
+  <circle cx="310" cy="110" r="2.5" fill="#10b981" opacity="0.5"/>
+  <circle cx="90" cy="150" r="2" fill="#f59e0b" opacity="0.4"/>
+  <circle cx="320" cy="200" r="1.8" fill="#3b82f6" opacity="0.4"/>
+  <circle cx="85" cy="230" r="2" fill="#10b981" opacity="0.35"/>
+
+  <!-- Wordmark -->
+  <text x="200" y="372" text-anchor="middle" font-family="Inter, 'Helvetica Neue', sans-serif" font-weight="800" font-size="32" letter-spacing="2">
+    <tspan fill="#1e293b">PRONO</tspan><tspan fill="#059669">FOOT</tspan>
+  </text>
+  <!-- Gold underline accent -->
+  <line x1="130" y1="382" x2="270" y2="382" stroke="url(#gold)" stroke-width="2.5" stroke-linecap="round"/>
+  <text x="200" y="398" text-anchor="middle" font-family="Inter, sans-serif" font-weight="500" font-size="10" fill="#94a3b8" letter-spacing="5">INTELLIGENCE</text>
+</svg>

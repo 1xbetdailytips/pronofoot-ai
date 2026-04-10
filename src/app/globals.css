@@ -36,7 +36,6 @@ html.dark {
 }
 
 /* ── Dark mode overrides ── */
-/* These apply globally so we don't need dark: on every component */
 .dark {
   --background: #0f172a;
   --foreground: #f1f5f9;
@@ -81,6 +80,59 @@ html.dark {
 .dark .bg-white\/95 { background-color: rgba(15, 23, 42, 0.95) !important; }
 .dark .bg-gray-50\/80 { background-color: rgba(30, 41, 59, 0.8) !important; }
 
+/* ══════════════════════════════════════════════════
+   TRYSORO-STYLE ANIMATIONS & LAYOUT SYSTEM
+   ══════════════════════════════════════════════════ */
+
+/* ── Section spacing (generous trysoro-style gaps) ── */
+.section-gap {
+  padding-top: 4rem;
+  padding-bottom: 4rem;
+}
+@media (min-width: 768px) {
+  .section-gap {
+    padding-top: 6rem;
+    padding-bottom: 6rem;
+  }
+}
+@media (min-width: 1024px) {
+  .section-gap {
+    padding-top: 8rem;
+    padding-bottom: 8rem;
+  }
+}
+
+/* ── Glassmorphism utility ── */
+.glass {
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.dark .glass {
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* ── Text gradient utility ── */
+.text-gradient {
+  background: linear-gradient(135deg, #10b981 0%, #34d399 50%, #6ee7b7 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Subtle section background gradients ── */
+.section-gradient-1 {
+  background: linear-gradient(180deg, transparent 0%, rgba(16, 185, 129, 0.02) 50%, transparent 100%);
+}
+.section-gradient-2 {
+  background: linear-gradient(180deg, transparent 0%, rgba(59, 130, 246, 0.02) 50%, transparent 100%);
+}
+.section-gradient-3 {
+  background: linear-gradient(180deg, transparent 0%, rgba(245, 158, 11, 0.02) 50%, transparent 100%);
+}
+
 /* ── Apple/Stripe-style micro-animations ── */
 
 /* Staggered children animation delays */
@@ -103,17 +155,17 @@ html.dark {
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* Smooth card hover lift (Apple-style) */
+/* Enhanced card hover (trysoro-style lift + scale) */
 .card-hover {
-  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
-              box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .card-hover:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.15), 0 4px 10px -5px rgba(0, 0, 0, 0.08);
+  transform: translateY(-4px) scale(1.01);
+  box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.15), 0 8px 16px -8px rgba(0, 0, 0, 0.1);
 }
 .dark .card-hover:hover {
-  box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.4), 0 4px 10px -5px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.5), 0 8px 16px -8px rgba(0, 0, 0, 0.4);
 }
 
 /* Button press effect */
@@ -126,6 +178,37 @@ html.dark {
 .btn-press:active {
   transform: translateY(0.5px);
   box-shadow: none;
+}
+
+/* ── CTA button glow animation ── */
+.btn-glow {
+  position: relative;
+  overflow: hidden;
+}
+.btn-glow::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.btn-glow:hover::after {
+  opacity: 1;
+}
+
+/* ── Gradient shift animation for CTAs ── */
+.gradient-shift {
+  background-size: 200% 200%;
+  animation: gradientShift 6s ease infinite;
+}
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 /* Smooth section reveal on scroll (CSS-only) */
@@ -161,10 +244,10 @@ a, button {
 
 /* Smooth page transition feel */
 main {
-  animation: pageEnter 0.35s ease-out;
+  animation: pageEnter 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 @keyframes pageEnter {
-  from { opacity: 0; transform: translateY(8px); }
+  from { opacity: 0; transform: translateY(12px); }
   to { opacity: 1; transform: translateY(0); }
 }
 

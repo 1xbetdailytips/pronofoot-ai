@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <!-- V1: Neural Football — football with AI neural network nodes instead of hex pattern -->
+  <defs>
+    <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#059669"/>
+      <stop offset="100%" stop-color="#10b981"/>
+    </linearGradient>
+    <linearGradient id="g1b" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#047857"/>
+      <stop offset="100%" stop-color="#065f46"/>
+    </linearGradient>
+  </defs>
+  <!-- Shield shape -->
+  <path d="M256 28 L460 120 C460 120 470 320 256 488 C42 320 52 120 52 120 Z" fill="url(#g1)" stroke="#047857" stroke-width="6"/>
+  <!-- Inner shadow -->
+  <path d="M256 52 L436 134 C436 134 446 310 256 462 C66 310 76 134 76 134 Z" fill="none" stroke="white" stroke-width="1.5" opacity="0.2"/>
+  <!-- Football outline -->
+  <circle cx="256" cy="240" r="120" fill="white" opacity="0.15" stroke="white" stroke-width="3"/>
+  <!-- Neural network nodes -->
+  <circle cx="256" cy="160" r="8" fill="white"/>
+  <circle cx="196" cy="200" r="7" fill="white"/>
+  <circle cx="316" cy="200" r="7" fill="white"/>
+  <circle cx="210" cy="270" r="7" fill="white"/>
+  <circle cx="302" cy="270" r="7" fill="white"/>
+  <circle cx="256" cy="320" r="8" fill="white"/>
+  <!-- Center brain node -->
+  <circle cx="256" cy="240" r="14" fill="white" opacity="0.9"/>
+  <circle cx="256" cy="240" r="8" fill="url(#g1b)"/>
+  <!-- Neural connections -->
+  <line x1="256" y1="160" x2="196" y2="200" stroke="white" stroke-width="2" opacity="0.7"/>
+  <line x1="256" y1="160" x2="316" y2="200" stroke="white" stroke-width="2" opacity="0.7"/>
+  <line x1="196" y1="200" x2="256" y2="240" stroke="white" stroke-width="2" opacity="0.6"/>
+  <line x1="316" y1="200" x2="256" y2="240" stroke="white" stroke-width="2" opacity="0.6"/>
+  <line x1="256" y1="240" x2="210" y2="270" stroke="white" stroke-width="2" opacity="0.6"/>
+  <line x1="256" y1="240" x2="302" y2="270" stroke="white" stroke-width="2" opacity="0.6"/>
+  <line x1="210" y1="270" x2="256" y2="320" stroke="white" stroke-width="2" opacity="0.7"/>
+  <line x1="302" y1="270" x2="256" y2="320" stroke="white" stroke-width="2" opacity="0.7"/>
+  <line x1="196" y1="200" x2="210" y2="270" stroke="white" stroke-width="1.5" opacity="0.4"/>
+  <line x1="316" y1="200" x2="302" y2="270" stroke="white" stroke-width="1.5" opacity="0.4"/>
+  <!-- Pulse rings around center -->
+  <circle cx="256" cy="240" r="28" fill="none" stroke="white" stroke-width="1" opacity="0.3"/>
+  <circle cx="256" cy="240" r="45" fill="none" stroke="white" stroke-width="0.8" opacity="0.15"/>
+  <!-- Text -->
+  <text x="256" y="420" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-weight="800" font-size="48" fill="white" letter-spacing="3">PRONOFOOT</text>
+  <text x="256" y="455" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-weight="600" font-size="28" fill="white" opacity="0.7" letter-spacing="8">AI</text>
+</svg>

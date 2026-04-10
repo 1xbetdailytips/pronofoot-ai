@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" fill="none">
+  <!-- V6: Negative Space Goal — The letters PF form a goalpost in negative space -->
+  <!-- Concept: The space BETWEEN the letters is the goal. Hidden meaning. -->
+
+  <!-- Background circle (subtle, off-white) -->
+  <circle cx="200" cy="175" r="145" fill="#f0fdf4"/>
+
+  <!-- Letter P — thick, modern, rounded -->
+  <path d="M95 80 L95 290 C95 295 98 298 103 298 L115 298 C120 298 123 295 123 290 L123 210
+           L160 210 C195 210 220 190 220 160 L220 130 C220 100 195 80 160 80 Z
+           M123 106 L155 106 C178 106 193 116 193 130 L193 160 C193 174 178 184 155 184 L123 184 Z"
+        fill="#065f46" fill-rule="evenodd"/>
+
+  <!-- Letter F — the crossbar creates the goalpost top -->
+  <path d="M240 80 L240 290 C240 295 243 298 248 298 L260 298 C265 298 268 295 268 290 L268 200
+           L310 200 C315 200 318 197 318 192 L318 183 C318 178 315 175 310 175 L268 175
+           L268 106 L320 106 C325 106 328 103 328 98 L328 88 C328 83 325 80 320 80 Z"
+        fill="#059669"/>
+
+  <!-- The "goal net" in the negative space between P and F -->
+  <!-- Subtle net pattern -->
+  <line x1="225" y1="106" x2="225" y2="298" stroke="#d1fae5" stroke-width="1" opacity="0.5"/>
+  <line x1="232" y1="106" x2="232" y2="298" stroke="#d1fae5" stroke-width="1" opacity="0.5"/>
+  <!-- Horizontal net lines -->
+  <line x1="220" y1="130" x2="240" y2="130" stroke="#d1fae5" stroke-width="1" opacity="0.4"/>
+  <line x1="220" y1="155" x2="240" y2="155" stroke="#d1fae5" stroke-width="1" opacity="0.4"/>
+  <line x1="220" y1="180" x2="240" y2="180" stroke="#d1fae5" stroke-width="1" opacity="0.4"/>
+  <line x1="220" y1="205" x2="240" y2="205" stroke="#d1fae5" stroke-width="1" opacity="0.4"/>
+  <line x1="220" y1="230" x2="240" y2="230" stroke="#d1fae5" stroke-width="1" opacity="0.4"/>
+  <line x1="220" y1="255" x2="240" y2="255" stroke="#d1fae5" stroke-width="1" opacity="0.4"/>
+
+  <!-- Small football flying into the "goal" -->
+  <circle cx="232" cy="190" r="9" fill="#059669"/>
+  <path d="M228 187 L236 187 M228 193 L236 193 M232 183 L232 197" stroke="white" stroke-width="0.8" opacity="0.4"/>
+
+  <!-- Motion lines behind the ball -->
+  <line x1="205" y1="190" x2="218" y2="190" stroke="#10b981" stroke-width="1.5" stroke-linecap="round" opacity="0.3"/>
+  <line x1="208" y1="185" x2="216" y2="187" stroke="#10b981" stroke-width="1" stroke-linecap="round" opacity="0.2"/>
+  <line x1="208" y1="195" x2="216" y2="193" stroke="#10b981" stroke-width="1" stroke-linecap="round" opacity="0.2"/>
+
+  <!-- Wordmark — lowercase, modern serif -->
+  <text x="200" y="362" text-anchor="middle" font-family="'Georgia', serif" font-size="30" fill="#065f46" font-weight="700" letter-spacing="3">
+    pronofoot
+  </text>
+  <!-- AI as a small superscript badge -->
+  <text x="310" y="348" font-family="'SF Mono', monospace" font-size="13" fill="#10b981" font-weight="700">AI</text>
+  <!-- Thin line under -->
+  <line x1="120" y1="372" x2="280" y2="372" stroke="#d1fae5" stroke-width="1.5"/>
+</svg>

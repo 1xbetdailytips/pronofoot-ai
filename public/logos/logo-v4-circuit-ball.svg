@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <!-- V4: Circuit Ball — Half football / half circuit board, AI-human fusion -->
+  <defs>
+    <linearGradient id="g4" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#059669"/>
+      <stop offset="100%" stop-color="#047857"/>
+    </linearGradient>
+    <linearGradient id="g4light" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10b981"/>
+      <stop offset="100%" stop-color="#34d399"/>
+    </linearGradient>
+    <clipPath id="leftHalf">
+      <rect x="0" y="0" width="256" height="512"/>
+    </clipPath>
+    <clipPath id="rightHalf">
+      <rect x="256" y="0" width="256" height="512"/>
+    </clipPath>
+  </defs>
+  <!-- Main circle -->
+  <circle cx="256" cy="220" r="160" fill="url(#g4)" stroke="#047857" stroke-width="4"/>
+  <!-- LEFT HALF: Football pattern -->
+  <g clip-path="url(#leftHalf)">
+    <!-- Football pentagon -->
+    <path d="M220 140 L250 120 L270 140 L260 170 L230 170 Z" fill="#065f46" stroke="white" stroke-width="2"/>
+    <!-- Football hex segments -->
+    <path d="M250 120 L280 110 L300 130 L270 140 Z" fill="none" stroke="white" stroke-width="1.5" opacity="0.5"/>
+    <path d="M220 140 L200 120 L215 100 L250 120 Z" fill="none" stroke="white" stroke-width="1.5" opacity="0.5"/>
+    <path d="M230 170 L210 190 L190 170 L200 150 L220 140 Z" fill="none" stroke="white" stroke-width="1.5" opacity="0.5"/>
+    <!-- More hex lines radiating out -->
+    <path d="M190 170 L160 190 L150 230 L175 250" fill="none" stroke="white" stroke-width="1.2" opacity="0.4"/>
+    <path d="M200 120 L175 100 L150 120 L140 160" fill="none" stroke="white" stroke-width="1.2" opacity="0.4"/>
+    <path d="M210 190 L200 230 L180 260 L165 290" fill="none" stroke="white" stroke-width="1.2" opacity="0.4"/>
+    <path d="M215 100 L220 70 L250 60" fill="none" stroke="white" stroke-width="1.2" opacity="0.4"/>
+    <path d="M175 250 L160 280 L155 310" fill="none" stroke="white" stroke-width="1.2" opacity="0.3"/>
+  </g>
+  <!-- RIGHT HALF: Circuit board pattern -->
+  <g clip-path="url(#rightHalf)">
+    <!-- Circuit traces (horizontal) -->
+    <line x1="260" y1="130" x2="380" y2="130" stroke="#34d399" stroke-width="2" opacity="0.7"/>
+    <line x1="260" y1="170" x2="350" y2="170" stroke="#34d399" stroke-width="2" opacity="0.6"/>
+    <line x1="260" y1="210" x2="400" y2="210" stroke="#34d399" stroke-width="2" opacity="0.5"/>
+    <line x1="260" y1="250" x2="370" y2="250" stroke="#34d399" stroke-width="2" opacity="0.6"/>
+    <line x1="260" y1="290" x2="340" y2="290" stroke="#34d399" stroke-width="2" opacity="0.5"/>
+    <!-- Circuit traces (vertical connectors) -->
+    <line x1="300" y1="130" x2="300" y2="170" stroke="#34d399" stroke-width="1.5" opacity="0.5"/>
+    <line x1="340" y1="170" x2="340" y2="250" stroke="#34d399" stroke-width="1.5" opacity="0.4"/>
+    <line x1="370" y1="130" x2="370" y2="210" stroke="#34d399" stroke-width="1.5" opacity="0.4"/>
+    <line x1="310" y1="250" x2="310" y2="290" stroke="#34d399" stroke-width="1.5" opacity="0.4"/>
+    <!-- Circuit nodes (chips/components) -->
+    <circle cx="300" cy="130" r="5" fill="#34d399"/>
+    <circle cx="370" cy="130" r="4" fill="#34d399" opacity="0.7"/>
+    <circle cx="340" cy="170" r="5" fill="#34d399"/>
+    <circle cx="300" cy="170" r="4" fill="#34d399" opacity="0.7"/>
+    <circle cx="370" cy="210" r="5" fill="#34d399"/>
+    <circle cx="340" cy="250" r="5" fill="#34d399"/>
+    <circle cx="310" cy="250" r="4" fill="#34d399" opacity="0.7"/>
+    <circle cx="310" cy="290" r="4" fill="#34d399" opacity="0.7"/>
+    <!-- Small IC chip shapes -->
+    <rect x="355" y="165" width="16" height="10" rx="2" fill="none" stroke="#34d399" stroke-width="1.5" opacity="0.6"/>
+    <rect x="285" y="245" width="16" height="10" rx="2" fill="none" stroke="#34d399" stroke-width="1.5" opacity="0.6"/>
+  </g>
+  <!-- Center dividing line with glow -->
+  <line x1="256" y1="62" x2="256" y2="378" stroke="white" stroke-width="2" opacity="0.4"/>
+  <!-- Center AI chip -->
+  <rect x="240" y="204" width="32" height="32" rx="6" fill="#065f46" stroke="#34d399" stroke-width="2"/>
+  <text x="256" y="226" text-anchor="middle" font-family="monospace" font-weight="900" font-size="14" fill="#34d399">AI</text>
+  <!-- Outer glow ring -->
+  <circle cx="256" cy="220" r="162" fill="none" stroke="#10b981" stroke-width="1" opacity="0.3"/>
+  <!-- Text -->
+  <text x="256" y="435" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-weight="900" font-size="50" letter-spacing="2">
+    <tspan fill="#065f46">PRONO</tspan><tspan fill="#10b981">FOOT</tspan>
+  </text>
+  <rect x="216" y="450" width="80" height="28" rx="14" fill="url(#g4light)"/>
+  <text x="256" y="470" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-weight="800" font-size="16" fill="white" letter-spacing="4">AI</text>
+</svg>
