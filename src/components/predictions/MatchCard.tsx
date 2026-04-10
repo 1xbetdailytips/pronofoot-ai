@@ -257,10 +257,10 @@ export default function MatchCard({
         {/* WIN/LOST badge + 1xBet */}
         <div className="w-16 text-right shrink-0">
           {resultStatus === true && (
-            <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 dark:bg-emerald-900/30 px-2 py-0.5 rounded-md">WIN</span>
+            <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 dark:bg-emerald-900/30 px-2 py-0.5 rounded-md">WIN ✓</span>
           )}
           {resultStatus === false && (
-            <span className="text-[10px] font-bold text-red-500 bg-red-50 dark:bg-red-900/30 px-2 py-0.5 rounded-md">LOST</span>
+            <span className="text-[10px] font-bold text-red-500 bg-red-50 dark:bg-red-900/30 px-2 py-0.5 rounded-md">LOST ✗</span>
           )}
           {statusInfo?.isLive && hasTip && (
             <span className="text-[10px] font-bold text-amber-500 bg-amber-50 dark:bg-amber-900/30 px-2 py-0.5 rounded-md animate-pulse">LIVE</span>
@@ -270,7 +270,7 @@ export default function MatchCard({
               href={`${siteConfig.affiliateLink}?utm_campaign=predictions_match`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-block text-[10px] font-bold text-white bg-emerald-600 hover:bg-emerald-700 px-2 py-0.5 rounded-md transition-colors"
+              className="inline-block text-[10px] font-bold text-white bg-[#1a5276] hover:bg-[#1a3a5c] px-2 py-0.5 rounded-md transition-colors"
               onClick={(e) => e.stopPropagation()}
             >
               1xBet
@@ -313,10 +313,10 @@ export default function MatchCard({
               <div className="flex flex-col items-center gap-1">
                 <span className={cn("text-base font-extrabold tabular-nums", statusInfo.isLive ? "text-red-600" : "")}>{statusInfo.score}</span>
                 {resultStatus === true && (
-                  <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 dark:bg-emerald-900/30 px-1.5 py-0.5 rounded-md">WIN</span>
+                  <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 dark:bg-emerald-900/30 px-1.5 py-0.5 rounded-md">WIN ✓</span>
                 )}
                 {resultStatus === false && (
-                  <span className="text-[10px] font-bold text-red-500 bg-red-50 dark:bg-red-900/30 px-1.5 py-0.5 rounded-md">LOST</span>
+                  <span className="text-[10px] font-bold text-red-500 bg-red-50 dark:bg-red-900/30 px-1.5 py-0.5 rounded-md">LOST ✗</span>
                 )}
               </div>
             ) : (

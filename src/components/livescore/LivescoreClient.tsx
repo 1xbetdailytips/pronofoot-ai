@@ -271,10 +271,10 @@ function MatchRow({ fixture }: { fixture: Fixture }) {
             <span className="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium">{lf.tip_best_pick}</span>
           )}
           {resultStatus === true && (
-            <span className="text-[11px] font-bold text-emerald-600 bg-emerald-50 dark:bg-emerald-900/30 px-2 py-0.5 rounded-md ml-auto">WIN</span>
+            <span className="text-[11px] font-bold text-emerald-600 bg-emerald-50 dark:bg-emerald-900/30 px-2 py-0.5 rounded-md ml-auto">WIN ✓</span>
           )}
           {resultStatus === false && (
-            <span className="text-[11px] font-bold text-red-500 bg-red-50 dark:bg-red-900/30 px-2 py-0.5 rounded-md ml-auto">LOST</span>
+            <span className="text-[11px] font-bold text-red-500 bg-red-50 dark:bg-red-900/30 px-2 py-0.5 rounded-md ml-auto">LOST ✗</span>
           )}
           {isLive && lf.tip_prediction && resultStatus === null && (
             <span className="text-[11px] font-medium text-amber-600 bg-amber-50 dark:bg-amber-900/30 px-2 py-0.5 rounded-md ml-auto animate-pulse">LIVE</span>
@@ -284,7 +284,7 @@ function MatchRow({ fixture }: { fixture: Fixture }) {
               href={`${siteConfig.affiliateLink}?utm_campaign=livescore_match`}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-[10px] font-bold text-white bg-emerald-600 hover:bg-emerald-700 px-2.5 py-0.5 rounded-md ml-auto transition-colors"
+              className="text-[10px] font-bold text-white bg-[#1a5276] hover:bg-[#1a3a5c] px-2.5 py-0.5 rounded-md ml-auto transition-colors"
               onClick={(e) => e.stopPropagation()}
             >
               1xBet
