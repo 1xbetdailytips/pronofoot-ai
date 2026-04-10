@@ -33,7 +33,7 @@ export default function PromoBanner({
         href={link}
         target="_blank"
         rel="noopener noreferrer"
-        className="group block relative overflow-hidden rounded-xl border border-blue-500/20"
+        className="group block relative overflow-hidden rounded-xl border border-gray-200/30 dark:border-gray-700/30"
       >
         {/* Banner image as background */}
         <div className="relative">
@@ -69,7 +69,7 @@ export default function PromoBanner({
       href={link}
       target="_blank"
       rel="noopener noreferrer"
-      className="group block relative overflow-hidden rounded-2xl border border-blue-500/20 shadow-lg"
+      className="group block relative overflow-hidden rounded-2xl border border-gray-200/30 dark:border-gray-700/30 shadow-md"
     >
       {/* Banner image */}
       <div className="relative">

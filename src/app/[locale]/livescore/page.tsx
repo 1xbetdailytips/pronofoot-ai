@@ -147,36 +147,45 @@ export default async function LivescorePage({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        {/* Header */}
+        {/* Premium header */}
         <div className="mb-6">
-          <div className="flex items-center gap-2 mb-1">
-            <Activity className="w-5 h-5 text-emerald-600" />
-            <h1 className="text-2xl font-bold text-gray-900">Livescore</h1>
+          <div className="flex items-center gap-3 mb-2">
+            <div className="w-9 h-9 rounded-xl bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center">
+              <Activity className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+            </div>
+            <div>
+              <h1 className="text-2xl font-extrabold text-gray-900 dark:text-white tracking-tight">Livescore</h1>
+              <p className="text-sm text-gray-500 dark:text-gray-400 capitalize">{dateStr}</p>
+            </div>
           </div>
-          <p className="text-sm text-gray-500 capitalize">{dateStr}</p>
-          <div className="flex items-center gap-4 mt-2 text-sm">
+          {/* Stats pills */}
+          <div className="flex items-center gap-3 mt-3">
             {live.length > 0 && (
-              <span className="flex items-center gap-1.5">
-                <span className="relative flex h-2.5 w-2.5">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200/50 dark:border-red-800/30">
+                <span className="relative flex h-2 w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
-                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500" />
                 </span>
-                <span className="font-medium text-red-600">
+                <span className="text-sm font-bold text-red-600 dark:text-red-400 tabular-nums">
                   {live.length} {isFr ? "en direct" : "live"}
                 </span>
               </span>
             )}
-            <span className="text-gray-500">
-              {upcoming.length} {isFr ? "a venir" : "upcoming"}
+            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200/50 dark:border-emerald-800/30">
+              <span className="text-sm font-semibold text-emerald-600 dark:text-emerald-400 tabular-nums">
+                {upcoming.length} {isFr ? "a venir" : "upcoming"}
+              </span>
             </span>
-            <span className="text-gray-400">
-              {finished.length} {isFr ? "termines" : "finished"}
+            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gray-100 dark:bg-gray-800 border border-gray-200/50 dark:border-gray-700/30">
+              <span className="text-sm font-semibold text-gray-500 dark:text-gray-400 tabular-nums">
+                {finished.length} {isFr ? "termines" : "finished"}
+              </span>
             </span>
           </div>
         </div>
 
         {/* 1xBet Live Betting Banner */}
-        <div className="mb-4">
+        <div className="mb-5">
           <PromoBanner locale={locale} variant="live-betting" campaign="livescore_live" />
         </div>
 

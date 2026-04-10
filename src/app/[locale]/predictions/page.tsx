@@ -97,23 +97,29 @@ export default async function PredictionsPage({
 
       {/* Header */}
       <div className="mb-6">
-        <div className="flex items-center gap-2 mb-1">
-          <TrendingUp className="w-5 h-5 text-emerald-600" />
-          <h1 className="text-2xl font-bold text-gray-900">{t("title")}</h1>
+        <div className="flex items-center gap-3 mb-2">
+          <div className="w-9 h-9 rounded-xl bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center">
+            <TrendingUp className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-extrabold text-gray-900 dark:text-white tracking-tight">{t("title")}</h1>
+            <p className="text-sm text-gray-500 dark:text-gray-400 capitalize">
+              {new Date().toLocaleDateString(isFr ? "fr-FR" : "en-GB", {
+                weekday: "long",
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+              })}
+            </p>
+          </div>
         </div>
-        <div className="flex items-center gap-3 text-sm text-gray-500">
-          <span>
-            {new Date().toLocaleDateString(isFr ? "fr-FR" : "en-GB", {
-              weekday: "long",
-              day: "numeric",
-              month: "long",
-              year: "numeric",
-            })}
+        <div className="flex items-center gap-3 mt-3">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gray-100 dark:bg-gray-800 border border-gray-200/50 dark:border-gray-700/30">
+            <span className="text-sm font-semibold text-gray-700 dark:text-gray-300 tabular-nums">{matches.length} {isFr ? "matchs" : "matches"}</span>
           </span>
-          <span className="text-gray-300">|</span>
-          <span className="font-medium text-gray-700">{matches.length} {isFr ? "matchs" : "matches"}</span>
-          <span className="text-gray-300">|</span>
-          <span className="text-emerald-600 font-medium">{predictedCount} {isFr ? "pr\u00e9dits" : "predicted"}</span>
+          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200/50 dark:border-emerald-800/30">
+            <span className="text-sm font-semibold text-emerald-600 dark:text-emerald-400 tabular-nums">{predictedCount} {isFr ? "pr\u00e9dits" : "predicted"}</span>
+          </span>
         </div>
       </div>
 

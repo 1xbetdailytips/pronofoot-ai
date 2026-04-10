@@ -202,17 +202,21 @@ export default async function BlogPage({
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* ── Header ── */}
       <div className="mb-8">
-        <div className="flex items-center gap-2 mb-2">
-          <BookOpen className="w-7 h-7 text-emerald-600" />
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-            {isFr ? "Blog Football" : "Football Blog"}
-          </h1>
+        <div className="flex items-center gap-3 mb-2">
+          <div className="w-10 h-10 rounded-xl bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center">
+            <BookOpen className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+          </div>
+          <div>
+            <h1 className="text-2xl md:text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">
+              {isFr ? "Blog Football" : "Football Blog"}
+            </h1>
+            <p className="text-gray-500 dark:text-gray-400 text-sm">
+              {isFr
+                ? "Analyses, pronostics et récapitulatifs par notre IA"
+                : "Analysis, predictions, and recaps by our AI"}
+            </p>
+          </div>
         </div>
-        <p className="text-gray-600 dark:text-gray-400 text-lg">
-          {isFr
-            ? "Analyses, pronostics et récapitulatifs par notre IA"
-            : "Analysis, predictions, and recaps by our AI"}
-        </p>
       </div>
 
       {/* ── Search & Filters ── */}
