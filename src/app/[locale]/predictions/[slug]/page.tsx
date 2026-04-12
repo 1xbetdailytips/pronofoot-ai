@@ -562,11 +562,59 @@ export default async function MatchDetailPage({
                 "@type": "SportsEvent",
                 name: `${match.home_team} vs ${match.away_team}`,
                 startDate: match.match_date,
-                homeTeam: { "@type": "SportsTeam", name: match.home_team },
-                awayTeam: { "@type": "SportsTeam", name: match.away_team },
-                organizer: { "@type": "SportsOrganization", name: match.league_name },
-                description: tip?.ai_analysis || `${isFr ? "Pronostic IA pour" : "AI prediction for"} ${match.home_team} vs ${match.away_team}`,
+                endDate: (() => {
+                  try {
+                    const start = new Date(match.match_date);
+                    return new Date(start.getTime() + 2 * 60 * 60 * 1000).toISOString();
+                  } catch { return undefined; }
+                })(),
+                eventStatus: (() => {
+                  const s = (match.status || "NS").toUpperCase();
+                  if (["FT", "AET", "PEN"].includes(s)) return "https://schema.org/EventScheduled";
+                  if (["PST", "SUSP"].includes(s)) return "https://schema.org/EventPostponed";
+                  if (["CANC", "ABD", "AWD", "WO"].includes(s)) return "https://schema.org/EventCancelled";
+                  return "https://schema.org/EventScheduled";
+                })(),
                 eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+                location: {
+                  "@type": "Place",
+                  name: `${match.home_team} Stadium`,
+                  address: {
+                    "@type": "PostalAddress",
+                    addressCountry: match.league_country || "Unknown",
+                  },
+                },
+                homeTeam: {
+                  "@type": "SportsTeam",
+                  name: match.home_team,
+                  ...(match.home_team_logo ? { logo: match.home_team_logo } : {}),
+                },
+                awayTeam: {
+                  "@type": "SportsTeam",
+                  name: match.away_team,
+                  ...(match.away_team_logo ? { logo: match.away_team_logo } : {}),
+                },
+                performer: [
+                  { "@type": "SportsTeam", name: match.home_team },
+                  { "@type": "SportsTeam", name: match.away_team },
+                ],
+                organizer: {
+                  "@type": "SportsOrganization",
+                  name: match.league_name,
+                  url: `${siteConfig.url}/${locale}/predictions`,
+                },
+                image: match.league_logo || `${siteConfig.url}/images/og-default.png`,
+                description: tip?.ai_analysis || `${isFr ? "Pronostic IA pour" : "AI prediction for"} ${match.home_team} vs ${match.away_team}`,
+                offers: {
+                  "@type": "Offer",
+                  url: `${siteConfig.url}/${locale}/predictions/${params.slug}`,
+                  price: "0",
+                  priceCurrency: "USD",
+                  availability: "https://schema.org/InStock",
+                  validFrom: match.match_date,
+                  description: isFr ? "Pronostic IA gratuit" : "Free AI prediction",
+                },
+                url: `${siteConfig.url}/${locale}/predictions/${params.slug}`,
               },
               {
                 "@type": "BreadcrumbList",

@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import AffiliatePopup from "@/components/ui/AffiliatePopup";
+import VisitorTracker from "@/components/analytics/VisitorTracker";
 import { siteConfig } from "@/lib/config";
 import "../globals.css";
 
@@ -184,6 +185,7 @@ export default async function LocaleLayout({
           />
           <main className="flex-1">{children}</main>
           <AffiliatePopup locale={locale} />
+          <VisitorTracker />
           <Footer
             locale={locale}
             translations={{
