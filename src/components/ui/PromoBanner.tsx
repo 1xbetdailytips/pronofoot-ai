@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { ExternalLink } from "lucide-react";
 import { siteConfig } from "@/lib/config";
 
@@ -37,11 +38,14 @@ export default function PromoBanner({
       >
         {/* Banner image as background */}
         <div className="relative">
-          <img
+          <Image
             src={bannerSrc}
             alt="1xBet - Global Partner of FC Barcelona"
+            width={1200}
+            height={300}
             className="w-full h-auto object-cover"
             loading="lazy"
+            unoptimized
           />
           {/* FLYUP777 + CTA overlay */}
           <div className="absolute inset-0 flex items-center justify-between px-4">
@@ -73,11 +77,15 @@ export default function PromoBanner({
     >
       {/* Banner image */}
       <div className="relative">
-        <img
+        <Image
           src={bannerSrc}
           alt="1xBet - Official Partner"
+          width={1200}
+          height={400}
           className="w-full h-auto object-cover"
+          priority={variant === "welcome-bonus" || variant === "best-odds"}
           loading={variant === "welcome-bonus" || variant === "best-odds" ? undefined : "lazy"}
+          unoptimized
         />
 
         {/* Gradient overlay for readability */}

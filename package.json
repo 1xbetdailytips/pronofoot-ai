@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.1",
@@ -29,6 +30,7 @@
     "prisma": "^7.5.0",
     "react": "^18",
     "react-dom": "^18",
+    "resend": "^6.11.0",
     "sharp": "^0.34.5",
     "tailwind-merge": "^3.5.0"
   },

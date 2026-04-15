@@ -58,10 +58,12 @@ export default async function Image() {
           }}
         />
 
-        {/* Logo */}
+        {/* Logo (next/image not available in OG image runtime — img is correct here) */}
         {logoSrc && (
+          // eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text
           <img
             src={logoSrc}
+            alt="Parifoot logo"
             width={180}
             height={180}
             style={{ marginBottom: "20px" }}
