@@ -139,20 +139,18 @@ function matchesMarketFilter(m: MatchWithTip, filter: MarketFilter): boolean {
 
 // Top league IDs that should ALWAYS appear in free picks
 const TOP_LEAGUE_IDS = new Set([
-  2, 3, // Champions League, Europa League
-  39, // Premier League
-  140, // La Liga
-  135, // Serie A
-  78, // Bundesliga
-  61, // Ligue 1
-  848, // Conference League
-  45, // FA Cup
-  143, // Copa del Rey
-  137, // Coppa Italia
-  81, // DFB Pokal
-  66, // Coupe de France
+  2, 3, 848, 5, 531, 4, // UCL, UEL, UECL, Nations League, Super Cup, Euro
+  39, 40, 45, 48, // England: PL, Championship, FA Cup, EFL Cup
+  140, 141, 143, // Spain: La Liga, Segunda, Copa del Rey
+  135, 136, 137, // Italy: Serie A, Serie B, Coppa Italia
+  78, 79, 80, 81, // Germany: Bundesliga, 2.Bundesliga, 3.Liga, DFB Pokal
+  61, 62, 66, // France: Ligue 1, Ligue 2, Coupe de France
+  94, 88, 144, 179, 203, // Portugal, Netherlands, Belgium, Scotland, Turkey
+  406, 407, // Cameroon
   6, 12, 20, // AFCON, CAF CL, CAF CC
-  1, // World Cup
+  233, 200, 332, 288, 570, 202, 276, 386, 186, // Africa majors
+  1, 15, 29, 30, 31, 32, 33, 34, // World Cup, Club WC, WC Qualifiers
+  253, 307, 13, // MLS, Saudi, Copa Libertadores
 ]);
 
 // ── Main PredictionsClient ──────────────────────────────────────────────────

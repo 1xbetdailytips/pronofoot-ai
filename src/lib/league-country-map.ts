@@ -19,6 +19,9 @@ export const POPULAR_LEAGUES: { name: string; shortName: string; flag: string; k
   { name: "AFCON", shortName: "AFCON", flag: "🌍", keywords: ["afcon", "africa cup", "coupe d'afrique"] },
   { name: "CAF Champions League", shortName: "CAF CL", flag: "🌍", keywords: ["caf champions"] },
   { name: "FIFA World Cup", shortName: "World Cup", flag: "🌎", keywords: ["world cup", "wc 2026", "coupe du monde"] },
+  { name: "UEFA Nations League", shortName: "Nations", flag: "🏆", keywords: ["nations league"] },
+  { name: "Euro Qualifiers", shortName: "Euro Q", flag: "🏆", keywords: ["euro qualifiers", "euro qualification"] },
+  { name: "WC Qualifiers", shortName: "WC Q", flag: "🌎", keywords: ["wc qualifiers", "world cup qual"] },
   { name: "MLS", shortName: "MLS", flag: "🇺🇸", keywords: ["mls", "major league soccer"] },
   { name: "Saudi Pro League", shortName: "Saudi", flag: "🇸🇦", keywords: ["saudi pro", "roshn"] },
 ];
@@ -41,9 +44,13 @@ export const GUARANTEED_LEAGUE_IDS = new Set([
   135,  // Serie A
   136,  // Serie B
   137,  // Coppa Italia
+  138,  // Serie C - Girone A
+  942,  // Serie C - Girone B
+  943,  // Serie C - Girone C
   // Germany
   78,   // Bundesliga
   79,   // 2. Bundesliga
+  80,   // 3. Liga
   81,   // DFB Pokal
   // France
   61,   // Ligue 1
@@ -63,6 +70,18 @@ export const GUARANTEED_LEAGUE_IDS = new Set([
   2,    // Champions League
   3,    // Europa League
   848,  // Conference League
+  5,    // UEFA Nations League
+  531,  // UEFA Super Cup
+  4,    // Euro Championship
+  // FIFA / World Cup
+  1,    // World Cup
+  15,   // Club World Cup
+  29,   // WC Qualifiers - Africa
+  30,   // WC Qualifiers - Asia
+  31,   // WC Qualifiers - Europe
+  32,   // WC Qualifiers - N. America
+  33,   // WC Qualifiers - Oceania
+  34,   // WC Qualifiers - S. America
   // Cameroon
   406,  // MTN Elite One
   407,  // MTN Elite Two
@@ -70,17 +89,20 @@ export const GUARANTEED_LEAGUE_IDS = new Set([
   12,   // CAF Champions League
   20,   // CAF Confederation Cup
   6,    // AFCON
-  // FIFA
-  1,    // World Cup
-  15,   // Club World Cup
-  // Other major
-  253,  // MLS
-  307,  // Saudi Pro League
-  13,   // Copa Libertadores
   233,  // Egyptian Premier League
   200,  // Botola Pro (Morocco)
   332,  // NPFL (Nigeria)
   288,  // DSTV Premiership (South Africa)
+  570,  // Ghana Premier League
+  202,  // Tunisia Ligue 1
+  276,  // Kenya FKF Premier League
+  386,  // Ivory Coast Ligue 1
+  186,  // Algeria Ligue 1
+  567,  // Tanzania Ligi kuu Bara
+  // Other major
+  253,  // MLS
+  307,  // Saudi Pro League
+  13,   // Copa Libertadores
 ]);
 
 // ── BETTABLE ON 1XBET — leagues with active betting markets ────────────────
@@ -91,9 +113,9 @@ export const BETTABLE_LEAGUE_IDS = new Set([
   // Spain
   140, 141, 143,
   // Italy
-  135, 136, 137,
+  135, 136, 137, 138, 942, 943, // + Serie C groups
   // Germany
-  78, 79, 81,
+  78, 79, 80, 81, // + 3. Liga
   // France
   61, 62, 66,
   // Portugal
@@ -134,6 +156,8 @@ export const BETTABLE_LEAGUE_IDS = new Set([
   235, 236,
   // UEFA
   2, 3, 848,
+  5,   // Nations League
+  531, // UEFA Super Cup
   // Cameroon
   406, 407,
   // Africa
@@ -142,13 +166,15 @@ export const BETTABLE_LEAGUE_IDS = new Set([
   200, // Morocco
   332, // Nigeria (NPFL)
   288, // South Africa
-  271, // Ghana Premier
-  305, // Tunisia
-  292, // Kenya Premier
-  276, // Ivory Coast
+  570, // Ghana Premier League (CORRECTED: was 271 = Hungary NB I)
+  202, // Tunisia Ligue 1 (CORRECTED: was 305 = Qatar Stars League)
+  276, // Kenya FKF Premier League
+  386, // Ivory Coast Ligue 1
+  186, // Algeria Ligue 1
+  567, // Tanzania Ligi kuu Bara
   // FIFA
   1, 15, // World Cup, Club WC
-  4, 5, // Euro, Euro Qualifiers
+  4, // Euro Championship
   29, 30, 31, 32, 33, 34, // WC Qualifiers (all zones)
   // Americas
   253, // MLS
@@ -162,7 +188,7 @@ export const BETTABLE_LEAGUE_IDS = new Set([
   307, // Saudi Pro League
   169, // Chinese Super League
   98, // J-League
-  292, // K-League
+  292, // K-League 1 (South Korea)
   // Australia
   188, // A-League
 ]);
@@ -199,12 +225,15 @@ const MAP: Record<string, LeagueCountry> = {
   // 🇮🇹 Italy
   "Serie A": { country: "Italy", flag: "🇮🇹", tier: 1 },
   "Serie B": { country: "Italy", flag: "🇮🇹", tier: 2 },
+  "Serie C - Girone A": { country: "Italy", flag: "🇮🇹", tier: 3 },
+  "Serie C - Girone B": { country: "Italy", flag: "🇮🇹", tier: 3 },
+  "Serie C - Girone C": { country: "Italy", flag: "🇮🇹", tier: 3 },
   "Coppa Italia": { country: "Italy", flag: "🇮🇹", tier: 2 },
 
   // 🇩🇪 Germany
   "Bundesliga": { country: "Germany", flag: "🇩🇪", tier: 1 },
   "2. Bundesliga": { country: "Germany", flag: "🇩🇪", tier: 2 },
-  "3. Liga": { country: "Germany", flag: "🇩🇪", tier: 3 },
+  "3. Liga": { country: "Germany", flag: "🇩🇪", tier: 2 },
   "DFB Pokal": { country: "Germany", flag: "🇩🇪", tier: 2 },
 
   // 🇫🇷 France
@@ -290,11 +319,23 @@ const MAP: Record<string, LeagueCountry> = {
   "AFCON Qualifiers": { country: "CAF", flag: "🌍", tier: 2 },
   "CAF WC Qualifiers": { country: "CAF", flag: "🌍", tier: 2 },
 
+  // 🏆 Euro
+  "Euro Championship": { country: "UEFA", flag: "🏆", tier: 1 },
+  "European Championship": { country: "UEFA", flag: "🏆", tier: 1 },
+  "Euro Qualifiers": { country: "UEFA", flag: "🏆", tier: 2 },
+  "European Championship - Qualification": { country: "UEFA", flag: "🏆", tier: 2 },
+
   // 🌎 FIFA
   "World Cup": { country: "FIFA", flag: "🌎", tier: 1 },
   "WC 2026": { country: "FIFA", flag: "🌎", tier: 1 },
   "WC 2026 Play-offs": { country: "FIFA", flag: "🌎", tier: 1 },
   "FIFA Club World Cup": { country: "FIFA", flag: "🌎", tier: 2 },
+  "World Cup - Qualification Africa": { country: "FIFA", flag: "🌎", tier: 1 },
+  "World Cup - Qualification Asia": { country: "FIFA", flag: "🌎", tier: 1 },
+  "World Cup - Qualification Europe": { country: "FIFA", flag: "🌎", tier: 1 },
+  "World Cup - Qualification North America": { country: "FIFA", flag: "🌎", tier: 1 },
+  "World Cup - Qualification Oceania": { country: "FIFA", flag: "🌎", tier: 1 },
+  "World Cup - Qualification South America": { country: "FIFA", flag: "🌎", tier: 1 },
 
   // 🇳🇬 Nigeria
   "NPFL": { country: "Nigeria", flag: "🇳🇬", tier: 2 },
@@ -308,8 +349,15 @@ const MAP: Record<string, LeagueCountry> = {
   "Egyptian Premier League": { country: "Egypt", flag: "🇪🇬", tier: 2 },
 
   // 🇹🇳 Tunisia
-  "Ligue 1 (Tunisia)": { country: "Tunisia", flag: "🇹🇳", tier: 3 },
-  "Ligue Professionnelle 1": { country: "Tunisia", flag: "🇹🇳", tier: 3 },
+  "Ligue 1 (Tunisia)": { country: "Tunisia", flag: "🇹🇳", tier: 2 },
+  "Ligue Professionnelle 1": { country: "Tunisia", flag: "🇹🇳", tier: 2 },
+
+  // 🇩🇿 Algeria
+  "Ligue 1 (Algeria)": { country: "Algeria", flag: "🇩🇿", tier: 2 },
+  "Ligue Professionnelle 1 (Algeria)": { country: "Algeria", flag: "🇩🇿", tier: 2 },
+
+  // 🇨🇮 Ivory Coast
+  "Ligue 1 (Ivory Coast)": { country: "Ivory Coast", flag: "🇨🇮", tier: 2 },
 
   // 🇿🇦 South Africa
   "Premier Soccer League": { country: "South Africa", flag: "🇿🇦", tier: 2 },
@@ -466,10 +514,19 @@ const ID_MAP: Record<number, LeagueCountry> = {
   // Cameroon
   406: { country: "Cameroon", flag: "🇨🇲", tier: 1 }, // MTN Elite One
   407: { country: "Cameroon", flag: "🇨🇲", tier: 2 }, // MTN Elite Two
+  // Italy lower
+  138: { country: "Italy", flag: "🇮🇹", tier: 3 },  // Serie C - Girone A
+  942: { country: "Italy", flag: "🇮🇹", tier: 3 },  // Serie C - Girone B
+  943: { country: "Italy", flag: "🇮🇹", tier: 3 },  // Serie C - Girone C
+  // Germany lower
+  80: { country: "Germany", flag: "🇩🇪", tier: 2 },  // 3. Liga
   // UEFA
   2: { country: "UEFA", flag: "🏆", tier: 1 },    // Champions League
   3: { country: "UEFA", flag: "🏆", tier: 1 },    // Europa League
   848: { country: "UEFA", flag: "🏆", tier: 2 },  // Conference League
+  5: { country: "UEFA", flag: "🏆", tier: 1 },    // UEFA Nations League
+  531: { country: "UEFA", flag: "🏆", tier: 2 },  // UEFA Super Cup
+  4: { country: "UEFA", flag: "🏆", tier: 1 },    // Euro Championship
   // CAF
   12: { country: "CAF", flag: "🌍", tier: 1 },    // CAF Champions League
   20: { country: "CAF", flag: "🌍", tier: 2 },    // CAF Confederation Cup
@@ -477,6 +534,12 @@ const ID_MAP: Record<number, LeagueCountry> = {
   // FIFA
   1: { country: "FIFA", flag: "🌎", tier: 1 },    // World Cup
   15: { country: "FIFA", flag: "🌎", tier: 2 },   // Club World Cup
+  29: { country: "FIFA", flag: "🌎", tier: 1 },   // WC Qualifiers - Africa
+  30: { country: "FIFA", flag: "🌎", tier: 1 },   // WC Qualifiers - Asia
+  31: { country: "FIFA", flag: "🌎", tier: 1 },   // WC Qualifiers - Europe
+  32: { country: "FIFA", flag: "🌎", tier: 1 },   // WC Qualifiers - N. America
+  33: { country: "FIFA", flag: "🌎", tier: 1 },   // WC Qualifiers - Oceania
+  34: { country: "FIFA", flag: "🌎", tier: 1 },   // WC Qualifiers - S. America
   // Portugal
   94: { country: "Portugal", flag: "🇵🇹", tier: 2 },  // Primeira Liga
   // Netherlands
@@ -494,7 +557,7 @@ const ID_MAP: Record<number, LeagueCountry> = {
   // South Africa
   288: { country: "South Africa", flag: "🇿🇦", tier: 2 }, // DSTV Premiership
   // Kenya
-  276: { country: "Kenya", flag: "🇰🇪", tier: 3 },   // FKF Premier League
+  276: { country: "Kenya", flag: "🇰🇪", tier: 2 },   // FKF Premier League
   // Uganda
   280: { country: "Uganda", flag: "🇺🇬", tier: 3 },   // Uganda Premier League
   // Nigeria
@@ -511,6 +574,18 @@ const ID_MAP: Record<number, LeagueCountry> = {
   262: { country: "Mexico", flag: "🇲🇽", tier: 2 },   // Liga MX
   // Japan
   98: { country: "Japan", flag: "🇯🇵", tier: 2 },     // J1 League
+  // Ghana (CORRECTED: was 271 = Hungary NB I)
+  570: { country: "Ghana", flag: "🇬🇭", tier: 2 },   // Ghana Premier League
+  // Tunisia (CORRECTED: was 305 = Qatar Stars League)
+  202: { country: "Tunisia", flag: "🇹🇳", tier: 2 },  // Ligue 1
+  // Ivory Coast
+  386: { country: "Ivory Coast", flag: "🇨🇮", tier: 2 }, // Ligue 1
+  // Algeria
+  186: { country: "Algeria", flag: "🇩🇿", tier: 2 },  // Ligue 1
+  // Tanzania
+  567: { country: "Tanzania", flag: "🇹🇿", tier: 3 },  // Ligi kuu Bara
+  // South Korea
+  292: { country: "South Korea", flag: "🇰🇷", tier: 2 }, // K League 1
   // CONMEBOL
   13: { country: "CONMEBOL", flag: "🌎", tier: 1 },  // Copa Libertadores
   11: { country: "CONMEBOL", flag: "🌎", tier: 2 },  // Copa Sudamericana

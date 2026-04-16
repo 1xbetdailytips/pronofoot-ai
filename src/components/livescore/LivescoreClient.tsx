@@ -33,16 +33,18 @@ function categorize(fixtures: Fixture[]) {
 
 // Top league IDs for priority sorting
 const TOP_LEAGUE_IDS = new Set([
-  2, 3, 848, // Champions League, Europa League, Conference League
+  2, 3, 848, 5, 531, 4, // UCL, UEL, UECL, Nations League, Super Cup, Euro
   39, 40, 41, 42, 45, 48, // England: PL, Championship, League One, League Two, FA Cup, EFL Cup
   140, 141, 143, // Spain: La Liga, Segunda, Copa del Rey
-  135, 136, 137, // Italy: Serie A, Serie B, Coppa Italia
-  78, 79, 81, // Germany: Bundesliga, 2.Bundesliga, DFB Pokal
+  135, 136, 137, 138, 942, 943, // Italy: Serie A, Serie B, Serie C groups, Coppa Italia
+  78, 79, 80, 81, // Germany: Bundesliga, 2.Bundesliga, 3.Liga, DFB Pokal
   61, 62, 66, // France: Ligue 1, Ligue 2, Coupe de France
   94, 88, 144, 179, 203, // Portugal, Netherlands, Belgium, Scotland, Turkey
   406, 407, // Cameroon
   6, 12, 20, // AFCON, CAF CL, CAF CC
-  1, 15, // World Cup, Club WC
+  233, 200, 332, 288, 570, 202, 276, 386, 186, 567, // Africa: Egypt, Morocco, Nigeria, SA, Ghana, Tunisia, Kenya, Ivory Coast, Algeria, Tanzania
+  1, 15, 29, 30, 31, 32, 33, 34, // World Cup, Club WC, WC Qualifiers (all zones)
+  253, 307, 13, 292, // MLS, Saudi, Copa Libertadores, K-League
 ]);
 
 // ── 1xBet-style Country → League grouping ───────────────────────────────────
@@ -102,6 +104,15 @@ function formatTime(dateStr: string) {
 
 function LiveMinuteTicker({ status, elapsed, matchDate }: { status: string; elapsed?: number | null; matchDate?: string }) {
   const [tick, setTick] = useState(0);
+  const [lastElapsed, setLastElapsed] = useState(elapsed);
+
+  // Reset tick counter whenever elapsed changes from server (new poll arrived)
+  useEffect(() => {
+    if (elapsed != null && elapsed !== lastElapsed) {
+      setTick(0);
+      setLastElapsed(elapsed);
+    }
+  }, [elapsed, lastElapsed]);
 
   useEffect(() => {
     if (status === "HT" || !LIVE_STATUSES.includes(status)) return;
@@ -111,14 +122,23 @@ function LiveMinuteTicker({ status, elapsed, matchDate }: { status: string; elap
 
   if (status === "HT") return "HT";
 
-  // If elapsed is available, use it + client ticks
-  if (elapsed) {
+  // If elapsed is available from DB, use it as anchor + client ticks since last poll
+  if (elapsed != null && elapsed > 0) {
     const displayMinute = elapsed + tick;
-    const maxMinute = ["ET", "BT"].includes(status) ? 120 : 90;
-    return `${Math.min(displayMinute, maxMinute)}'`;
+    // Stoppage time display: "45+X'" or "90+X'"
+    if (status === "1H" && displayMinute > 45) {
+      return `45+${displayMinute - 45}'`;
+    }
+    if (status === "2H" && displayMinute > 90) {
+      return `90+${displayMinute - 90}'`;
+    }
+    if (["ET", "BT"].includes(status) && displayMinute > 120) {
+      return `120+${displayMinute - 120}'`;
+    }
+    return `${displayMinute}'`;
   }
 
-  // Estimate minute from match start time if elapsed not available
+  // Fallback: estimate minute from match start time if elapsed not available
   if (matchDate) {
     const kickoff = new Date(matchDate).getTime();
     const now = Date.now();
@@ -127,6 +147,9 @@ function LiveMinuteTicker({ status, elapsed, matchDate }: { status: string; elap
       let estimatedMin = Math.floor(elapsedMs / 60000);
       // 2H starts at ~45 min + 15 min break
       if (status === "2H") estimatedMin = Math.max(46, estimatedMin - 15);
+      // Stoppage time display for fallback too
+      if (status === "1H" && estimatedMin > 45) return `45+${estimatedMin - 45}'`;
+      if (status === "2H" && estimatedMin > 90) return `90+${estimatedMin - 90}'`;
       const maxMinute = ["ET", "BT"].includes(status) ? 120 : status === "2H" ? 90 : 45;
       return `${Math.min(estimatedMin, maxMinute)}'`;
     }
