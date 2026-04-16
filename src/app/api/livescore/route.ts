@@ -34,8 +34,8 @@ export async function GET(request: Request) {
     // Get fixture IDs for targeted tip query
     const fixtureIds = fixtures.map((f: Fixture) => f.id);
 
-    // Fetch tips + results only for today's fixtures (not ALL tips)
-    const [tipsRes, resultsRes] = await Promise.all([
+    // Fetch tips + results + odds only for today's fixtures
+    const [tipsRes, resultsRes, oddsRes] = await Promise.all([
       fixtureIds.length > 0
         ? supabase
             .from("tips")
@@ -46,6 +46,12 @@ export async function GET(request: Request) {
         ? supabase
             .from("results_log")
             .select("fixture_id, is_correct")
+            .in("fixture_id", fixtureIds)
+        : Promise.resolve({ data: [] }),
+      fixtureIds.length > 0
+        ? supabase
+            .from("match_odds")
+            .select("fixture_id, home_odd, draw_odd, away_odd, over25_odd, under25_odd, btts_yes_odd, btts_no_odd")
             .in("fixture_id", fixtureIds)
         : Promise.resolve({ data: [] }),
     ]);
@@ -63,17 +69,31 @@ export async function GET(request: Request) {
       resultMap.set(r.fixture_id, r.is_correct)
     );
 
+    type OddsRow = { fixture_id: number; home_odd: number | null; draw_odd: number | null; away_odd: number | null; over25_odd: number | null; under25_odd: number | null; btts_yes_odd: number | null; btts_no_odd: number | null };
+    const oddsMap = new Map<number, OddsRow>();
+    ((oddsRes as { data: OddsRow[] | null }).data || []).forEach((o) =>
+      oddsMap.set(o.fixture_id, o)
+    );
+
     // Return ALL fixtures that have predictions (tips)
     const predicted = (fixtures as Fixture[])
       .filter((f) => tipMap.has(f.id))
       .map((f) => {
         const tip = tipMap.get(f.id);
+        const odds = oddsMap.get(f.id);
         return {
           ...f,
           tip_prediction: tip?.prediction ?? null,
           tip_confidence: tip?.confidence ?? null,
           tip_best_pick: tip?.best_pick ?? null,
           result_correct: resultMap.get(f.id) ?? null,
+          odds_home: odds?.home_odd ?? null,
+          odds_draw: odds?.draw_odd ?? null,
+          odds_away: odds?.away_odd ?? null,
+          odds_over25: odds?.over25_odd ?? null,
+          odds_under25: odds?.under25_odd ?? null,
+          odds_btts_yes: odds?.btts_yes_odd ?? null,
+          odds_btts_no: odds?.btts_no_odd ?? null,
         };
       });
 

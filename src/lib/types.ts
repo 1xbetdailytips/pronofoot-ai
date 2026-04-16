@@ -94,6 +94,14 @@ export type LiveFixture = Fixture & {
   tip_confidence: number | null;
   tip_best_pick: string | null;
   result_correct: boolean | null;
+  // 1xBet real odds
+  odds_home: number | null;
+  odds_draw: number | null;
+  odds_away: number | null;
+  odds_over25: number | null;
+  odds_under25: number | null;
+  odds_btts_yes: number | null;
+  odds_btts_no: number | null;
 };
 
 // ── Win Rate Stats ────────────────────────────────────────────────────────────

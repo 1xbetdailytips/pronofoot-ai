@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { RefreshCw, Clock, Activity, ChevronDown, ChevronRight, ChevronLeft, CalendarDays } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import LeagueFilterBar from "@/components/filters/LeagueFilterBar";
 import GlobalMatchSearch from "@/components/livescore/GlobalMatchSearch";
 import { isPopularLeague, getCountryForLeague, isBettableOn1xBet } from "@/lib/league-country-map";
@@ -243,11 +244,18 @@ function computeResultInstantly(prediction: string, homeScore: number | null, aw
   return actualResult === pred;
 }
 
-function MatchRow({ fixture }: { fixture: Fixture }) {
+function generateSlug(fixture: Fixture): string {
+  const home = fixture.home_team.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+  const away = fixture.away_team.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+  return `${home}-vs-${away}-${fixture.id}`;
+}
+
+function MatchRow({ fixture, locale }: { fixture: Fixture; locale: string }) {
   const isLive = LIVE_STATUSES.includes(fixture.status);
   const isFinished = FINISHED_STATUSES.includes(fixture.status);
   const hasEvents = fixture.match_events && fixture.match_events.length > 0;
   const lf = fixture as LiveFixture;
+  const slug = generateSlug(fixture);
 
   // Instant WIN/LOST: if match is finished and has a prediction, calculate NOW
   let resultStatus: boolean | null = lf.result_correct ?? null;
@@ -256,9 +264,12 @@ function MatchRow({ fixture }: { fixture: Fixture }) {
   }
 
   return (
-    <div className={`border-b border-gray-100 dark:border-gray-800 last:border-b-0 transition-colors ${
-      isLive ? "bg-red-50/50 dark:bg-red-950/20" : "hover:bg-gray-50/80 dark:hover:bg-gray-800/30"
-    }`}>
+    <Link
+      href={`/${locale}/predictions/${slug}`}
+      className={`block border-b border-gray-100 dark:border-gray-800 last:border-b-0 transition-colors cursor-pointer ${
+        isLive ? "bg-red-50/50 dark:bg-red-950/20" : "hover:bg-gray-50/80 dark:hover:bg-gray-800/30"
+      }`}
+    >
       {/* Main match row */}
       <div className="grid grid-cols-[48px_1fr_72px_1fr_auto] md:grid-cols-[60px_1fr_90px_1fr_auto] items-center gap-2 md:gap-3 px-3 md:px-4 py-3">
         {/* Time */}
@@ -315,6 +326,45 @@ function MatchRow({ fixture }: { fixture: Fixture }) {
           )}
         </div>
       )}
+      {/* 1xBet Odds row — FlashScore style */}
+      {lf.odds_home && lf.odds_draw && lf.odds_away && (
+        <div className="flex items-center gap-1.5 px-3 md:px-4 pb-2 -mt-0.5">
+          <span className="text-[10px] text-gray-400 dark:text-gray-500 font-medium">1xBet</span>
+          <a
+            href={`${siteConfig.affiliateLink}?utm_campaign=odds_home`}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            className="text-[11px] font-bold px-2 py-0.5 rounded bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-[#1a5276] hover:text-white transition-colors tabular-nums"
+          >
+            {lf.odds_home.toFixed(2)}
+          </a>
+          <a
+            href={`${siteConfig.affiliateLink}?utm_campaign=odds_draw`}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            className="text-[11px] font-bold px-2 py-0.5 rounded bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-[#1a5276] hover:text-white transition-colors tabular-nums"
+          >
+            {lf.odds_draw.toFixed(2)}
+          </a>
+          <a
+            href={`${siteConfig.affiliateLink}?utm_campaign=odds_away`}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            className="text-[11px] font-bold px-2 py-0.5 rounded bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-[#1a5276] hover:text-white transition-colors tabular-nums"
+          >
+            {lf.odds_away.toFixed(2)}
+          </a>
+          {lf.odds_over25 && (
+            <span className="text-[10px] text-gray-400 dark:text-gray-500 ml-1.5">O2.5: <span className="text-gray-600 dark:text-gray-300 font-semibold">{lf.odds_over25.toFixed(2)}</span></span>
+          )}
+          {lf.odds_btts_yes && (
+            <span className="text-[10px] text-gray-400 dark:text-gray-500 ml-1.5">BTTS: <span className="text-gray-600 dark:text-gray-300 font-semibold">{lf.odds_btts_yes.toFixed(2)}</span></span>
+          )}
+        </div>
+      )}
       {/* Goal scorers + cards row */}
       {hasEvents && (isLive || isFinished) && (
         <div className="grid grid-cols-[48px_1fr_72px_1fr_auto] md:grid-cols-[60px_1fr_90px_1fr_auto] gap-2 md:gap-3 px-3 md:px-4 pb-2.5 -mt-1">
@@ -325,13 +375,13 @@ function MatchRow({ fixture }: { fixture: Fixture }) {
           <div />
         </div>
       )}
-    </div>
+    </Link>
   );
 }
 
 // ── FlashScore-style collapsible country section ────────────────────────────
 
-function CountrySection({ block, defaultOpen }: { block: CountryBlock; defaultOpen: boolean }) {
+function CountrySection({ block, defaultOpen, locale }: { block: CountryBlock; defaultOpen: boolean; locale: string }) {
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
   return (
@@ -367,7 +417,7 @@ function CountrySection({ block, defaultOpen }: { block: CountryBlock; defaultOp
       >
         <div className="divide-y divide-gray-100 dark:divide-gray-800">
           {block.leagues.map((league) => (
-            <LeagueSection key={league.leagueName} league={league} countryFlag={block.flag} />
+            <LeagueSection key={league.leagueName} league={league} countryFlag={block.flag} locale={locale} />
           ))}
         </div>
       </div>
@@ -375,7 +425,7 @@ function CountrySection({ block, defaultOpen }: { block: CountryBlock; defaultOp
   );
 }
 
-function LeagueSection({ league }: { league: LeagueBlock; countryFlag?: string }) {
+function LeagueSection({ league, locale }: { league: LeagueBlock; countryFlag?: string; locale: string }) {
   const [isOpen, setIsOpen] = useState(true);
   const hasLive = league.fixtures.some(f => LIVE_STATUSES.includes(f.status));
 
@@ -387,6 +437,9 @@ function LeagueSection({ league }: { league: LeagueBlock; countryFlag?: string }
         className="w-full flex items-center gap-2 px-4 py-2 bg-gray-50/80 dark:bg-gray-800/50 hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-all duration-150 border-b border-gray-100 dark:border-gray-800"
       >
         <ChevronDown className={`w-3.5 h-3.5 text-gray-400 transition-transform duration-150 ${isOpen ? "" : "-rotate-90"}`} />
+        {league.fixtures[0]?.league_logo && (
+          <Image src={league.fixtures[0].league_logo} alt={league.leagueName} width={16} height={16} className="w-4 h-4 object-contain" unoptimized />
+        )}
         <span className="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide">
           {league.leagueName}
         </span>
@@ -405,7 +458,7 @@ function LeagueSection({ league }: { league: LeagueBlock; countryFlag?: string }
         }`}
       >
         <div className="bg-white dark:bg-gray-900">
-          {league.fixtures.map((f) => <MatchRow key={f.id} fixture={f} />)}
+          {league.fixtures.map((f) => <MatchRow key={f.id} fixture={f} locale={locale} />)}
         </div>
       </div>
     </div>
@@ -707,7 +760,7 @@ export default function LivescoreClient({ initialFixtures, locale }: Props) {
           </div>
           <div className="space-y-2.5">
             {liveCountryGroups.map((block) => (
-              <CountrySection key={block.country} block={block} defaultOpen={true} />
+              <CountrySection key={block.country} block={block} defaultOpen={true} locale={locale} />
             ))}
           </div>
         </div>
@@ -725,7 +778,7 @@ export default function LivescoreClient({ initialFixtures, locale }: Props) {
           </div>
           <div className="space-y-2.5">
             {finishedCountryGroups.map((block) => (
-              <CountrySection key={block.country} block={block} defaultOpen={finishedCountryGroups.length <= 5} />
+              <CountrySection key={block.country} block={block} defaultOpen={finishedCountryGroups.length <= 5} locale={locale} />
             ))}
           </div>
         </div>
@@ -747,6 +800,7 @@ export default function LivescoreClient({ initialFixtures, locale }: Props) {
                 key={block.country}
                 block={block}
                 defaultOpen={block.tier <= 1}
+                locale={locale}
               />
             ))}
           </div>
