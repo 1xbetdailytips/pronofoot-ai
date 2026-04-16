@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import {
   ArrowLeft,
@@ -10,6 +11,7 @@ import {
   ChevronRight,
   Zap,
 } from "lucide-react";
+import { supabase } from "@/lib/supabase";
 import AffiliateCTA from "@/components/ui/AffiliateCTA";
 import CrowdBacking from "@/components/social/CrowdBacking";
 import LeagueStandings from "@/components/predictions/LeagueStandings";
@@ -121,10 +123,17 @@ export default async function MatchDetailPage({
     ? predictionLabels[prediction]?.[locale] ?? prediction
     : "-";
 
-  // Odds from probabilities
-  const homeOdds = tip ? Math.max(1.05, 100 / tip.home_prob).toFixed(2) : "-";
-  const drawOdds = tip ? Math.max(1.05, 100 / tip.draw_prob).toFixed(2) : "-";
-  const awayOdds = tip ? Math.max(1.05, 100 / tip.away_prob).toFixed(2) : "-";
+  // Fetch real 1xBet odds (fallback to probability-derived)
+  const { data: oddsRow } = await supabase
+    .from("match_odds")
+    .select("home_odd, draw_odd, away_odd, over25_odd, under25_odd, btts_yes_odd, btts_no_odd")
+    .eq("fixture_id", match.id)
+    .single();
+
+  const hasRealOdds = oddsRow?.home_odd != null;
+  const homeOdds = hasRealOdds ? oddsRow.home_odd.toFixed(2) : tip ? Math.max(1.05, 100 / tip.home_prob).toFixed(2) : "-";
+  const drawOdds = hasRealOdds ? oddsRow.draw_odd.toFixed(2) : tip ? Math.max(1.05, 100 / tip.draw_prob).toFixed(2) : "-";
+  const awayOdds = hasRealOdds ? oddsRow.away_odd.toFixed(2) : tip ? Math.max(1.05, 100 / tip.away_prob).toFixed(2) : "-";
 
   const homeForm = Array.isArray(match.home_form) ? match.home_form : [];
   const awayForm = Array.isArray(match.away_form) ? match.away_form : [];
@@ -179,10 +188,14 @@ export default async function MatchDetailPage({
           {/* Teams */}
           <div className="flex items-center justify-center gap-6 mb-8">
             <div className="text-center flex-1">
-              <div className="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-3 text-2xl font-bold text-gray-400">
-                {match.home_team.charAt(0)}
-              </div>
-              <p className="text-xl font-bold text-gray-900">{match.home_team}</p>
+              {match.home_team_logo ? (
+                <Image src={match.home_team_logo} alt={match.home_team} width={64} height={64} className="w-16 h-16 object-contain mx-auto mb-3" unoptimized />
+              ) : (
+                <div className="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-2xl flex items-center justify-center mx-auto mb-3 text-2xl font-bold text-gray-400">
+                  {match.home_team.charAt(0)}
+                </div>
+              )}
+              <p className="text-xl font-bold text-gray-900 dark:text-white">{match.home_team}</p>
               <p className="text-sm text-gray-500">{isFr ? "Domicile" : "Home"}</p>
             </div>
 
@@ -192,10 +205,14 @@ export default async function MatchDetailPage({
             </div>
 
             <div className="text-center flex-1">
-              <div className="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-3 text-2xl font-bold text-gray-400">
-                {match.away_team.charAt(0)}
-              </div>
-              <p className="text-xl font-bold text-gray-900">{match.away_team}</p>
+              {match.away_team_logo ? (
+                <Image src={match.away_team_logo} alt={match.away_team} width={64} height={64} className="w-16 h-16 object-contain mx-auto mb-3" unoptimized />
+              ) : (
+                <div className="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-2xl flex items-center justify-center mx-auto mb-3 text-2xl font-bold text-gray-400">
+                  {match.away_team.charAt(0)}
+                </div>
+              )}
+              <p className="text-xl font-bold text-gray-900 dark:text-white">{match.away_team}</p>
               <p className="text-sm text-gray-500">{isFr ? "Exterieur" : "Away"}</p>
             </div>
           </div>
@@ -223,6 +240,42 @@ export default async function MatchDetailPage({
                 </div>
               ))}
             </div>
+          )}
+
+          {/* O/U 2.5 + BTTS odds (only if real odds exist) */}
+          {hasRealOdds && (oddsRow.over25_odd || oddsRow.btts_yes_odd) && (
+            <div className="flex justify-center gap-4 mb-6">
+              {oddsRow.over25_odd && oddsRow.under25_odd && (
+                <div className="flex gap-2">
+                  <div className="px-4 py-2 rounded-lg bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-center">
+                    <p className="text-[10px] text-gray-500 mb-0.5">O 2.5</p>
+                    <p className="text-sm font-bold font-mono text-gray-700 dark:text-gray-300">{oddsRow.over25_odd.toFixed(2)}</p>
+                  </div>
+                  <div className="px-4 py-2 rounded-lg bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-center">
+                    <p className="text-[10px] text-gray-500 mb-0.5">U 2.5</p>
+                    <p className="text-sm font-bold font-mono text-gray-700 dark:text-gray-300">{oddsRow.under25_odd.toFixed(2)}</p>
+                  </div>
+                </div>
+              )}
+              {oddsRow.btts_yes_odd && oddsRow.btts_no_odd && (
+                <div className="flex gap-2">
+                  <div className="px-4 py-2 rounded-lg bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-center">
+                    <p className="text-[10px] text-gray-500 mb-0.5">BTTS Yes</p>
+                    <p className="text-sm font-bold font-mono text-gray-700 dark:text-gray-300">{oddsRow.btts_yes_odd.toFixed(2)}</p>
+                  </div>
+                  <div className="px-4 py-2 rounded-lg bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-center">
+                    <p className="text-[10px] text-gray-500 mb-0.5">BTTS No</p>
+                    <p className="text-sm font-bold font-mono text-gray-700 dark:text-gray-300">{oddsRow.btts_no_odd.toFixed(2)}</p>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {hasRealOdds && (
+            <p className="text-center text-[10px] text-gray-400 dark:text-gray-500 mb-4">
+              {isFr ? "Cotes fournies par 1xBet • Mises à jour quotidiennes" : "Odds powered by 1xBet • Updated daily"}
+            </p>
           )}
 
           <div className="text-center">
