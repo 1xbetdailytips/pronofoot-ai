@@ -55,18 +55,23 @@ export async function getTodaysMatches(date?: string): Promise<MatchWithTip[]> {
   if (fError || !fixtures) return [];
 
   const fixtureIds = fixtures.map((f: Fixture) => f.id);
-  const { data: tips } = await supabase
-    .from("tips")
-    .select("*")
-    .in("fixture_id", fixtureIds);
+  const [tipsRes, oddsRes] = await Promise.all([
+    supabase.from("tips").select("*").in("fixture_id", fixtureIds),
+    supabase.from("match_odds").select("fixture_id, home_odd, draw_odd, away_odd, over25_odd, under25_odd, btts_yes_odd, btts_no_odd").in("fixture_id", fixtureIds),
+  ]);
 
   const tipMap = new Map<number, Tip>();
-  (tips || []).forEach((t: Tip) => tipMap.set(t.fixture_id, t));
+  (tipsRes.data || []).forEach((t: Tip) => tipMap.set(t.fixture_id, t));
+
+  type OddsRow = { fixture_id: number; home_odd: number | null; draw_odd: number | null; away_odd: number | null; over25_odd: number | null; under25_odd: number | null; btts_yes_odd: number | null; btts_no_odd: number | null };
+  const oddsMap = new Map<number, OddsRow>();
+  (oddsRes.data as OddsRow[] || []).forEach((o) => oddsMap.set(o.fixture_id, o));
 
   return fixtures.map((f: Fixture) => ({
     ...f,
     tip: tipMap.get(f.id) ?? null,
     slug: fixtureToSlug(f),
+    realOdds: oddsMap.get(f.id) ?? null,
   }));
 }
 
@@ -208,10 +213,11 @@ export function matchToCardProps(m: MatchWithTip) {
   const riskLevel = m.tip ? mapRiskLevel(m.tip.risk_level) : null;
   const bestPick = m.tip?.best_pick ?? null;
 
-  // Estimate 1X2 odds from probabilities (min 1.05)
-  const homeOdds = m.tip ? Math.max(1.05, parseFloat((100 / m.tip.home_prob).toFixed(2))) : null;
-  const drawOdds = m.tip ? Math.max(1.05, parseFloat((100 / m.tip.draw_prob).toFixed(2))) : null;
-  const awayOdds = m.tip ? Math.max(1.05, parseFloat((100 / m.tip.away_prob).toFixed(2))) : null;
+  // Use real 1xBet odds when available, fallback to probability-derived
+  const ro = m.realOdds;
+  const homeOdds = ro?.home_odd ?? (m.tip ? Math.max(1.05, parseFloat((100 / m.tip.home_prob).toFixed(2))) : null);
+  const drawOdds = ro?.draw_odd ?? (m.tip ? Math.max(1.05, parseFloat((100 / m.tip.draw_prob).toFixed(2))) : null);
+  const awayOdds = ro?.away_odd ?? (m.tip ? Math.max(1.05, parseFloat((100 / m.tip.away_prob).toFixed(2))) : null);
 
   return {
     homeTeam: m.home_team,

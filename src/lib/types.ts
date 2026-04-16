@@ -41,6 +41,7 @@ export type Fixture = {
   home_score: number | null;
   away_score: number | null;
   elapsed: number | null;
+  ht_score: string | null;
   home_form: string[] | null;
   away_form: string[] | null;
   h2h_data: H2HData | null;
@@ -87,6 +88,16 @@ export type Tip = {
 export type MatchWithTip = Fixture & {
   tip: Tip | null;
   slug: string;
+  realOdds?: {
+    fixture_id: number;
+    home_odd: number | null;
+    draw_odd: number | null;
+    away_odd: number | null;
+    over25_odd: number | null;
+    under25_odd: number | null;
+    btts_yes_odd: number | null;
+    btts_no_odd: number | null;
+  } | null;
 };
 
 export type LiveFixture = Fixture & {

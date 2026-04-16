@@ -182,10 +182,15 @@ function ScoreDisplay({ fixture }: { fixture: Fixture }) {
   const isFinished = FINISHED_STATUSES.includes(fixture.status);
   if (isLive || isFinished) {
     return (
-      <div className={`flex items-center gap-2 font-extrabold text-xl tabular-nums ${isLive ? "text-red-600" : "text-gray-900 dark:text-white"}`}>
-        <span className="w-7 text-right">{fixture.home_score ?? 0}</span>
-        <span className="text-gray-300 dark:text-gray-600 text-sm">-</span>
-        <span className="w-7 text-left">{fixture.away_score ?? 0}</span>
+      <div className="flex flex-col items-center">
+        <div className={`flex items-center gap-2 font-extrabold text-xl tabular-nums ${isLive ? "text-red-600" : "text-gray-900 dark:text-white"}`}>
+          <span className="w-7 text-right">{fixture.home_score ?? 0}</span>
+          <span className="text-gray-300 dark:text-gray-600 text-sm">-</span>
+          <span className="w-7 text-left">{fixture.away_score ?? 0}</span>
+        </div>
+        {fixture.ht_score && isFinished && (
+          <span className="text-[10px] text-gray-400 dark:text-gray-500 tabular-nums">HT: {fixture.ht_score}</span>
+        )}
       </div>
     );
   }

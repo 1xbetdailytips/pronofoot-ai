@@ -16,6 +16,8 @@ import AffiliateCTA from "@/components/ui/AffiliateCTA";
 import CrowdBacking from "@/components/social/CrowdBacking";
 import LeagueStandings from "@/components/predictions/LeagueStandings";
 import MatchTimeline from "@/components/predictions/MatchTimeline";
+import MatchStats from "@/components/predictions/MatchStats";
+import MatchLineups from "@/components/predictions/MatchLineups";
 import { siteConfig } from "@/lib/config";
 import { getMatchBySlug, mapPrediction, mapRiskLevel } from "@/lib/data";
 
@@ -436,6 +438,12 @@ export default async function MatchDetailPage({
         homeTeamId={match.home_team_id}
         locale={locale}
       />
+
+      {/* Match Statistics (live stats from API) */}
+      <MatchStats fixtureId={match.id} locale={locale} />
+
+      {/* Team Lineups */}
+      <MatchLineups fixtureId={match.id} locale={locale} />
 
       {/* Recent Form */}
       {(homeForm.length > 0 || awayForm.length > 0) && (
